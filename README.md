@@ -1,8 +1,7 @@
-![Auto Assign](https://github.com/DSB300-CRDC-DS262-1/demo-repository/actions/workflows/auto-assign.yml/badge.svg)
+# DSB300 Capstone Project
+## Cotton Research & Development Corporation (CRDC): AI Metadata Pipeline (text-based extraction)
+This repository is for the development of a python application that can extract structured, reliable quantitative findings from unstructured research documents.
 
-![Proof HTML](https://github.com/DSB300-CRDC-DS262-1/demo-repository/actions/workflows/proof-html.yml/badge.svg)
+![Auto Assign](https://github.com/DSB300-CRDC-DS262-1/metadata-pipeline/actions/workflows/auto-assign.yml/badge.svg)
 
-# Welcome to your organization's demo respository
-This code repository (or "repo") is designed to demonstrate the best GitHub has to offer with the least amount of noise.
-
-The repo includes an `index.html` file (so it can render a web page), two GitHub Actions workflows, and a CSS stylesheet dependency.
+![Proof HTML](https://github.com/DSB300-CRDC-DS262-1/metadata-pipeline/actions/workflows/proof-html.yml/badge.svg)
