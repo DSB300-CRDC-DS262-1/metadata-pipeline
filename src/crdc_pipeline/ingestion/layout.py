@@ -59,7 +59,7 @@ def detect_columns(
     min_lines: int = 4,
     respect_threshold: float = 0.6,
     margin_ratio: float = 0.30,
-    min_gap_ratio: float = 0.03,
+    min_gap_ratio: float = 0.02,
     y_tolerance: float = 3.0,
 ) -> LayoutDetection:
     """Classify a page as single- or two-column from its word positions.
@@ -79,7 +79,10 @@ def detect_columns(
             of similar length can otherwise leave a misleadingly
             consistent gap near the right margin.
         min_gap_ratio: minimum width (as a fraction of page width) an
-            empty band must have to be considered a candidate gutter.
+            empty band must have to be considered a candidate gutter. A
+            real two-column journal gutter can be narrow -- as little as
+            ~2-3% of page width -- so this needs to be set low enough to
+            catch that, not just the wide gaps of a magazine-style layout.
         y_tolerance: vertical distance within which words are grouped
             into the same line.
 
@@ -131,7 +134,7 @@ def _find_candidate_gutter(
     page_width: float,
     margin_ratio: float,
     min_gap_ratio: float,
-    bins: int = 200,
+    bins: int = 400,
 ) -> tuple[float, float] | None:
     """Find the widest empty vertical strip in the middle of the page.
 
