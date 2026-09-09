@@ -1,0 +1,29 @@
+{
+  "_comment": "Maps each ground-truth document_id to its PDF filename under data/raw_pdfs/. Fill in 'filename' for each entry once the source PDF is added; leave null for documents not yet available. expected_layout and expected_page_count are copied from ground_truth_all_documents.json for a quick sanity check, not the recall measure itself.",
+  "documents": [
+    {
+      "document_id": "doc_aghealth2019",
+      "filename": null,
+      "expected_layout": "single column, portrait, A4",
+      "expected_page_count": 11
+    },
+    {
+      "document_id": "doc_aghealth2024",
+      "filename": null,
+      "expected_layout": "single column, portrait, letter",
+      "expected_page_count": 10
+    },
+    {
+      "document_id": "doc_hedayati2019",
+      "filename": null,
+      "expected_layout": "two column, portrait, journal typesetting",
+      "expected_page_count": 12
+    },
+    {
+      "document_id": "doc_voconiq2025",
+      "filename": null,
+      "expected_layout": "single column, portrait, A4, chart and pull-quote heavy",
+      "expected_page_count": 23
+    }
+  ]
+}

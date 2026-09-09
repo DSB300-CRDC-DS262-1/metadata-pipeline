@@ -1,0 +1,189 @@
+{
+  "documents": [
+    {
+      "document_id": "doc_aghealth2019",
+      "title": "Sentinel Health and Safety Data for Australian Cotton Farms",
+      "authors": ["Hon. A/Prof Tony Lower", "Kerri-Lynn Peachey"],
+      "organisation": "AgHealth Australia (The University of Sydney)",
+      "publication_date": "2019-11-13",
+      "source_url": "https://www.insidecotton.com/sites/default/files/article-files/Sentinel_Cotton_Industry_Injury_And_Safety_Data_FINAL_Website_Copy.pdf",
+      "page_count": 11,
+      "supersedes_document_id": null
+    },
+    {
+      "document_id": "doc_aghealth2024",
+      "title": "Health and Safety Data for Australian Cotton Farms",
+      "authors": ["Hon. A/Prof Tony Lower", "Kerri-Lynn Peachey"],
+      "organisation": "AgHealth Australia (The University of Sydney)",
+      "publication_date": "2024-01-22",
+      "source_url": null,
+      "page_count": 10,
+      "supersedes_document_id": "doc_aghealth2019",
+      "note": "explicitly described in its own text as 'an update to the previous review'"
+    },
+    {
+      "document_id": "doc_hedayati2019",
+      "title": "Farm-level strategies to reduce the life cycle greenhouse gas emissions of cotton production: An Australian perspective",
+      "authors": ["Mehdi Hedayati", "Philippa M. Brock", "Gunasekhar Nachimuthu", "Graeme Schwenke"],
+      "organisation": "NSW Department of Primary Industries",
+      "publication_date": "2018-11-22",
+      "source_url": "https://doi.org/10.1016/j.jclepro.2018.11.190",
+      "page_count": 12,
+      "supersedes_document_id": null
+    },
+    {
+      "document_id": "doc_voconiq2025",
+      "title": "Community Trust in the Australian Cotton Industry, 2025 Survey Report",
+      "authors": ["Voconiq"],
+      "organisation": "Voconiq, commissioned by Cotton Australia and Cotton Research and Development Corporation",
+      "publication_date": "2025-12-01",
+      "source_url": null,
+      "page_count": 23,
+      "supersedes_document_id": null
+    }
+  ],
+
+  "contexts": [
+    {
+      "context_id": "ctx_deaths_2014_19",
+      "geographic_region": "Australia, cotton growing postcode areas",
+      "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
+      "collection_method": "case-by-case review of National Coroners Information System records",
+      "time_period": "2014-01-01 to 2019-10-31",
+      "limitations": "restricted to cases where a cotton link could be positively confirmed"
+    },
+    {
+      "context_id": "ctx_deaths_recent_2024",
+      "geographic_region": "Australia, cotton growing postcode areas",
+      "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
+      "collection_method": "case-by-case review of National Coroners Information System records",
+      "time_period": "2019-11-01 to 2023-12-31",
+      "limitations": "AgHealth Australia's ethics agreement for coronial data prohibits reporting an exact count when a category holds fewer than five cases"
+    },
+    {
+      "context_id": "ctx_hedayati_n_fert_scenario",
+      "geographic_region": "Namoi and Gwydir regions, northwest New South Wales",
+      "sample_or_population": "modelled cotton lint production, cradle-to-port",
+      "collection_method": "Life Cycle Assessment, foreground data from 3 production seasons combined with published and survey data",
+      "time_period": "2011-12 to 2013-14 production seasons",
+      "functional_unit": "kg CO2e per tonne of cotton lint",
+      "scenario_description": "commercial nitrogen fertiliser rate of 255 kg N/ha reduced to 240 kg N/ha, all other inputs held at baseline",
+      "limitations": "modelled result, not a field measurement, depends on the stated baseline assumptions holding"
+    },
+    {
+      "context_id": "ctx_voconiq_water_responsibly",
+      "geographic_region": "Australia, national sample",
+      "sample_or_population": "Australian community members responding to the Voconiq national survey",
+      "collection_method": "Voconiq annual national community trust survey",
+      "survey_question_text": "The cotton industry in Australia uses water responsibly",
+      "limitations": "single Likert-style agreement item, no margin of error stated in the source text"
+    }
+  ],
+
+  "statistics": [
+    {
+      "id": "stat_aghealth2019_deaths_2014_19",
+      "document_id": "doc_aghealth2019",
+      "context_id": "ctx_deaths_2014_19",
+      "variable": "confirmed cotton-related deaths",
+      "value": 6,
+      "value_status": "exact",
+      "reported_text": "six",
+      "unit": "deaths",
+      "record_type": "measurement",
+      "page": 3,
+      "source_excerpt": "In the more recent period (2014 - Oct 2019), there have been a further six cases that can positively be defined as occurring on a cotton property.",
+      "supersedes_statistic_id": null
+    },
+    {
+      "id": "stat_aghealth2024_deaths_2014_19_revised",
+      "document_id": "doc_aghealth2024",
+      "context_id": "ctx_deaths_2014_19",
+      "variable": "confirmed cotton-related deaths",
+      "value": 8,
+      "value_status": "exact",
+      "reported_text": "eight",
+      "unit": "deaths",
+      "record_type": "measurement",
+      "page": 3,
+      "source_excerpt": "Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight.",
+      "supersedes_statistic_id": "stat_aghealth2019_deaths_2014_19",
+      "note": "same real-world period as the 2019 report's figure, revised upward after two more cases were confirmed"
+    },
+    {
+      "id": "stat_aghealth2024_deaths_recent",
+      "document_id": "doc_aghealth2024",
+      "context_id": "ctx_deaths_recent_2024",
+      "variable": "confirmed cotton-related deaths",
+      "value": null,
+      "value_status": "censored_below",
+      "reported_text": "fewer than five",
+      "unit": "deaths",
+      "record_type": "measurement",
+      "page": 3,
+      "source_excerpt": "In the more recent period (Oct 2019 - Dec 2023), there have been fewer than five cases on a cotton property.",
+      "supersedes_statistic_id": null,
+      "note": "value intentionally withheld by the source under its own ethics agreement, not a missing extraction"
+    },
+    {
+      "id": "stat_hedayati_nfert_reduction",
+      "document_id": "doc_hedayati2019",
+      "context_id": "ctx_hedayati_n_fert_scenario",
+      "variable": "life cycle greenhouse gas emissions reduction",
+      "value": 2.6,
+      "value_status": "exact",
+      "reported_text": "2.6%",
+      "unit": "percent reduction from baseline emissions",
+      "record_type": "scenario_result",
+      "page": "974 (journal pagination, abstract)",
+      "source_excerpt": "reducing N fertiliser rate from a commercial rate of 255 kg N/ha to 240 kg N/ha or 180 kg N/ha (2.6% and 13.2% emissions reduction)",
+      "supersedes_statistic_id": null
+    },
+    {
+      "id": "stat_hedayati_irrigation_assumption",
+      "document_id": "doc_hedayati2019",
+      "context_id": null,
+      "variable": "share of production from irrigated systems",
+      "value": 96,
+      "value_status": "exact",
+      "reported_text": "96%",
+      "unit": "percent of production",
+      "record_type": "model_assumption",
+      "page": "974 (journal pagination, abstract)",
+      "source_excerpt": "We assumed that 96% of production was from irrigated systems, with 85% of irrigation water pumped by diesel-powered irrigation pumps",
+      "supersedes_statistic_id": null,
+      "note": "a model input the authors assumed, not a measured outcome, kept distinct via record_type rather than treated as a finding"
+    },
+    {
+      "id": "stat_voconiq_water_2025",
+      "document_id": "doc_voconiq2025",
+      "context_id": "ctx_voconiq_water_responsibly",
+      "variable": "community agreement that the cotton industry uses water responsibly",
+      "value": 47,
+      "value_status": "exact",
+      "reported_text": "47%",
+      "unit": "percent agreed",
+      "record_type": "survey_response",
+      "time_period": "2025",
+      "page": 11,
+      "source_excerpt": "More people agree this year than they have in any other year of the survey that the cotton industry uses water responsibly at 47% (Figure 4) compared to 42% in 2020.",
+      "supersedes_statistic_id": null
+    },
+    {
+      "id": "stat_voconiq_water_2020",
+      "document_id": "doc_voconiq2025",
+      "context_id": "ctx_voconiq_water_responsibly",
+      "variable": "community agreement that the cotton industry uses water responsibly",
+      "value": 42,
+      "value_status": "exact",
+      "reported_text": "42%",
+      "unit": "percent agreed",
+      "record_type": "survey_response",
+      "time_period": "2020",
+      "page": 11,
+      "source_excerpt": "compared to 42% in 2020",
+      "supersedes_statistic_id": null,
+      "note": "same survey question as stat_voconiq_water_2025, a prior year's result restated for trend comparison, both share ctx_voconiq_water_responsibly rather than duplicating the question text and methodology"
+    }
+  ]
+}
