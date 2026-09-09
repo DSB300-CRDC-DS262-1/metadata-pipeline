@@ -1,0 +1,61 @@
+"""Tests for metadata extraction.
+
+Page-selection and prompt-building are pure functions, tested directly.
+The actual Gemini call is only tested end-to-end when GEMINI_API_KEY is
+available -- these tests are not run by default and cost real API
+calls when they do run.
+"""
+
+import os
+
+import pytest
+
+from crdc_pipeline.extraction.metadata import build_context_text, build_prompt
+
+
+def test_short_document_uses_all_pages() -> None:
+    pages = ["page one", "page two"]
+    assert build_context_text(pages) == "page one\n\n=== page break ===\n\npage two"
+
+
+def test_long_document_uses_leading_and_trailing_pages_only() -> None:
+    pages = [f"page {i}" for i in range(1, 11)]  # 10 pages
+    result = build_context_text(pages)
+    # LEADING_PAGES=2, TRAILING_PAGES=1 -> pages 1, 2, and 10
+    assert "page 1" in result
+    assert "page 2" in result
+    assert "page 10" in result
+    assert "page 5" not in result
+    assert "page 9" not in result
+
+
+def test_prompt_includes_rules_and_selected_text() -> None:
+    prompt = build_prompt(["Title Page Text"])
+    assert "Title Page Text" in prompt
+    assert "return null" in prompt
+    assert "Do not fabricate a source_url" in prompt
+
+
+@pytest.mark.skipif(
+    not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")),
+    reason="no GEMINI_API_KEY/GOOGLE_API_KEY set -- skipping live API call",
+)
+def test_live_extraction_on_aghealth2019() -> None:
+    from pathlib import Path
+
+    from crdc_pipeline.extraction.metadata import extract_metadata, make_client
+    from crdc_pipeline.ingestion.loader import load_document
+
+    pdf_path = Path(__file__).resolve().parent.parent / "data" / "raw_pdfs" / "aghealth2019.pdf"
+    if not pdf_path.is_file():
+        pytest.skip("data/raw_pdfs/aghealth2019.pdf not found")
+
+    document = load_document(pdf_path, document_id="doc_aghealth2019")
+    pages = [p.text for p in document.pages]
+
+    result = extract_metadata(pages, make_client())
+    metadata = result.metadata
+
+    assert metadata.title is not None
+    assert "cotton" in metadata.title.lower()
+    assert any("lower" in a.lower() for a in metadata.authors)
