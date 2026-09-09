@@ -3,25 +3,25 @@
   "documents": [
     {
       "document_id": "doc_aghealth2019",
-      "filename": null,
+      "filename": "aghealth2019.pdf",
       "expected_layout": "single column, portrait, A4",
       "expected_page_count": 11
     },
     {
       "document_id": "doc_aghealth2024",
-      "filename": null,
+      "filename": "aghealth2024.pdf",
       "expected_layout": "single column, portrait, letter",
       "expected_page_count": 10
     },
     {
       "document_id": "doc_hedayati2019",
-      "filename": null,
+      "filename": "hedayati2019.pdf",
       "expected_layout": "two column, portrait, journal typesetting",
       "expected_page_count": 12
     },
     {
       "document_id": "doc_voconiq2025",
-      "filename": null,
+      "filename": "voconiq2025.pdf",
       "expected_layout": "single column, portrait, A4, chart and pull-quote heavy",
       "expected_page_count": 23
     }
