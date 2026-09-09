@@ -68,33 +68,60 @@ fixtures) surfaced two problems no synthetic test had anticipated:
    per-line validation, where one outlier line barely moves the
    confidence score.
 
+### Why pdfplumber alone, not pdftotext for the single-column path
+
+An earlier version of this module used `pdftotext -layout` for
+single-column pages and pdfplumber only for the two-column crop. That
+turned out to be an unexamined default, not a technical requirement:
+pdfplumber's own `extract_text(layout=True)` reconstructs whitespace
+the same way, and testing it against `pdftotext -layout` on real
+single-column pages (including a stats-heavy table page) showed
+matching content -- if anything, pdfplumber preserved table row
+alignment slightly better on one page. Dropping `pdftotext` removes an
+external binary dependency and the fragility that comes with it: the
+`pdftotext` bundled with Git for Windows is Xpdf-derived and doesn't
+support the same flags as a poppler build would (this bit us once
+already, when a crop-box approach was briefly considered), so
+correctness would otherwise depend on which `pdftotext` happened to be
+on a given machine's PATH. Everything now goes through pdfplumber.
+
 ### pdfplumber's word-spacing on tightly-kerned text
 
-Extracting the two-column crops initially reproduced text like
-`agriculturalresources(Kongetal.,2015)` -- missing spaces between
-words that plain `pdftotext` renders correctly on the same page
-(`agricultural resources (Kong et al., 2015)`). This is pdfplumber's
-own word-boundary heuristic (`x_tolerance`, default 3pt) being too
-loose for this PDF's character spacing, not a text-layer gap -- the
-characters are all present, pdfplumber just wasn't inserting a space
-between them. Lowering `x_tolerance` to 1.5 for the two-column crop
-extraction (`loader.TWO_COLUMN_X_TOLERANCE`) matches plain pdftotext's
-output.
+Extraction initially reproduced text like
+`agriculturalresources(Kongetal.,2015)` on the Hedayati PDF -- missing
+spaces between words, confirmed (during the `pdftotext` comparison
+above) to be a pdfplumber-specific issue: plain `pdftotext` renders the
+same page as `agricultural resources (Kong et al., 2015)`. This is
+pdfplumber's own word-boundary heuristic (`x_tolerance`, default 3pt)
+being too loose for this PDF's character spacing, not a text-layer gap
+-- the characters are all present, pdfplumber just wasn't inserting a
+space between them. Lowering `x_tolerance` to 1.5 (`loader.X_TOLERANCE`,
+applied to both extraction paths) matches plain pdftotext's output.
+
+### Unicode dash normalisation
+
+PDF fonts often use a typographic hyphen/dash glyph distinct from a
+plain ASCII `-` (confirmed on aghealth2019: "3‐5 years" uses HYPHEN
+U+2010). Left alone, every later regex that looks for a number range or
+a hyphenated compound would need to account for each dash variant
+separately. Since this pipeline only cares about the underlying value,
+not exact source typography, `loader._normalise()` maps every
+dash-like glyph (hyphen, non-breaking hyphen, figure dash, en dash, em
+dash, minus sign) to ASCII `-` once, at ingestion, rather than leaving
+that to every consumer downstream.
 
 ## Extraction routing
 
-- **Single-column pages**: `pdftotext -layout`. Position-preserving
-  mode is exactly what you want when there's only one column -- it
-  keeps paragraph structure and avoids re-flowing text across line
-  breaks awkwardly.
-- **Two-column pages**: pdfplumber, cropped at the detected gutter x
-  into left and right halves, each extracted independently and
+- **Single-column pages**: `pdfplumber.extract_text(layout=True)`.
+  Position-preserving mode is exactly what you want when there's only
+  one column -- it keeps paragraph structure and avoids re-flowing text
+  across line breaks awkwardly.
+- **Two-column pages**: the same library, cropped at the detected
+  gutter x into left and right halves, each extracted independently and
   concatenated left-then-right. This reconstructs reading order
-  directly from geometry rather than trusting either tool's stream
-  order -- plain `pdftotext` (the naive fix for issue 1) happens to
-  work when the PDF's content stream was written in column order, but
-  that's a property of how the PDF was generated, not something this
-  pipeline can assume for every future document.
+  directly from geometry rather than trusting a layout-preserving
+  extractor's line-by-line assumptions, which is exactly what breaks on
+  a two-column page (issue 1).
 
 ## What this module deliberately does not do yet
 

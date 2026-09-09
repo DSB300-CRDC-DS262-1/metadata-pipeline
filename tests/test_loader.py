@@ -11,13 +11,13 @@ from pathlib import Path
 from crdc_pipeline.ingestion.loader import load_document
 
 
-def test_single_column_document_uses_pdftotext_layout(single_column_pdf: Path) -> None:
+def test_single_column_document_uses_layout_preserving_extraction(single_column_pdf: Path) -> None:
     doc = load_document(single_column_pdf, document_id="test_single")
     assert doc.page_count == 1
     assert doc.detected_layout == "single_column"
     page = doc.pages[0]
     assert page.column_count == 1
-    assert page.extraction_method == "pdftotext_layout"
+    assert page.extraction_method == "pdfplumber_layout"
     assert "line number 1 " in page.text
     assert "line number 20" in page.text
     assert not page.warnings

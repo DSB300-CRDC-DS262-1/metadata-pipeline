@@ -1,24 +1,29 @@
 """PDF ingestion: turns a source PDF into per-page text, choosing an
 extraction path per page based on its detected column layout.
 
-Single-column pages use `pdftotext -layout`, which preserves reading
-order well when there is only one column to preserve. Two-column pages
-are extracted column-by-column with pdfplumber -- crop the left half,
-crop the right half at the detected gutter, extract each top-to-bottom,
-then concatenate left-then-right -- because `pdftotext -layout`
-corrupts two-column reading order (docs/weaknesses_and_fixes.md, issue
-1) and plain `pdftotext`'s stream order isn't guaranteed to match
-visual reading order either. Reconstructing order from word geometry
-sidesteps both tools' ordering assumptions.
+Everything here runs through pdfplumber -- no external binary
+dependency. Single-column pages use `extract_text(layout=True)`,
+pdfplumber's own whitespace-preserving reconstruction (equivalent to
+`pdftotext -layout`, confirmed to match it on real single-column pages
+in this corpus, content-for-content). Two-column pages are extracted
+column-by-column -- crop the left half, crop the right half at the
+detected gutter, extract each top-to-bottom, then concatenate
+left-then-right -- because layout-preserving extraction corrupts
+two-column reading order by interleaving both columns line by line
+(docs/weaknesses_and_fixes.md, issue 1). Reconstructing order from word
+geometry sidesteps that entirely.
 
-Requires the poppler `pdftotext` binary on PATH (used only for
-single-column pages); pdfplumber (used for layout detection and all
-two-column extraction) is a pure Python dependency.
+An earlier version of this module shelled out to `pdftotext` for the
+single-column path. That was dropped: it added a dependency on
+whichever `pdftotext` build happened to be on PATH, and different
+builds disagree on supported flags (the poppler build supports
+crop-box options a project might eventually want; the Xpdf-derived
+build bundled with Git for Windows does not) -- exactly the kind of
+works-on-my-machine fragility a pure Python dependency avoids.
 """
 
 from __future__ import annotations
 
-import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -26,7 +31,30 @@ import pdfplumber
 
 from .layout import Word, detect_columns
 
-PDFTOTEXT_BIN = "pdftotext"
+#: pdfplumber's own default x_tolerance (3pt) merges adjacent words with
+#: no visible space into a single run on some tightly-kerned justified
+#: fonts (confirmed on the Hedayati PDF: "agriculturalresources(Kong..."
+#: instead of "agricultural resources (Kong..."). A tighter tolerance
+#: fixes it. Applied everywhere, not just the two-column path, since
+#: nothing rules out the same font behaviour on a single-column page.
+X_TOLERANCE = 1.5
+
+#: PDF fonts often use a typographic hyphen/dash glyph distinct from the
+#: plain ASCII "-" (confirmed on aghealth2019: "3‐5 years", using
+#: HYPHEN U+2010, where a naive read might expect "-"). This pipeline
+#: only cares about the underlying value, not preserving exact source
+#: typography, so every dash-like glyph is normalised to ASCII "-" here
+#: rather than leaving every later regex to account for each variant.
+_DASH_TRANSLATION = str.maketrans(
+    {
+        "‐": "-",  # hyphen
+        "‑": "-",  # non-breaking hyphen
+        "‒": "-",  # figure dash
+        "–": "-",  # en dash
+        "—": "-",  # em dash
+        "−": "-",  # minus sign
+    }
+)
 
 
 @dataclass
@@ -53,9 +81,7 @@ class Document:
 def load_document(pdf_path: str | Path, document_id: str) -> Document:
     """Load a PDF, detecting and correcting for column layout per page.
 
-    Raises FileNotFoundError if pdf_path doesn't exist, and
-    RuntimeError if the pdftotext binary is missing or fails on a
-    single-column page.
+    Raises FileNotFoundError if pdf_path doesn't exist.
     """
     pdf_path = Path(pdf_path)
     if not pdf_path.is_file():
@@ -79,8 +105,10 @@ def load_document(pdf_path: str | Path, document_id: str) -> Document:
                 text = _extract_two_column_text(plumber_page, detection.gutter_x)
                 method = "pdfplumber_column_crop"
             else:
-                text = _run_pdftotext(pdf_path, i, layout=True)
-                method = "pdftotext_layout"
+                text = _normalise(
+                    plumber_page.extract_text(layout=True, x_tolerance=X_TOLERANCE) or ""
+                )
+                method = "pdfplumber_layout"
 
             page_warnings: list[str] = []
             char_count = len(text.strip())
@@ -117,45 +145,18 @@ def load_document(pdf_path: str | Path, document_id: str) -> Document:
     )
 
 
-#: pdfplumber's own default x_tolerance (3pt) merges adjacent words with
-#: no visible space into a single run on some tightly-kerned justified
-#: fonts (confirmed on the Hedayati PDF: "agriculturalresources(Kong..."
-#: instead of "agricultural resources (Kong..." -- plain pdftotext gets
-#: this right on the same page, so it's specifically a pdfplumber word-
-#: boundary heuristic issue, not a text-layer problem). A tighter
-#: tolerance fixes it without depending on which pdftotext build (Xpdf
-#: vs poppler) happens to be installed.
-TWO_COLUMN_X_TOLERANCE = 1.5
-
-
 def _extract_two_column_text(plumber_page: pdfplumber.page.Page, gutter_x: float) -> str:
     """Extract a two-column page in correct reading order via cropping."""
     width, height = plumber_page.width, plumber_page.height
     left = plumber_page.crop((0, 0, gutter_x, height))
     right = plumber_page.crop((gutter_x, 0, width, height))
-    left_text = (left.extract_text(x_tolerance=TWO_COLUMN_X_TOLERANCE) or "").strip()
-    right_text = (right.extract_text(x_tolerance=TWO_COLUMN_X_TOLERANCE) or "").strip()
+    left_text = _normalise((left.extract_text(x_tolerance=X_TOLERANCE) or "").strip())
+    right_text = _normalise((right.extract_text(x_tolerance=X_TOLERANCE) or "").strip())
     return f"{left_text}\n\n{right_text}"
 
 
-def _run_pdftotext(pdf_path: Path, page_number: int, layout: bool) -> str:
-    args = [PDFTOTEXT_BIN, "-f", str(page_number), "-l", str(page_number)]
-    if layout:
-        args.append("-layout")
-    args += [str(pdf_path), "-"]
-    try:
-        result = subprocess.run(
-            args, capture_output=True, text=True, encoding="utf-8", errors="replace"
-        )
-    except FileNotFoundError as exc:
-        raise RuntimeError(
-            "pdftotext binary not found on PATH (requires poppler-utils)"
-        ) from exc
-    if result.returncode != 0:
-        raise RuntimeError(
-            f"pdftotext failed on {pdf_path} page {page_number}: {result.stderr.strip()}"
-        )
-    return result.stdout
+def _normalise(text: str) -> str:
+    return text.translate(_DASH_TRANSLATION)
 
 
 def _summarise_layout(column_counts: list[int]) -> str:

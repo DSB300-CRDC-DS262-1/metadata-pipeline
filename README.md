@@ -14,9 +14,8 @@ not started yet.
 
 ## Setup
 
-Requires Python 3.11+ and the poppler `pdftotext` binary on PATH (used
-for single-column page extraction; two-column pages are handled with
-pdfplumber alone).
+Requires Python 3.11+. Pure Python -- no external PDF binary needed;
+all extraction goes through pdfplumber.
 
 ```bash
 python -m venv .venv
