@@ -45,6 +45,42 @@ document-level `detected_layout` field (`single_column` / `two_column`
 / `mixed`) is a summary for logging and the manifest sanity check, not
 what extraction routing actually uses.
 
+### Two things the real Hedayati PDF surfaced that a synthetic test wouldn't
+
+Testing against the actual sample PDFs (not just synthetic reportlab
+fixtures) surfaced two problems no synthetic test had anticipated:
+
+1. **The real gutter is narrow -- about 3% of page width (~18pt on a
+   595pt-wide A4 page)**, not the wider magazine-style gap a first
+   guess might assume. `min_gap_ratio` is tuned to 0.02 (2%) with
+   400 histogram bins so the search has enough resolution not to lose
+   an 18pt gap to bin-quantization error.
+
+2. **A running header ("M. Hedayati et al. / Journal of Cleaner
+   Production...") is extracted as a single word spanning the full
+   page width**, because this PDF's font encoding doesn't reliably
+   mark word-breaks (the same underlying issue as the missing spaces
+   below). One such word crossing straight over the true gutter is
+   enough to hide it from a page-wide search, since the search requires
+   a totally empty band. Fix: exclude a vertical band at the top and
+   bottom of the page (`vertical_margin_ratio`, default 8%) from the
+   gutter search itself, while still including those lines in the
+   per-line validation, where one outlier line barely moves the
+   confidence score.
+
+### pdfplumber's word-spacing on tightly-kerned text
+
+Extracting the two-column crops initially reproduced text like
+`agriculturalresources(Kongetal.,2015)` -- missing spaces between
+words that plain `pdftotext` renders correctly on the same page
+(`agricultural resources (Kong et al., 2015)`). This is pdfplumber's
+own word-boundary heuristic (`x_tolerance`, default 3pt) being too
+loose for this PDF's character spacing, not a text-layer gap -- the
+characters are all present, pdfplumber just wasn't inserting a space
+between them. Lowering `x_tolerance` to 1.5 for the two-column crop
+extraction (`loader.TWO_COLUMN_X_TOLERANCE`) matches plain pdftotext's
+output.
+
 ## Extraction routing
 
 - **Single-column pages**: `pdftotext -layout`. Position-preserving

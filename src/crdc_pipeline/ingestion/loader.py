@@ -117,13 +117,24 @@ def load_document(pdf_path: str | Path, document_id: str) -> Document:
     )
 
 
+#: pdfplumber's own default x_tolerance (3pt) merges adjacent words with
+#: no visible space into a single run on some tightly-kerned justified
+#: fonts (confirmed on the Hedayati PDF: "agriculturalresources(Kong..."
+#: instead of "agricultural resources (Kong..." -- plain pdftotext gets
+#: this right on the same page, so it's specifically a pdfplumber word-
+#: boundary heuristic issue, not a text-layer problem). A tighter
+#: tolerance fixes it without depending on which pdftotext build (Xpdf
+#: vs poppler) happens to be installed.
+TWO_COLUMN_X_TOLERANCE = 1.5
+
+
 def _extract_two_column_text(plumber_page: pdfplumber.page.Page, gutter_x: float) -> str:
     """Extract a two-column page in correct reading order via cropping."""
     width, height = plumber_page.width, plumber_page.height
     left = plumber_page.crop((0, 0, gutter_x, height))
     right = plumber_page.crop((gutter_x, 0, width, height))
-    left_text = (left.extract_text() or "").strip()
-    right_text = (right.extract_text() or "").strip()
+    left_text = (left.extract_text(x_tolerance=TWO_COLUMN_X_TOLERANCE) or "").strip()
+    right_text = (right.extract_text(x_tolerance=TWO_COLUMN_X_TOLERANCE) or "").strip()
     return f"{left_text}\n\n{right_text}"
 
 
