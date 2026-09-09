@@ -25,10 +25,19 @@ from __future__ import annotations
 
 import json
 import os
+import time
 
 from google import genai
-from google.genai import types
+from google.genai import errors, types
 from pydantic import BaseModel, Field
+
+#: The free-tier flash model returns 503 ("high demand") often enough
+#: in practice that a single unretried call isn't reliable -- observed
+#: repeatedly during development, on requests that then succeeded
+#: immediately on the next attempt. The SDK's own built-in retry
+#: doesn't cover this consistently, hence a small explicit retry here.
+MAX_RETRIES = 4
+RETRY_BACKOFF_SECONDS = 5
 
 #: Pro-tier Gemini models moved behind billing in 2026; the team's
 #: current access is free-tier, which covers Flash models only.
@@ -124,6 +133,23 @@ class MetadataExtractionResult(BaseModel):
     resolved_model: str
 
 
+def _generate_with_retry(client: genai.Client, model: str, prompt: str):
+    config = types.GenerateContentConfig(
+        response_mime_type="application/json",
+        response_schema=DocumentMetadata,
+        temperature=0,
+    )
+    last_error: errors.ServerError | None = None
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            return client.models.generate_content(model=model, contents=prompt, config=config)
+        except errors.ServerError as exc:
+            last_error = exc
+            if attempt < MAX_RETRIES:
+                time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+    raise last_error
+
+
 def extract_metadata(
     pages: list[str],
     client: genai.Client,
@@ -135,15 +161,7 @@ def extract_metadata(
     `[p.text for p in document.pages]` from crdc_pipeline.ingestion).
     """
     prompt = build_prompt(pages)
-    response = client.models.generate_content(
-        model=model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=DocumentMetadata,
-            temperature=0,
-        ),
-    )
+    response = _generate_with_retry(client, model, prompt)
     if response.parsed is not None:
         metadata = response.parsed
     else:
