@@ -56,10 +56,12 @@ class LayoutDetection:
 def detect_columns(
     words: list[Word],
     page_width: float,
+    page_height: float,
     min_lines: int = 4,
     respect_threshold: float = 0.6,
     margin_ratio: float = 0.30,
     min_gap_ratio: float = 0.02,
+    vertical_margin_ratio: float = 0.08,
     y_tolerance: float = 3.0,
 ) -> LayoutDetection:
     """Classify a page as single- or two-column from its word positions.
@@ -67,6 +69,10 @@ def detect_columns(
     Args:
         words: words on the page with bounding boxes.
         page_width: page width in the same units as the word coordinates.
+        page_height: page height, same units. Used only to exclude
+            running headers/footers from the gutter search (see
+            vertical_margin_ratio) -- column classification itself is
+            about horizontal position and doesn't otherwise depend on it.
         min_lines: pages with fewer text lines than this (e.g. a mostly
             blank cover page) default to single-column rather than
             risk a confident call on too little evidence.
@@ -83,6 +89,16 @@ def detect_columns(
             real two-column journal gutter can be narrow -- as little as
             ~2-3% of page width -- so this needs to be set low enough to
             catch that, not just the wide gaps of a magazine-style layout.
+        vertical_margin_ratio: fraction of page height excluded from the
+            gutter search at the top and bottom. Running headers/footers
+            (e.g. "Author et al. / Journal Name") routinely span the full
+            page width even on an otherwise two-column page, and PDFs
+            with unreliable space encoding can extract such a header as
+            one word with no internal gaps -- a single word like that
+            crossing the true gutter is enough to hide it from a search
+            over the whole page, so headers/footers are excluded from
+            the *search* (though not from the per-line validation below,
+            where one outlier line barely dents the confidence score).
         y_tolerance: vertical distance within which words are grouped
             into the same line.
 
@@ -95,7 +111,13 @@ def detect_columns(
     if len(lines) < min_lines:
         return LayoutDetection(1, None, 1.0, len(lines), len(lines))
 
-    gutter = _find_candidate_gutter(words, page_width, margin_ratio, min_gap_ratio)
+    body_words = [
+        w
+        for w in words
+        if w.top >= page_height * vertical_margin_ratio
+        and w.bottom <= page_height * (1 - vertical_margin_ratio)
+    ]
+    gutter = _find_candidate_gutter(body_words, page_width, margin_ratio, min_gap_ratio)
     if gutter is None:
         return LayoutDetection(1, None, 1.0, len(lines), len(lines))
 

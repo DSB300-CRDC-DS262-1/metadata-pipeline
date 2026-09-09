@@ -6,6 +6,7 @@ pin down the detection logic in isolation.
 from crdc_pipeline.ingestion.layout import Word, detect_columns
 
 PAGE_WIDTH = 600.0
+PAGE_HEIGHT = 800.0
 
 
 def _line(text_words: list[str], top: float, x0: float, word_width: float = 40.0) -> list[Word]:
@@ -23,7 +24,7 @@ def test_single_column_full_width_text() -> None:
     for row in range(10):
         top = row * 15.0
         words += _line(["word"] * 10, top, x0=50)  # spans ~50 to ~495, no consistent gap
-    result = detect_columns(words, PAGE_WIDTH)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
     assert result.column_count == 1
 
 
@@ -33,7 +34,7 @@ def test_two_column_layout_detected() -> None:
         top = row * 15.0
         words += _line(["left"] * 4, top, x0=50)  # ~50 to ~245
         words += _line(["right"] * 4, top, x0=350)  # ~350 to ~545
-    result = detect_columns(words, PAGE_WIDTH)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
     assert result.column_count == 2
     assert result.gutter_x is not None
     assert 245 < result.gutter_x < 350
@@ -49,7 +50,7 @@ def test_full_width_heading_above_two_column_body_still_detects_two_columns() ->
         top = row * 15.0
         words += _line(["left"] * 4, top, x0=50)
         words += _line(["right"] * 4, top, x0=350)
-    result = detect_columns(words, PAGE_WIDTH)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
     assert result.column_count == 2
 
 
@@ -64,17 +65,35 @@ def test_mostly_full_width_with_incidental_gap_is_single_column() -> None:
         else:
             words += _line(["left"] * 3, top, x0=50)
             words += _line(["right"] * 3, top, x0=350)
-    result = detect_columns(words, PAGE_WIDTH)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
     assert result.column_count == 1
 
 
 def test_sparse_page_defaults_to_single_column() -> None:
     words = _line(["Figure", "1"], top=0, x0=50)
-    result = detect_columns(words, PAGE_WIDTH)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
     assert result.column_count == 1
 
 
 def test_empty_page_defaults_to_single_column() -> None:
-    result = detect_columns([], PAGE_WIDTH)
+    result = detect_columns([], PAGE_WIDTH, PAGE_HEIGHT)
     assert result.column_count == 1
     assert result.line_count == 0
+
+
+def test_full_width_running_header_does_not_hide_a_narrow_gutter() -> None:
+    """A running header ("Author et al. / Journal Name") spanning the
+    full page width, as a single merged word with no internal gap, must
+    not stop a real (narrow) gutter below it from being detected -- this
+    is exactly what happened on the real Hedayati two-column PDF."""
+    words: list[Word] = []
+    # Running header: one word (unreliable space encoding merges it),
+    # crossing straight over where the gutter will be.
+    words.append(Word("RunningHeaderCrossingTheGutter", 200, 400, top=5, bottom=13))
+    for row in range(1, 11):
+        top = row * 15.0
+        words += _line(["left"] * 6, top, x0=50)  # ~50 to ~325 (6 words)
+        words += _line(["right"] * 6, top, x0=345)  # ~345 to ~620, clamped by page width below
+
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT, min_gap_ratio=0.02)
+    assert result.column_count == 2

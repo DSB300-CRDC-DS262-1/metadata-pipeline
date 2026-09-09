@@ -70,7 +70,9 @@ def load_document(pdf_path: str | Path, document_id: str) -> Document:
                 Word(w["text"], w["x0"], w["x1"], w["top"], w["bottom"])
                 for w in plumber_page.extract_words()
             ]
-            detection = detect_columns(words, float(plumber_page.width))
+            detection = detect_columns(
+                words, float(plumber_page.width), float(plumber_page.height)
+            )
             column_counts.append(detection.column_count)
 
             if detection.column_count == 2 and detection.gutter_x is not None:
