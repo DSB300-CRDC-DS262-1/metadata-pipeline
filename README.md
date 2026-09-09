@@ -2,6 +2,8 @@
 ## Cotton Research & Development Corporation (CRDC): AI Metadata Pipeline (text-based extraction)
 This repository is for the development of a python application that can extract structured, reliable quantitative findings from unstructured research documents.
 
+![Tests](https://github.com/DSB300-CRDC-DS262-1/metadata-pipeline/actions/workflows/tests.yml/badge.svg)
+
 Extracts metadata and prose-reported quantitative statistics from CRDC
 research PDFs into structured JSON (`documents` / `contexts` /
 `statistics`, per `data/schema_worked_examples.json`). Text-layer
@@ -40,6 +42,11 @@ pytest
 `tests/test_layout.py` and `tests/test_loader.py` run against synthetic
 PDFs and need nothing else. `tests/test_sample_documents.py` checks the
 real CRDC sample PDFs once they're added -- see below.
+
+Runs automatically on every PR into `main` (`.github/workflows/tests.yml`).
+The real-sample-PDF and live-Gemini tests skip in CI the same way they
+skip locally without the PDFs/API key -- CI stays deterministic and
+free rather than burning API quota on every push.
 
 ## Adding the sample PDFs
 
