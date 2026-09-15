@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+output/**/*.json
+.env
+
+# Copyrighted third-party source PDFs -- not ours to redistribute.
+# See data/document_manifest.json for how to fetch/place them locally.
+data/raw_pdfs/*.pdf
