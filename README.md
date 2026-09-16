@@ -94,8 +94,8 @@ data/
   schema_worked_examples.json       target output schema (incl. reference
                                      metadata for comparison)
 docs/
-  weaknesses_and_fixes.md    known extraction problems and planned fixes
-  architecture.md            design notes for the ingestion module
+  weaknesses_and_fixes.md     known extraction problems and planned fixes
+  architecture.md             design notes for the ingestion module
 output/
   metadata/                  per-document metadata extraction results
 ```

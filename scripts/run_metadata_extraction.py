@@ -97,9 +97,14 @@ def main() -> None:
         print(compare_field("title", metadata.title, ref.get("title")))
         print(compare_field("authors", metadata.authors, ref.get("authors")))
         print(compare_field("organisation", metadata.organisation, ref.get("organisation")))
+        # No reference values yet for these newer fields; printed for inspection only.
+        print(compare_field("publisher", metadata.publisher, None))
+        print(compare_field("funder", metadata.funder, None))
         print(
             compare_field("publication_date", metadata.publication_date, ref.get("publication_date"))
         )
+        print(compare_field("submission_date", metadata.submission_date, None))
+        print(compare_field("acceptance_date", metadata.acceptance_date, None))
         print(compare_field("source_url", metadata.source_url, ref.get("source_url")))
         if metadata.supersedes_note:
             print(f"    supersedes_note: {metadata.supersedes_note}")
