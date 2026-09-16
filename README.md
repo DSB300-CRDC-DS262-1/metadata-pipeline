@@ -96,14 +96,10 @@ data/
 docs/
   weaknesses_and_fixes.md     known extraction problems and planned fixes
   architecture.md             design notes for the ingestion module
-  metadata_extraction.md      design notes for the metadata module, incl.
-                               schema decisions from the 9 Sept 2026 meeting
 output/
   metadata/                  per-document metadata extraction results
 ```
 
 See `docs/architecture.md` for why column detection works the way it
-does, `docs/weaknesses_and_fixes.md` for the extraction problems this
-and later modules are designed around, and
-`docs/metadata_extraction.md` for the organisation/publisher/funder
-split, multiple-date fields, and the web-interface-vs-API finding.
+does, and `docs/weaknesses_and_fixes.md` for the extraction problems
+this and later modules are designed around.

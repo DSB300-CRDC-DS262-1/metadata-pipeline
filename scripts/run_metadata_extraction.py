@@ -97,10 +97,7 @@ def main() -> None:
         print(compare_field("title", metadata.title, ref.get("title")))
         print(compare_field("authors", metadata.authors, ref.get("authors")))
         print(compare_field("organisation", metadata.organisation, ref.get("organisation")))
-        # publisher/funder/submission_date/acceptance_date are new fields
-        # (per the 9 Sept 2026 meeting with Burton) that predate
-        # schema_worked_examples.json's reference entries, so there's
-        # nothing to compare against yet -- printed for inspection only.
+        # No reference values yet for these newer fields; printed for inspection only.
         print(compare_field("publisher", metadata.publisher, None))
         print(compare_field("funder", metadata.funder, None))
         print(

@@ -1,31 +1,14 @@
 """Document metadata extraction via a frontier model (Gemini).
 
 Pulls bibliographic metadata (title, authors, organisation, publisher,
-funder, publication/submission/acceptance dates, source URL, and any
-explicit self-described revision relationship) from a document's own
-ingested text. This is the "easy" half of the CRDC AI Metadata
-Pipeline's extraction stage, run first, on a frontier model, before
-the statistics extraction (value_status / record_type / context) that
-the ground truth and weaknesses_and_fixes.md are actually scoped
-around.
+funder, dates, source URL, revision notes) from a document's own
+ingested text. Runs before the statistics extraction covered by
+weaknesses_and_fixes.md.
 
-Schema decisions below (organisation = author affiliation specifically,
-separate publisher/funder fields, multiple date fields, source_url kept
-even when empty) were confirmed with Burton in the 9 Sept 2026 project
-meeting -- see docs/metadata_extraction.md for the full reasoning and
-the web-interface-vs-API finding he asked to have documented.
-
-Deliberately does NOT ask the model for:
-- page_count: already known exactly from ingestion (Document.page_count),
-  asking an LLM to recount it would just add a chance to get a fact right
-  for the wrong reason.
-- supersedes_document_id: linking one document's ID to another's needs
-  corpus-wide reconciliation (matching titles/organisations across
-  documents), not something a single document's own text can answer.
-  This module extracts `supersedes_note` instead, whether a document
-  explicitly describes itself as updating an earlier report, in its
-  own words, and leaves matching that note to a specific other
-  document_id as a separate, not-yet-built reconciliation step.
+Does not ask the model for page_count (already known from ingestion)
+or supersedes_document_id (needs cross-document reconciliation, not
+answerable from one document's text); supersedes_note captures the
+document's own self-description instead.
 """
 
 from __future__ import annotations
@@ -38,32 +21,16 @@ from google import genai
 from google.genai import errors, types
 from pydantic import BaseModel, Field
 
-#: The free-tier flash model returns 503 ("high demand") often enough
-#: in practice that a single unretried call isn't reliable -- observed
-#: repeatedly during development, on requests that then succeeded
-#: immediately on the next attempt. The SDK's own built-in retry
-#: doesn't cover this consistently, hence a small explicit retry here.
+#: Free tier returns occasional 503s under load; retry with backoff.
 MAX_RETRIES = 4
 RETRY_BACKOFF_SECONDS = 5
 
-#: Pro-tier Gemini models moved behind billing in 2026; the team's
-#: current access is free-tier, which covers Flash models only.
-#:
-#: Pinned rather than using the "gemini-flash-latest" alias: the alias
-#: returned repeated 503s (server overloaded) when this was tested,
-#: while this pinned id served the same request cleanly -- an alias
-#: pointing at whatever is newest isn't automatically the reliable
-#: choice. "gemini-2.5-flash" was tried first and rejected outright
-#: (404: "no longer available to new users... use models/gemini-3.6-flash"),
-#: which is exactly the failure mode to expect again eventually -- when
-#: this one starts 404ing, the error message itself names the
-#: replacement, so re-pin from that rather than guessing.
+#: Pinned to a specific free-tier model rather than an alias, which was
+#: unstable. Re-pin from whatever a future 404 recommends.
 DEFAULT_MODEL = "gemini-3.6-flash"
 
-#: How many leading/trailing pages to give the model. Title, authors,
-#: and publication info are almost always on page 1; DOIs and source
-#: URLs sometimes only appear in a running header/footer or a
-#: references/citation block near the end.
+#: Title/author/date info is almost always on page 1; URLs sometimes
+#: only appear near the end.
 LEADING_PAGES = 2
 TRAILING_PAGES = 1
 
@@ -188,12 +155,7 @@ def build_prompt(pages: list[str]) -> str:
 
 class MetadataExtractionResult(BaseModel):
     metadata: DocumentMetadata
-    #: The specific model version that actually served the request, not
-    #: just the (possibly "-latest") alias that was requested -- worth
-    #: keeping alongside results run with a moving alias, so a later
-    #: comparison isn't silently mixing runs from different model
-    #: versions without anyone noticing.
-    resolved_model: str
+    resolved_model: str  # actual model version that served the request
 
 
 def _generate_with_retry(client: genai.Client, model: str, prompt: str):

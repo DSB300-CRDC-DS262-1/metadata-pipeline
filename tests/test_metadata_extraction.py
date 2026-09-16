@@ -14,9 +14,6 @@ from crdc_pipeline.extraction.metadata import DocumentMetadata, build_context_te
 
 
 def test_document_metadata_has_separate_organisation_publisher_funder_fields() -> None:
-    # Per the 9 Sept 2026 meeting with Burton: organisation is author
-    # affiliation only, publisher and funder are their own fields, not
-    # folded into organisation.
     metadata = DocumentMetadata(
         title="A Title",
         organisation="A University",
@@ -56,9 +53,6 @@ def test_prompt_includes_rules_and_selected_text() -> None:
     assert "Title Page Text" in prompt
     assert "return null" in prompt
     assert "Do not fabricate a source_url" in prompt
-    # Meeting with Burton, 9 Sept 2026: organisation/publisher/funder must
-    # be distinguished explicitly, and publication_date should win over
-    # submission/acceptance dates when a document states more than one.
     assert "organisation: the author's own affiliated institution" in prompt
     assert "publisher:" in prompt
     assert "funder:" in prompt
