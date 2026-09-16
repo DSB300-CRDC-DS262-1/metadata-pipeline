@@ -10,7 +10,29 @@ import os
 
 import pytest
 
-from crdc_pipeline.extraction.metadata import build_context_text, build_prompt
+from crdc_pipeline.extraction.metadata import DocumentMetadata, build_context_text, build_prompt
+
+
+def test_document_metadata_has_separate_organisation_publisher_funder_fields() -> None:
+    # Per the 9 Sept 2026 meeting with Burton: organisation is author
+    # affiliation only, publisher and funder are their own fields, not
+    # folded into organisation.
+    metadata = DocumentMetadata(
+        title="A Title",
+        organisation="A University",
+        publisher="A Publisher",
+        funder="A Funder",
+    )
+    assert metadata.organisation == "A University"
+    assert metadata.publisher == "A Publisher"
+    assert metadata.funder == "A Funder"
+
+
+def test_document_metadata_has_separate_date_fields_defaulting_to_none() -> None:
+    metadata = DocumentMetadata(title="A Title", publication_date="2019")
+    assert metadata.publication_date == "2019"
+    assert metadata.submission_date is None
+    assert metadata.acceptance_date is None
 
 
 def test_short_document_uses_all_pages() -> None:
@@ -34,6 +56,13 @@ def test_prompt_includes_rules_and_selected_text() -> None:
     assert "Title Page Text" in prompt
     assert "return null" in prompt
     assert "Do not fabricate a source_url" in prompt
+    # Meeting with Burton, 9 Sept 2026: organisation/publisher/funder must
+    # be distinguished explicitly, and publication_date should win over
+    # submission/acceptance dates when a document states more than one.
+    assert "organisation: the author's own affiliated institution" in prompt
+    assert "publisher:" in prompt
+    assert "funder:" in prompt
+    assert "publication_date for whichever one represents" in prompt
 
 
 @pytest.mark.skipif(
