@@ -102,11 +102,14 @@ class OllamaBackend:
         self.label = f"ollama_{model}"
 
     def generate(self, prompt: str, schema: type[BaseModel]) -> GenerationResult:
+        json_schema = schema.model_json_schema()
+        # With every field optional, an empty object is a valid answer.
+        json_schema["required"] = list(json_schema["properties"])
         payload = {
             "model": self.model,
             "messages": [{"role": "user", "content": prompt}],
             "stream": False,
-            "format": schema.model_json_schema(),
+            "format": json_schema,
             "options": {"temperature": 0, "num_ctx": self.num_ctx},
         }
         request = urllib.request.Request(

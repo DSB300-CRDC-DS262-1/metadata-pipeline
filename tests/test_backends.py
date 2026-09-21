@@ -62,7 +62,9 @@ def test_ollama_request_sets_schema_and_context_window(monkeypatch) -> None:
     assert captured["url"].endswith("/api/chat")
     assert payload["stream"] is False
     assert payload["options"] == {"temperature": 0, "num_ctx": 8192}
-    assert payload["format"]["properties"].keys() == DocumentMetadata.model_json_schema()["properties"].keys()
+    properties = DocumentMetadata.model_json_schema()["properties"]
+    assert payload["format"]["properties"].keys() == properties.keys()
+    assert payload["format"]["required"] == list(properties)
 
 
 def test_ollama_backend_rejects_truncated_prompt(monkeypatch) -> None:

@@ -17,6 +17,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from crdc_pipeline.extraction import extract_metadata, make_backend  # noqa: E402
+from crdc_pipeline.extraction.scoring import strict_equal  # noqa: E402
 from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
@@ -33,14 +34,6 @@ def load_manifest() -> list[dict]:
 def load_reference_metadata() -> dict[str, dict]:
     schema = json.loads((DATA_DIR / "schema_worked_examples.json").read_text(encoding="utf-8"))
     return {d["document_id"]: d for d in schema["documents"]}
-
-
-def loosely_equal(a, b) -> bool:
-    if isinstance(a, list) and isinstance(b, list):
-        return {str(x).strip().lower() for x in a} == {str(x).strip().lower() for x in b}
-    if a is None or b is None:
-        return a == b
-    return str(a).strip().lower() == str(b).strip().lower()
 
 
 def slug(text: str) -> str:
@@ -101,7 +94,7 @@ def main() -> None:
             extracted, expected = getattr(metadata, field), ref.get(field)
             if expected is None and field not in ref:
                 continue
-            ok = loosely_equal(extracted, expected)
+            ok = strict_equal(extracted, expected)
             matched += ok
             compared += 1
             print(f"  {'OK' if ok else '??'} {field:<17} {extracted!s:<45} ref: {expected!s}")
