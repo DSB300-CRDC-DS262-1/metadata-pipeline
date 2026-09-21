@@ -17,11 +17,15 @@ from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "metadata"
 CHECK_PATH = PROJECT_ROOT / "output" / "verification" / "metadata_checklist.md"
-FIELDS = ["title", "authors", "organisation", "publication_date", "source_url"]
+FIELDS = ["title", "authors", "organisation", "publisher", "funder", "publication_date", "submission_date", "acceptance_date", "source_url"]
 
 EVIDENCE_PATTERNS = {
     "title": None,
     "authors": None,
+    "publisher": r"elsevier|published by|publisher|©|copyright|voconiq",
+    "funder": r"funded|funding|financial|commissioned|undertaken for|©",
+    "submission_date": r"received|submitted",
+    "acceptance_date": r"accepted",
     "organisation": r"universit|department of|institute|school of|agHealth|voconiq|commissioned|prepared|funded|published by|elsevier|corporation",
     "publication_date": r"received|accepted|available online|published|issued|\b(19|20)\d\d\b",
     "source_url": r"https?://|www\.|doi",
@@ -59,6 +63,7 @@ def main() -> None:
         document = load_document(DATA_DIR / "raw_pdfs" / filename, doc_id)
         head = [(p.page_number, p.text) for p in document.pages[:3]]
         tail = [(p.page_number, p.text) for p in document.pages[-1:]]
+        everything = [(p.page_number, p.text) for p in document.pages]
         for field in FIELDS:
             if field not in reference[doc_id]:
                 continue
@@ -71,7 +76,8 @@ def main() -> None:
                     f"- [ ] reference: `{ref}`"]
             out += [f"- [ ] {name}: `{value}`" for name, value in values.items()]
             out += ["", "PDF text:", "```"]
-            out += evidence(field, head if field != "source_url" else head + tail) or ["(no matching text found)"]
+            pool = {"source_url": head + tail, "funder": everything}.get(field, head)
+            out += evidence(field, pool) or ["(no matching text found)"]
             out += ["```", ""]
     CHECK_PATH.parent.mkdir(parents=True, exist_ok=True)
     CHECK_PATH.write_text("\n".join(out), encoding="utf-8")

@@ -12,7 +12,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from crdc_pipeline.extraction.scoring import field_matches  # noqa: E402
 
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "metadata"
-FIELDS = ["title", "authors", "organisation", "publication_date", "source_url"]
+FIELDS = ["title", "authors", "organisation", "publisher", "funder", "publication_date", "submission_date", "acceptance_date", "source_url"]
 
 
 def main() -> None:

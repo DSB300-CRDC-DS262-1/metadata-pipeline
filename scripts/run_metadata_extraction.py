@@ -23,7 +23,7 @@ from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "metadata"
 
-COMPARED_FIELDS = ["title", "authors", "organisation", "publication_date", "source_url"]
+COMPARED_FIELDS = ["title", "authors", "organisation", "publisher", "funder", "publication_date", "submission_date", "acceptance_date", "source_url"]
 
 
 def load_manifest() -> list[dict]:
@@ -98,8 +98,6 @@ def main() -> None:
             matched += ok
             compared += 1
             print(f"  {'OK' if ok else '??'} {field:<17} {extracted!s:<45} ref: {expected!s}")
-        for field in ["publisher", "funder", "submission_date", "acceptance_date"]:
-            print(f"     {field:<17} {getattr(metadata, field)!s}")
 
     print(
         f"\n{backend.label}: {matched}/{compared} reference fields matched, "
