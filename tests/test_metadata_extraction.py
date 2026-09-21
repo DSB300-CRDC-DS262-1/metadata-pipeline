@@ -66,7 +66,7 @@ def test_prompt_includes_rules_and_selected_text() -> None:
 def test_live_extraction_on_aghealth2019() -> None:
     from pathlib import Path
 
-    from crdc_pipeline.extraction.metadata import extract_metadata, make_client
+    from crdc_pipeline.extraction import extract_metadata, make_backend
     from crdc_pipeline.ingestion.loader import load_document
 
     pdf_path = Path(__file__).resolve().parent.parent / "data" / "raw_pdfs" / "aghealth2019.pdf"
@@ -76,7 +76,7 @@ def test_live_extraction_on_aghealth2019() -> None:
     document = load_document(pdf_path, document_id="doc_aghealth2019")
     pages = [p.text for p in document.pages]
 
-    result = extract_metadata(pages, make_client())
+    result = extract_metadata(pages, make_backend("gemini"))
     metadata = result.metadata
 
     assert metadata.title is not None

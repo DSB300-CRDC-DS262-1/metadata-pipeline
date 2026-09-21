@@ -1,4 +1,4 @@
-"""Document metadata extraction via a frontier model (Gemini).
+"""Document metadata extraction via a pluggable model backend.
 
 Pulls bibliographic metadata (title, authors, organisation, publisher,
 funder, dates, source URL, revision notes) from a document's own
@@ -13,21 +13,9 @@ document's own self-description instead.
 
 from __future__ import annotations
 
-import json
-import os
-import time
-
-from google import genai
-from google.genai import errors, types
 from pydantic import BaseModel, Field
 
-#: Free tier returns occasional 503s under load; retry with backoff.
-MAX_RETRIES = 4
-RETRY_BACKOFF_SECONDS = 5
-
-#: Pinned to a specific free-tier model rather than an alias, which was
-#: unstable. Re-pin from whatever a future 404 recommends.
-DEFAULT_MODEL = "gemini-3.6-flash"
+from .backends import Backend
 
 #: Title/author/date info is almost always on page 1; URLs sometimes
 #: only appear near the end.
@@ -156,54 +144,19 @@ def build_prompt(pages: list[str]) -> str:
 
 class MetadataExtractionResult(BaseModel):
     metadata: DocumentMetadata
-    resolved_model: str  # actual model version that served the request
+    resolved_model: str
+    seconds: float
+    prompt_tokens: int | None = None
+    output_tokens: int | None = None
 
 
-def _generate_with_retry(client: genai.Client, model: str, prompt: str):
-    config = types.GenerateContentConfig(
-        response_mime_type="application/json",
-        response_schema=DocumentMetadata,
-        temperature=0,
+def extract_metadata(pages: list[str], backend: Backend) -> MetadataExtractionResult:
+    """Extract DocumentMetadata from a document's per-page text."""
+    result = backend.generate(build_prompt(pages), DocumentMetadata)
+    return MetadataExtractionResult(
+        metadata=result.parsed,
+        resolved_model=result.model,
+        seconds=result.seconds,
+        prompt_tokens=result.prompt_tokens,
+        output_tokens=result.output_tokens,
     )
-    last_error: errors.ServerError | None = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            return client.models.generate_content(model=model, contents=prompt, config=config)
-        except errors.ServerError as exc:
-            last_error = exc
-            if attempt < MAX_RETRIES:
-                time.sleep(RETRY_BACKOFF_SECONDS * attempt)
-    raise last_error
-
-
-def extract_metadata(
-    pages: list[str],
-    client: genai.Client,
-    model: str = DEFAULT_MODEL,
-) -> MetadataExtractionResult:
-    """Extract DocumentMetadata from a document's page texts.
-
-    `pages` is a document's full list of per-page text (e.g.
-    `[p.text for p in document.pages]` from crdc_pipeline.ingestion).
-    """
-    prompt = build_prompt(pages)
-    response = _generate_with_retry(client, model, prompt)
-    if response.parsed is not None:
-        metadata = response.parsed
-    else:
-        # Fallback if the SDK didn't auto-parse for some reason --
-        # validate the raw JSON text against the same schema ourselves.
-        metadata = DocumentMetadata.model_validate(json.loads(response.text))
-    resolved_model = getattr(response, "model_version", None) or model
-    return MetadataExtractionResult(metadata=metadata, resolved_model=resolved_model)
-
-
-def make_client() -> genai.Client:
-    """Build a Gemini client, failing with a clear message if no API
-    key is configured rather than a raw SDK error."""
-    if not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
-        raise RuntimeError(
-            "No GEMINI_API_KEY (or GOOGLE_API_KEY) found in the environment. "
-            "Copy .env.example to .env and fill in your key, or export it directly."
-        )
-    return genai.Client()
