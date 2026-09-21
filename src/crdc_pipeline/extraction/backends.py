@@ -12,18 +12,14 @@ from typing import Protocol
 
 from pydantic import BaseModel
 
-#: Free tier returns occasional 503s under load; retry with backoff.
 MAX_RETRIES = 4
 RETRY_BACKOFF_SECONDS = 5
 
-#: Pinned to a specific free-tier model rather than an alias, which was
-#: unstable. Re-pin from whatever a future 404 recommends.
 DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
 
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
 
-#: Ollama silently truncates prompts beyond num_ctx (default 4096), which
-#: would drop most of a document without any error.
+# Ollama silently truncates prompts beyond num_ctx (default 4096).
 DEFAULT_NUM_CTX = 16384
 
 

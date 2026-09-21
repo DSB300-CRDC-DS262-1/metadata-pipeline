@@ -1,15 +1,4 @@
-"""Ingestion sanity checks against the real CRDC sample PDFs.
-
-Each entry is skipped individually until its filename is filled in at
-data/document_manifest.json and the file exists under data/raw_pdfs/ --
-this file is safe to run at any point, before or after the PDFs arrive.
-
-This only checks page count and single-vs-two-column layout against
-the values already recorded in ground_truth_all_documents.json. It is
-not the recall measurement itself (that needs the extraction stage,
-built in a later task) -- it just confirms ingestion sees each document
-the way it's expected to before anything downstream depends on that.
-"""
+"""Layout and page-count checks on the real sample PDFs (skipped if absent)."""
 
 import json
 from pathlib import Path
@@ -48,9 +37,7 @@ def test_sample_document_layout_matches_ground_truth(entry: dict) -> None:
 
     expected_columns = _expected_columns(entry["expected_layout"])
     majority_columns = [p.column_count for p in doc.pages].count(expected_columns)
-    # Not every page of a "two column" paper is two-column (abstract,
-    # title, references pages are typically full-width), so require a
-    # majority rather than every page matching.
+    # Abstract and reference pages are often full-width, so require a majority.
     assert majority_columns >= doc.page_count / 2, (
         f"expected most pages to be {expected_columns}-column for "
         f"{entry['document_id']}, got column counts: "

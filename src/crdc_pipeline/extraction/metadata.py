@@ -1,15 +1,4 @@
-"""Document metadata extraction via a pluggable model backend.
-
-Pulls bibliographic metadata (title, authors, organisation, publisher,
-funder, dates, source URL, revision notes) from a document's own
-ingested text. Runs before the statistics extraction covered by
-weaknesses_and_fixes.md.
-
-Does not ask the model for page_count (already known from ingestion)
-or supersedes_document_id (needs cross-document reconciliation, not
-answerable from one document's text); supersedes_note captures the
-document's own self-description instead.
-"""
+"""Document metadata schema, prompt, and extraction."""
 
 from __future__ import annotations
 
@@ -17,8 +6,6 @@ from pydantic import BaseModel, Field
 
 from .backends import Backend
 
-#: Title/author/date info is almost always on page 1; URLs sometimes
-#: only appear near the end.
 LEADING_PAGES = 2
 TRAILING_PAGES = 1
 
@@ -125,12 +112,7 @@ Extract the metadata now."""
 
 
 def build_context_text(pages: list[str]) -> str:
-    """Select and join the pages worth giving the model.
-
-    Exposed separately from extract_metadata so the page-selection
-    logic (which pages, how they're joined) can be unit-tested without
-    a live API call.
-    """
+    """Join the first two and last pages, which carry the metadata."""
     if len(pages) <= LEADING_PAGES + TRAILING_PAGES:
         selected = pages
     else:
@@ -151,7 +133,6 @@ class MetadataExtractionResult(BaseModel):
 
 
 def extract_metadata(pages: list[str], backend: Backend) -> MetadataExtractionResult:
-    """Extract DocumentMetadata from a document's per-page text."""
     result = backend.generate(build_prompt(pages), DocumentMetadata)
     return MetadataExtractionResult(
         metadata=result.parsed,

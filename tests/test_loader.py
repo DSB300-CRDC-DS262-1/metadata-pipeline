@@ -1,10 +1,4 @@
-"""Integration tests for load_document, run against synthetic PDFs.
-
-Real integration coverage (does this actually work on the Hedayati
-two-column journal layout, does it correctly flag the VoconiQ pages
-with missing glyphs) still needs the real sample PDFs under
-data/raw_pdfs/ -- see tests/test_sample_documents.py.
-"""
+"""Loader tests on synthetic PDFs."""
 
 from pathlib import Path
 
@@ -30,9 +24,7 @@ def test_two_column_document_reconstructs_reading_order(two_column_pdf: Path) ->
     assert page.column_count == 2
     assert page.extraction_method == "pdfplumber_column_crop"
 
-    # The whole point of column-aware extraction: every LEFT line must
-    # come before every RIGHT line, even though they were interleaved
-    # row-by-row in the PDF's content stream.
+    # All LEFT lines must precede all RIGHT lines.
     last_left = page.text.rindex("LEFT-10")
     first_right = page.text.index("RIGHT-1 ")
     assert last_left < first_right

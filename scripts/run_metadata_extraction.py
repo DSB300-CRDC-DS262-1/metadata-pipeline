@@ -1,12 +1,6 @@
-"""Run metadata extraction across the sample documents and compare against
-the reference metadata in data/schema_worked_examples.json.
+"""Run metadata extraction on the sample documents and compare with the reference.
 
-Usage:
-    python scripts/run_metadata_extraction.py
-    python scripts/run_metadata_extraction.py --backend ollama --model gemma3:12b
-
-Gemini needs GEMINI_API_KEY (environment or .env). Ollama needs a running
-local server with the model already pulled.
+Usage: python scripts/run_metadata_extraction.py [--backend ollama --model gemma3:12b]
 """
 
 from __future__ import annotations

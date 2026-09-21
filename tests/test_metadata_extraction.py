@@ -1,10 +1,4 @@
-"""Tests for metadata extraction.
-
-Page-selection and prompt-building are pure functions, tested directly.
-The actual Gemini call is only tested end-to-end when GEMINI_API_KEY is
-available -- these tests are not run by default and cost real API
-calls when they do run.
-"""
+"""Prompt, schema, and page-selection tests; the live Gemini test needs an API key."""
 
 import os
 
@@ -38,9 +32,8 @@ def test_short_document_uses_all_pages() -> None:
 
 
 def test_long_document_uses_leading_and_trailing_pages_only() -> None:
-    pages = [f"page {i}" for i in range(1, 11)]  # 10 pages
+    pages = [f"page {i}" for i in range(1, 11)]
     result = build_context_text(pages)
-    # LEADING_PAGES=2, TRAILING_PAGES=1 -> pages 1, 2, and 10
     assert "page 1" in result
     assert "page 2" in result
     assert "page 10" in result

@@ -1,31 +1,4 @@
-"""Column-layout detection for PDF pages.
-
-Detects whether a page uses a single-column or two-column layout from
-the horizontal positions of its extracted words, independent of any
-particular PDF text-extraction tool. This has to run *before* any text
-is handed to a layout-preserving extractor: `pdftotext -layout` reads a
-two-column page left-to-right, line by line, splicing unrelated
-sentences from each column together on the same output line (see
-docs/weaknesses_and_fixes.md, issue 1). Detecting the column count
-first lets the loader route each page through whichever extraction
-method actually produces correct reading order for that page.
-
-Detection is two-pass and per page (not per document), because a
-two-column journal article can still have full-width elements --
-titles, abstracts, figure captions -- on the same page as its
-two-column body (the Hedayati paper is like this: ground truth cites
-its abstract ("page: abstract") separately from the two-column body
-pages).
-
-    1. Find a candidate gutter: the widest empty vertical band away
-       from the page margins, from a histogram of word positions.
-    2. Validate it: check what fraction of actual text *lines* respect
-       that gutter (no word crosses it). A full-width heading creates
-       a misleading gap in the global histogram without any individual
-       line straddling it in a way that breaks the check, but a page
-       that is mostly full-width text with only an incidental gap will
-       fail this per-line check and correctly come back single-column.
-"""
+"""Per-page single- vs two-column layout detection from word positions."""
 
 from __future__ import annotations
 
@@ -34,8 +7,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Word:
-    """A single extracted word and its bounding box, in page coordinates
-    (origin top-left, matching pdfplumber's convention)."""
+    """A word and its bounding box (origin top-left, as in pdfplumber)."""
 
     text: str
     x0: float
@@ -64,53 +36,12 @@ def detect_columns(
     vertical_margin_ratio: float = 0.08,
     y_tolerance: float = 3.0,
 ) -> LayoutDetection:
-    """Classify a page as single- or two-column from its word positions.
-
-    Args:
-        words: words on the page with bounding boxes.
-        page_width: page width in the same units as the word coordinates.
-        page_height: page height, same units. Used only to exclude
-            running headers/footers from the gutter search (see
-            vertical_margin_ratio) -- column classification itself is
-            about horizontal position and doesn't otherwise depend on it.
-        min_lines: pages with fewer text lines than this (e.g. a mostly
-            blank cover page) default to single-column rather than
-            risk a confident call on too little evidence.
-        respect_threshold: minimum fraction of lines that must respect
-            the candidate gutter for the page to be called two-column.
-        margin_ratio: fraction of page width excluded from gutter search
-            at each edge. A real column gutter sits roughly in the middle
-            of the page, not near the edges -- a wide margin_ratio also
-            protects against ragged-right single-column text, where lines
-            of similar length can otherwise leave a misleadingly
-            consistent gap near the right margin.
-        min_gap_ratio: minimum width (as a fraction of page width) an
-            empty band must have to be considered a candidate gutter. A
-            real two-column journal gutter can be narrow -- as little as
-            ~2-3% of page width -- so this needs to be set low enough to
-            catch that, not just the wide gaps of a magazine-style layout.
-        vertical_margin_ratio: fraction of page height excluded from the
-            gutter search at the top and bottom. Running headers/footers
-            (e.g. "Author et al. / Journal Name") routinely span the full
-            page width even on an otherwise two-column page, and PDFs
-            with unreliable space encoding can extract such a header as
-            one word with no internal gaps -- a single word like that
-            crossing the true gutter is enough to hide it from a search
-            over the whole page, so headers/footers are excluded from
-            the *search* (though not from the per-line validation below,
-            where one outlier line barely dents the confidence score).
-        y_tolerance: vertical distance within which words are grouped
-            into the same line.
-
-    Returns:
-        A LayoutDetection with column_count 1 or 2. gutter_x is the
-        detected column boundary (in page x-coordinates) when
-        column_count is 2, else None.
-    """
+    """Classify a page as single- or two-column from its word positions."""
     lines = _group_into_lines(words, y_tolerance)
     if len(lines) < min_lines:
         return LayoutDetection(1, None, 1.0, len(lines), len(lines))
 
+    # Running headers/footers can span the gutter and hide it.
     body_words = [
         w
         for w in words
@@ -136,12 +67,6 @@ def detect_columns(
 
 
 def _group_into_lines(words: list[Word], y_tolerance: float) -> list[list[Word]]:
-    """Group words into text lines by vertical position.
-
-    Sorting by (top, x0) first means a simple forward scan comparing
-    each word only to the running line's first word is enough --
-    there's no need to re-sort or merge clusters afterwards.
-    """
     lines: list[list[Word]] = []
     for w in sorted(words, key=lambda w: (w.top, w.x0)):
         if lines and abs(w.top - lines[-1][0].top) <= y_tolerance:
@@ -158,11 +83,6 @@ def _find_candidate_gutter(
     min_gap_ratio: float,
     bins: int = 400,
 ) -> tuple[float, float] | None:
-    """Find the widest empty vertical strip in the middle of the page.
-
-    Returns (gutter_start, gutter_end) in page coordinates, or None if
-    no strip wide enough to plausibly be a column gutter exists.
-    """
     if not words:
         return None
 
