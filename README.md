@@ -9,9 +9,8 @@ research PDFs into structured JSON (`documents` / `contexts` /
 `statistics`, per `data/schema_worked_examples.json`). Text-layer
 statistics only -- tables and images are a separate team's scope.
 
-Status: ingestion and layout detection built and tested. Metadata
-extraction (title/authors/organisation/date/URL) built, via a frontier
-model (Gemini). Statistics extraction not started yet.
+Status: ingestion and layout detection built and tested. Metadata and
+statistics extraction both built, via a frontier model (Gemini).
 
 ## Setup
 
@@ -69,24 +68,41 @@ Runs all four manifest documents through Gemini, writes each result to
 comparison against the reference metadata in
 `data/schema_worked_examples.json`.
 
+## Running statistics extraction
+
+```bash
+.venv/Scripts/python.exe scripts/run_statistics_extraction.py
+```
+
+Runs all four manifest documents through Gemini, writes each result to
+`output/statistics/<document_id>.json`, and prints a rough recall check
+against `data/ground_truth_all_documents.json`. The recall number matches
+by exact variable-name string, so it under-counts whenever the model
+phrases a statistic differently to the ground truth -- read the printed
+statistics themselves, not just the recall percentage.
+
 ## Layout
 
 ```
 src/crdc_pipeline/
   ingestion/
-    layout.py    column detection (pure function, no PDF library dependency)
-    loader.py    PDF -> Document/Page, routes each page through the
-                 extraction method its detected layout needs
+    layout.py     column detection (pure function, no PDF library dependency)
+    loader.py     PDF -> Document/Page, routes each page through the
+                  extraction method its detected layout needs
   extraction/
-    metadata.py  frontier-model (Gemini) document metadata extraction
+    metadata.py    frontier-model (Gemini) document metadata extraction
+    statistics.py  frontier-model (Gemini) quantitative statistics extraction
 scripts/
-  run_metadata_extraction.py  runs metadata extraction across the manifest
+  run_metadata_extraction.py    runs metadata extraction across the manifest
+  run_statistics_extraction.py  runs statistics extraction across the manifest
 tests/
-  test_layout.py              unit tests, synthetic word positions
-  test_loader.py               integration tests, synthetic PDFs (reportlab)
-  test_sample_documents.py     sanity check against the real sample PDFs
-  test_metadata_extraction.py  prompt/page-selection tests; live API test
-                                skips unless GEMINI_API_KEY is set
+  test_layout.py                unit tests, synthetic word positions
+  test_loader.py                 integration tests, synthetic PDFs (reportlab)
+  test_sample_documents.py       sanity check against the real sample PDFs
+  test_metadata_extraction.py    prompt/page-selection tests; live API test
+                                  skips unless GEMINI_API_KEY is set
+  test_statistics_extraction.py  prompt/page-selection tests; live API test
+                                  skips unless GEMINI_API_KEY is set
 data/
   raw_pdfs/                  the four source PDFs go here (gitignored)
   document_manifest.json     document_id -> filename mapping
@@ -98,6 +114,7 @@ docs/
   architecture.md             design notes for the ingestion module
 output/
   metadata/                  per-document metadata extraction results
+  statistics/                per-document statistics extraction results
 ```
 
 See `docs/architecture.md` for why column detection works the way it
