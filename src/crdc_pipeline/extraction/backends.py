@@ -19,8 +19,11 @@ DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
 
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
 
-# Ollama silently truncates prompts beyond num_ctx (default 4096).
-DEFAULT_NUM_CTX = 16384
+# Ollama silently truncates prompts beyond num_ctx (default 4096). Measured
+# real prompts on the 4 sample documents: metadata stays under 7K tokens,
+# but statistics (whole-document prompts) hit 19K-22K on Hedayati/VoconiQ,
+# plus room for a long JSON response, so 16384 isn't enough.
+DEFAULT_NUM_CTX = 32768
 
 
 @dataclass
