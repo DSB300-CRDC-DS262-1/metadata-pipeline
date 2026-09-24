@@ -14,8 +14,9 @@ from pydantic import BaseModel
 
 MAX_RETRIES = 4
 RETRY_BACKOFF_SECONDS = 5
+RATE_LIMIT_BACKOFF_SECONDS = 20
 
-DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
+DEFAULT_GEMINI_MODEL = "gemini-3.5-flash-lite"
 
 DEFAULT_OLLAMA_HOST = "http://localhost:11434"
 
@@ -70,11 +71,15 @@ class GeminiBackend:
                     model=self.model, contents=prompt, config=config
                 )
                 break
-            except errors.ServerError as exc:
+            except (errors.ServerError, errors.ClientError) as exc:
+                rate_limited = getattr(exc, "code", None) == 429
+                if not (rate_limited or isinstance(exc, errors.ServerError)):
+                    raise
                 last_error = exc
                 if attempt == MAX_RETRIES:
                     raise last_error
-                time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+                wait = RATE_LIMIT_BACKOFF_SECONDS if rate_limited else RETRY_BACKOFF_SECONDS
+                time.sleep(wait * attempt)
         seconds = time.monotonic() - start
 
         parsed = response.parsed
