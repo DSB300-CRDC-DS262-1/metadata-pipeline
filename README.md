@@ -74,6 +74,49 @@ token counts), and prints a field-by-field comparison against the reference
 metadata in `data/schema_worked_examples.json`, ending with a
 matched-fields and total-time summary line so runs can be compared.
 
+## Local models (Ollama)
+
+Runs the same metadata extraction on a local model, with no API key or
+quota.
+
+1. Install Ollama from https://ollama.com and make sure it is running.
+2. Pull a model:
+
+```bash
+ollama pull llama3.1:8b
+ollama pull gemma3:12b
+```
+
+3. Run the extraction:
+
+```bash
+.venv/Scripts/python.exe scripts/run_metadata_extraction.py --backend ollama --model llama3.1:8b
+```
+
+Notes:
+
+- The first call loads the model and can take 20-40 seconds.
+- Requests use a 32768-token context (`DEFAULT_NUM_CTX` in
+  `backends.py`). If the machine has less memory the model may run slowly
+  or fail. If a prompt fills the context the backend raises an error
+  instead of silently truncating it.
+- Results on the four sample documents (36 reference fields): Gemini
+  3.5 flash lite (the default) 29, Gemini 3.6 flash 30, Llama 3.1 8B 21,
+  Gemma 3 12B 19. Local models take 1-5 seconds per document and are
+  weaker at separating organisation, publisher and funder.
+
+Comparing and checking runs:
+
+```bash
+.venv/Scripts/python.exe scripts/compare_metadata_runs.py    # all saved runs side by side
+.venv/Scripts/python.exe scripts/verify_ground_truth.py      # checks the 48 reference statistics against the PDFs
+.venv/Scripts/python.exe scripts/metadata_checklist.py       # writes output/verification/metadata_checklist.md
+```
+
+The reference files in `data/` were AI-generated and have not been fully
+verified by a person yet. `scoring.py` decides whether a field counts as
+matching (dates are compared after normalising the format).
+
 ## Layout
 
 ```
@@ -85,8 +128,12 @@ src/crdc_pipeline/
   extraction/
     backends.py  Gemini and Ollama (local) model backends, one interface
     metadata.py  document metadata schema, prompt, and extraction
+    scoring.py   field matching against the reference metadata
 scripts/
   run_metadata_extraction.py  runs metadata extraction across the manifest
+  compare_metadata_runs.py    compares saved runs against the reference
+  verify_ground_truth.py      checks reference statistics against the PDFs
+  metadata_checklist.py       writes the manual review checklist
 tests/
   test_layout.py              unit tests, synthetic word positions
   test_loader.py               integration tests, synthetic PDFs (reportlab)
@@ -94,6 +141,7 @@ tests/
   test_metadata_extraction.py  prompt/page-selection tests; live API test
                                 skips unless GEMINI_API_KEY is set
   test_backends.py             backend tests with mocked HTTP (no server needed)
+  test_scoring.py              field matching and date normalisation
 data/
   raw_pdfs/                  the four source PDFs go here (gitignored)
   document_manifest.json     document_id -> filename mapping
