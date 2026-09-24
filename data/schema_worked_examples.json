@@ -45,7 +45,17 @@
 
   "contexts": [
     {
-      "context_id": "ctx_deaths_2014_19",
+      "context_id": "ctx_aghealth2019_deaths_2014_19",
+      "document_id": "doc_aghealth2019",
+      "geographic_region": "Australia, cotton growing postcode areas",
+      "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
+      "collection_method": "case-by-case review of National Coroners Information System records",
+      "time_period": "2014-01-01 to 2019-10-31",
+      "limitations": "restricted to cases where a cotton link could be positively confirmed"
+    },
+    {
+      "context_id": "ctx_aghealth2024_deaths_2014_19",
+      "document_id": "doc_aghealth2024",
       "geographic_region": "Australia, cotton growing postcode areas",
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
       "collection_method": "case-by-case review of National Coroners Information System records",
@@ -54,6 +64,7 @@
     },
     {
       "context_id": "ctx_deaths_recent_2024",
+      "document_id": "doc_aghealth2024",
       "geographic_region": "Australia, cotton growing postcode areas",
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
       "collection_method": "case-by-case review of National Coroners Information System records",
@@ -62,6 +73,7 @@
     },
     {
       "context_id": "ctx_hedayati_n_fert_scenario",
+      "document_id": "doc_hedayati2019",
       "geographic_region": "Namoi and Gwydir regions, northwest New South Wales",
       "sample_or_population": "modelled cotton lint production, cradle-to-port",
       "collection_method": "Life Cycle Assessment, foreground data from 3 production seasons combined with published and survey data",
@@ -72,6 +84,7 @@
     },
     {
       "context_id": "ctx_voconiq_water_responsibly",
+      "document_id": "doc_voconiq2025",
       "geographic_region": "Australia, national sample",
       "sample_or_population": "Australian community members responding to the Voconiq national survey",
       "collection_method": "Voconiq annual national community trust survey",
@@ -84,7 +97,7 @@
     {
       "id": "stat_aghealth2019_deaths_2014_19",
       "document_id": "doc_aghealth2019",
-      "context_id": "ctx_deaths_2014_19",
+      "context_id": "ctx_aghealth2019_deaths_2014_19",
       "variable": "confirmed cotton-related deaths",
       "value": 6,
       "value_status": "exact",
@@ -98,7 +111,7 @@
     {
       "id": "stat_aghealth2024_deaths_2014_19_revised",
       "document_id": "doc_aghealth2024",
-      "context_id": "ctx_deaths_2014_19",
+      "context_id": "ctx_aghealth2024_deaths_2014_19",
       "variable": "confirmed cotton-related deaths",
       "value": 8,
       "value_status": "exact",
