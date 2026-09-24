@@ -39,95 +39,382 @@ MAX_RETRIES = 4
 RETRY_BACKOFF_SECONDS = 5
 
 #: See metadata.py for why this is pinned rather than an alias.
-DEFAULT_MODEL = "gemini-3.6-flash"
+DEFAULT_MODEL = "gemini-3.5-flash"
+
+class AssociatedDateTimes(BaseModel):
+    start: str | None = Field(
+        default=None,
+        description="ISO-8601 date (YYYY-MM-DD) representing the beginning of the reporting period."
+    )
+
+    end: str | None = Field(
+        default=None,
+        description="ISO-8601 date (YYYY-MM-DD) representing the end of the reporting period."
+    )
 
 
 class StatisticEntry(BaseModel):
     variable: str = Field(
-        description="Plain-English description of what was measured, e.g. "
-        "'community agreement that the cotton industry uses water responsibly'."
-    )
-    value: float | None = Field(
-        description="The numeric value, as a plain number (no % sign, no commas, no units). "
-        "Null if the source explicitly withholds or censors the value (e.g. 'fewer than five') "
-        "rather than simply not reporting one."
-    )
-    value_status: str = Field(
-        description="How the value is reported: 'exact' for a plainly stated figure, "
-        "'approximate' if the source hedges it (e.g. 'surpasses', 'approaching', '~'), "
-        "'censored_below' if the source deliberately withholds an exact value below a "
-        "threshold (e.g. 'fewer than five'). Briefly note the hedge word/phrase used, if any."
-    )
-    reported_text: str = Field(
-        description="The value exactly as printed in the source, e.g. '47%', '$2.8 million', "
-        "'fewer than five'."
-    )
-    unit: str = Field(
-        description="What the number measures, e.g. 'percent agreed', 'deaths', "
-        "'kg CO2e per tonne of lint', 'AUD millions'."
-    )
-    record_type: str = Field(
-        description="One of: 'measurement' (an observed/reported real-world fact), "
-        "'scenario_result' (an output of a modelled what-if scenario), 'model_assumption' "
-        "(an input the authors assumed rather than measured), 'survey_response' (a survey "
-        "agreement/response percentage). Use the closest fit if none match exactly."
-    )
-    time_period: str | None = Field(
-        description="The time period the statistic covers, as stated or clearly inferable "
-        "from the immediate surrounding text (e.g. '2020', '2014-2019', '2017/18-2021/22'). "
-        "Null if genuinely not stated anywhere nearby."
-    )
-    page: int = Field(description="The page number (as given in the page markers below) this statistic was found on.")
-    source_excerpt: str = Field(
-        description="The sentence(s) from the source text that this statistic was extracted from, "
-        "quoted closely enough to verify the extraction against the original."
-    )
-    note: str | None = Field(
-        default=None,
-        description="Anything unusual worth flagging: the source explicitly calls the figure "
-        "unconfirmed, the time period is ambiguous, the statistic is a computed total of other "
-        "statistics, etc. Null if nothing unusual applies.",
+        description=(
+            "The real-world quantity being measured. "
+            "Use a concise noun phrase such as "
+            "'cotton-related deaths', "
+            "'injury rate', "
+            "'water use efficiency', "
+            "'survey agreement with industry sustainability practices'."
+        )
     )
 
+    value: float | None = Field(
+        description=(
+            "The reported numeric value. "
+            "Null only when the document deliberately withholds the value "
+            "(e.g. 'fewer than five cases')."
+        )
+    )
+
+    reported_text: str = Field(
+        description=(
+            "The exact value expression as written in the document. "
+            "Examples: '47%', '$2.8 million', "
+            "'fewer than five', 'eight'."
+        )
+    )
+
+    unit: str | None = Field(
+        default=None,
+        description=(
+            "Unit associated with the value. "
+            "Examples: '%', 'deaths', 'respondents', "
+            "'kg CO2e per tonne lint', 'AUD million'."
+        )
+    )
+
+    statistic_type: str = Field(
+        description=(
+            "One of: "
+            "count, percentage, rate, average, median, "
+            "ratio, monetary_value, duration, index, other."
+        )
+    )
+
+    value_status: str = Field(
+        description=(
+            "One of: "
+            "exact, approximate, censored_below, censored_above."
+        )
+    )
+
+    constraints: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Logical constraints on the value. "
+            "Examples: "
+            "'non_negative', "
+            "'integer_count', "
+            "'percentage_range_0_100'."
+        )
+    )
+
+    associated_datetimes: AssociatedDateTimes | None = Field(
+        default=None,
+        description=(
+            "Reporting period associated with the statistic."
+        )
+    )
+
+    limitations: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Limitations, caveats, assumptions or data-quality concerns "
+            "explicitly stated in the surrounding text."
+        )
+    )
+
+    page: int = Field(
+        description="Page number where the statistic occurs."
+    )
+
+    source_text: str = Field(
+        description=(
+            "The complete contextual passage used for extraction. "
+            "Include enough surrounding text to verify the value, "
+            "time period and limitations."
+        )
+    )
 
 class StatisticsExtraction(BaseModel):
     statistics: list[StatisticEntry]
 
+PROMPT_TEMPLATE = """You are an information extraction system.
+Your task is to extract quantitative findings from a research document.
+Return structured records describing quantitative findings, not merely isolated numbers.
 
-PROMPT_TEMPLATE = """You are extracting quantitative statistics from a research document for a \
-government research agency's document pipeline. Accuracy matters more than completeness: it is \
-much better to omit a statistic, or return a null value, than to guess or infer a \
-plausible-sounding number.
+A finding consists of:
+- the variable being measured
+- the reported value
+- any unit
+- the reporting period
+- explicit limitations
+- supporting source text
 
-Extract EVERY explicit quantitative finding reported in the text below -- percentages, counts, \
-dollar/cost figures, emissions figures, survey agreement rates, and modelled scenario results. \
-Do not extract page numbers, section numbers, years used only as labels (e.g. a table column \
-header), or figures that are purely decorative/structural rather than a reported finding.
+CRITICAL RULES
+1. Use ONLY information explicitly present in the supplied text.
+2. Never calculate, estimate, infer or invent values.
+3. If a value is deliberately withheld
+   (e.g. "fewer than five cases"),
+   set:
+       value = null
+       value_status = "censored_below"
+   and preserve the original wording in reported_text.
+4. Capture limitations whenever they are explicitly stated nearby
+   or in immediately preceding contextual paragraphs that apply
+   to the finding being reported.
+5. Extract complete findings rather than isolated numbers.
+   A finding may require multiple consecutive sentences or paragraphs
+   to establish the variable, reporting period, limitations and final value.
+6. Extract final reported values as primary findings, not multiple values
+   that describe the evolution of the same underlying statistic
+   (e.g. original count, revised count, updated total).
+   Do not create separate records solely for intermediate values
+   unless the document explicitly treats them as distinct findings.
+7. Preserve document provenance:
+   - page must match the page marker
+   - source_text must contain all text required
+     to verify the extraction.
+8. Do not create findings that are unsupported by source_text.
+9. If information is genuinely unavailable, return null rather than guessing.
+10. Return every distinct quantitative finding as a separate record.
+11. source_text should contain every sentence used to determine:
+    - the value
+    - the variable
+    - the reporting period
+    - limitations
+    - assumptions
+    Do not truncate source_text to a single sentence if adjacent
+    sentences were required to interpret the finding.
 
-Rules:
-- Use ONLY information literally present in the text below. Never calculate, infer, or round a \
-value that is not itself printed in the text.
-- If the source deliberately withholds an exact value (e.g. "fewer than five"), set value to \
-null and value_status to 'censored_below', keeping the withheld phrase in reported_text.
-- Distinguish a real measured/reported finding (record_type 'measurement' or 'survey_response') \
-from a value the authors merely assumed as a modelling input (record_type 'model_assumption') \
-or a modelled what-if outcome (record_type 'scenario_result'). Read the surrounding sentence \
-carefully -- don't assume every number is a finding.
-- If the same real-world figure is restated in a summary/abstract and again in the body text, \
-extract it once, from wherever it is stated most precisely (with page and full context).
-- If a single sentence reports multiple distinct numbers (e.g. a count alongside a dollar figure, or several percentages in one sentence), extract EACH number as its own separate statistic entry, even if they share the same source_excerpt. Do not only extract the most prominent number in a sentence.
-- Also extract explicit numeric facts about the study's own methodology or process (e.g. how long a step in data collection typically takes, sample sizes, response rates), not just headline research findings. Use record_type 'measurement' for these unless a better fit applies.
-- If a time period is ambiguous or requires cross-referencing another part of the document to \
-resolve, still extract the statistic, set time_period to null, and use the note field to flag \
-the ambiguity.
-- page must be the page marker number the statistic appears under, not a guess.
+---------------------------------------
+FINDING CONSOLIDATION AND DEDUPLICATION
+---------------------------------------
 
-Document text (all pages, each marked with its page number):
----
+A record represents a complete quantitative finding, not an isolated number.
+
+Before creating a record:
+1. Locate the primary quantitative statement.
+2. Expand context backward and forward until:
+   - the variable is unambiguous
+   - units are identified
+   - reporting periods are identified
+   - limitations and assumptions are identified
+3. Include all contextual sentences used in interpretation
+   within source_text.
+4. If several numbers describe the evolution of the same
+   finding (e.g. an initial value, revisions, additions,
+   updates, or a final total), extract a single record using
+   the final reported value and preserve supporting context in source_text.
+5. If multiple candidate records describe the same variable,
+   population and reporting period, keep only the most complete record.
+
+Return no duplicate findings.
+
+---------------------
+DEDUPLICATION EXAMPLE
+---------------------
+
+Input text:
+
+The previous review identified a total of six deaths
+that definitely occurred within cotton production
+in the 2014-19 period.
+
+Since the previous review, two additional cases
+were identified to have occurred during this period,
+taking the total for the 2014-2019 period to eight.
+
+Incorrect extraction:
+
+[
+  {{
+    "variable": "cotton-related deaths",
+    "value": 6,
+    "unit": "deaths"
+  }},
+  {{
+    "variable": "additional cotton-related deaths",
+    "value": 2,
+    "unit": "deaths"
+  }},
+  {{
+    "variable": "cotton-related deaths",
+    "value": 8,
+    "unit": "deaths"
+  }}
+]
+
+Reason:
+
+The values 6 and 2 are intermediate values used to
+explain the final reported total of 8. These are not separate findings.
+
+Correct extraction:
+
+[
+  {{
+    "variable": "cotton-related deaths",
+    "value": 8,
+    "reported_text": "eight",
+    "unit": "deaths",
+    "statistic_type": "count",
+    "value_status": "exact",
+    "constraints": [
+      "non_negative",
+      "integer_count"
+    ],
+    "associated_datetimes": {{
+      "start": "2014-01-01",
+      "end": "2019-12-31"
+    }},
+    "limitations": [],
+    "source_text": "The previous review identified a total of six deaths that definitely occurred within cotton production in the 2014-19 period. Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight."
+  }}
+]
+
+Rule:
+
+When multiple numeric values describe intermediate steps,
+revisions, additions, or calculations that lead to a final
+reported total, extract a single statistic record using the
+final reported value and preserve the supporting context
+within source_text.
+
+--------------------------------------------------
+FIELD DEFINITIONS
+--------------------------------------------------
+
+variable
+- The real-world quantity being measured.
+- Use concise noun phrases.
+- Examples:
+    "cotton-related deaths"
+    "injury rate"
+    "survey agreement"
+
+value
+- Numeric value only.
+- No units.
+- Null only for censored values.
+
+reported_text
+- Exact wording used by the document.
+
+unit
+- Measurement unit.
+Examples:
+- deaths
+- %
+- respondents
+- AUD million
+
+statistic_type
+Must be one of:
+- count
+- percentage
+- rate
+- average
+- median
+- ratio
+- monetary_value
+- duration
+- index
+- other
+
+value_status
+Must be one of:
+- exact
+- approximate
+- censored_below
+- censored_above
+
+constraints
+Examples:
+- non_negative
+- integer_count
+- percentage_range_0_100
+
+associated_datetimes
+Where possible convert reporting periods to:
+{{
+  "start": "YYYY-MM-DD",
+  "end": "YYYY-MM-DD"
+}}
+
+Examples:
+"2014-2019" becomes
+{{
+  "start": "2014-01-01",
+  "end": "2019-12-31"
+}}
+
+If insufficient information exists,
+set either field to null.
+
+limitations
+Capture explicit limitations, caveats,
+assumptions, exclusions, uncertainties,
+data quality issues, or under-reporting concerns.
+
+source_text
+Include all surrounding sentences required to:
+- verify value
+- verify unit
+- verify reporting period
+- verify limitations
+
+--------------------------------------------------
+EXAMPLE
+--------------------------------------------------
+
+Input text:
+
+The previous review identified a total of six deaths
+that definitely occurred within cotton production
+in the 2014-19 period.
+
+Since the previous review,
+two additional cases were identified to have occurred
+during this period,
+taking the total for the 2014-2019 period to eight.
+
+Output:
+
+{{
+  "variable": "cotton-related deaths",
+  "value": 8,
+  "reported_text": "eight",
+  "unit": "deaths",
+  "statistic_type": "count",
+  "value_status": "exact",
+  "constraints": [
+    "non_negative",
+    "integer_count"
+  ],
+  "associated_datetimes": {{
+    "start": "2014-01-01",
+    "end": "2019-12-31"
+  }},
+  "limitations": [],
+  "page": 3,
+  "source_text": "The previous review identified a total of six deaths that definitely occurred within cotton production in the 2014-19 period. Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight."
+}}
+
+--------------------------------------------------
+DOCUMENT TEXT
+--------------------------------------------------
 {text}
----
-
-Extract all statistics now."""
+--------------------------------------------------
+EXTRACT ALL QUANTITATIVE FINDINGS
+--------------------------------------------------"""
 
 
 def build_context_text(pages: list[str]) -> str:

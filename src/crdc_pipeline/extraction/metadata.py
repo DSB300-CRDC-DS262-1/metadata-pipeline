@@ -36,6 +36,7 @@ TRAILING_PAGES = 1
 
 
 class DocumentMetadata(BaseModel):
+
     title: str | None = Field(
         default=None, description="The document's full title, as printed."
     )
