@@ -8,6 +8,718 @@
     { "document_id": "doc_voconiq2025", "title": "Community Trust in the Australian Cotton Industry, 2025 Survey Report", "publication_date": "2025-12-01", "page_count": 23, "layout": "single column, portrait, A4, chart and pull-quote heavy", "supersedes_document_id": null }
   ],
 
+  "contexts": [
+    {
+      "document": "doc_aghealth2019",
+      "contexts":
+      [
+        {
+          "context_id": "aghealth2019_001",
+          "context_type": "data_source",
+          "value": "National Coroners Information System",
+          "original_text": "The National Coroners Information System (NCIS) is the sentinel repository of all deaths in Australia.",
+          "page": 3
+        },
+        {
+          "context_id": "aghealth2019_002a",
+          "context_type": "sample_population",
+          "value": "commercial cotton growing postcodes",
+          "original_text": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2014‐19 were identified.",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_002b",
+          "context_type": "time_period",
+          "value": {
+            "start": "2014-01-01",
+            "end": "2019-12-31"
+          },
+          "original_text": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2014‐19 were identified.",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_003a",
+          "context_type": "data_source",
+          "value": "AgHealth Australia",
+          "original_text": "Data held by AgHealth Australia and drawn from NCIS were accessed, with fatalities in the relevant post code areas being retained",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_003b",
+          "context_type": "inclusion_criteria",
+          "value": "fatalities in relevant post code areas",
+          "original_text": "Data held by AgHealth Australia and drawn from NCIS were accessed, with fatalities in the relevant post code areas being retained",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_004",
+          "context_type": "exclusion_criteria",
+          "value": "cases not related to cotton were removed from the data",
+          "original_text": "cases that were clearly not cotton related were removed from the data e.g. cattle or grain production deaths",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_005",
+          "context_type": "inclusion_criteria",
+          "value": "only on-farm incidents were included in the data",
+          "original_text": "All of these cases were reviewed to ensure that only on-farm incidents were included in the data (i.e. these data exclude ginning related cases).",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_006",
+          "context_type": "study_design",
+          "value": "included costs in model estimates",
+          "original_text": "In summary, the model includes loss of future earnings, loss of household contributions, insurance payouts, workcover investigations, police investigations, premature funeral costs, coronial costs, ambulance and hospital expenditure.",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_007",
+          "context_type": "preprocessing",
+          "value": "costs expressed in 2018 Australian dollars",
+          "original_text": "Earlier data costs (expressed in 2012 dollars), were updated to reflect 2018 Australian dollars",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2019_08",
+          "context_type": "limitation",
+          "value": "data for 2016‐17 is provisional",
+          "original_text": "As with the previous study, the available data for the most recent year where data are available (2016‐17), is provisional in nature.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2019_009",
+          "context_type": "exclusion_criteria",
+          "value": "no calculation of injury rates due to the lack of robust denominator data",
+          "original_text": "no calculation of injury rates has been undertaken due to the lack of robust denominator data regarding the number of individuals working in the sector.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2019_010",
+          "context_type": "limitation",
+          "value": "data are unlikely to include information on injuries to owner‐operators",
+          "original_text": "Furthermore, the data are unlikely to include information on injuries to owner‐operators and hence significantly under‐represent the true burden of injury in the agricultural sector generally.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2019_011",
+          "context_type": "preprocessing",
+          "value": "costs expressed in 2018 Australian dollars",
+          "original_text": "All figures have been updated to reflect costs in 2018 Australian dollars (previously expressed in 2012 dollars)",
+          "page": 6
+        },
+        {
+          "context_id": "aghealth2019_012",
+          "context_type": "study_design",
+          "value": "report does not include rates of injury and death as they are not available",
+          "original_text": "accurate denominator data to ascertain rates of injury and death are not available and have not been presented in this report",
+          "page": 10
+        }
+      ]
+    },
+    {
+      "document": "doc_aghealth2024",
+      "contexts":
+      [
+        {
+          "context_id": "aghealth2024_001",
+          "context_type": "other",
+          "value": "Document updates 2019 brief.",
+          "original_text": "This brief provides an update to the previous review (Sentinel Health and Safety Data for Australian Cotton Farms), that was commissioned by the Cotton Research and Development Corporation in 2019.",
+          "page": 3
+        },
+        {
+          "context_id": "aghealth2024_002",
+          "context_type": "data_source",
+          "value": "National Coroners Information System",
+          "original_text": "The National Coroners Information System (NCIS) is the sentinel repository of all deaths in Australia.",
+          "page": 3
+        },
+        {
+          "context_id": "aghealth2024_003a",
+          "context_type": "sample_population",
+          "value": "commercial cotton growing postcodes",
+          "original_text": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2001-23 were identified.",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_003b",
+          "context_type": "sample_population",
+          "value": {
+            "start": "2001-01-01",
+            "end": "2023-12-31"
+          },
+          "original_text": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2001-23 were identified.",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_004a",
+          "context_type": "data_source",
+          "value": "AgHealth Australia",
+          "original_text": "Data held by AgHealth Australia and drawn from NCIS were accessed, with fatalities in the relevant post code areas being retained",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_004b",
+          "context_type": "inclusion_criteria",
+          "value": "fatalities in relevant post code areas retained",
+          "original_text": "Data held by AgHealth Australia and drawn from NCIS were accessed, with fatalities in the relevant post code areas being retained",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_005",
+          "context_type": "exclusion_criteria",
+          "value": "cases not related to cotton were removed from the data",
+          "original_text": "cases that were clearly not cotton related were removed from the data e.g. cattle or grain production deaths",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_006",
+          "context_type": "inclusion_criteria",
+          "value": "only on-farm incidents were included in the data",
+          "original_text": "This identified all cases where this was present and included ginning and other related services. All of these cases were reviewed to ensure that only on-farm incidents were included in the data (i.e. these data exclude ginning related cases).",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_007",
+          "context_type": "study_design",
+          "value": "included costs in model estimates",
+          "original_text": "In summary, the model includes loss of future earnings, loss of household contributions, insurance payouts, workcover investigations, police investigations, premature funeral costs, coronial costs, ambulance and hospital expenditure.",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_008",
+          "context_type": "preprocessing",
+          "value": "costs expressed in 2023 Australian dollars",
+          "original_text": "Earlier data cost estimates (expressed in 2012 and 2018 dollars) were updated to reflect 2023 Australian dollars",
+          "page": 4
+        },
+        {
+          "context_id": "aghealth2024_009a",
+          "context_type": "limitation",
+          "value": "data is provisional for recent injury data and economic costs",
+          "original_text": "the available data for the most recent years where nature and mechanism of injury data are available (2021-22) and for the economic costs (2020-21), are provisional in nature.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2024_009b",
+          "context_type": "time_period",
+          "value": {
+            "start": "2021-01-01",
+            "end": "2022-12-31"
+          },
+          "original_text": "the available data for the most recent years where nature and mechanism of injury data are available (2021-22) and for the economic costs (2020-21), are provisional in nature.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2024_009c",
+          "context_type": "time_period",
+          "value": {
+            "start": "2020-07-01",
+            "end": "2021-06-31"
+          },
+          "original_text": "the available data for the most recent years where nature and mechanism of injury data are available (2021-22) and for the economic costs (2020-21), are provisional in nature.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2024_010",
+          "context_type": "exclusion_criteria",
+          "value": "no calculation of injury rates due to the lack of robust denominator data",
+          "original_text": "no calculation of injury rates has been undertaken due to the lack of robust denominator data regarding the number of individuals working in the sector.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2024_011",
+          "context_type": "limitation",
+          "value": "data are unlikely to include information on injuries to owner‐operators",
+          "original_text": "Furthermore, the data are unlikely to include information on injuries to owner‐operators and hence significantly under‐represent the true burden of injury in the agricultural sector generally.",
+          "page": 5
+        },
+        {
+          "context_id": "aghealth2024_012",
+          "context_type": "preprocessing",
+          "value": "costs expressed in 2023 Australian dollars",
+          "original_text": "All figures have been updated to reflect costs in 2023 Australian dollars.",
+          "page": 6
+        },
+        {
+          "context_id": "aghealth2024_013",
+          "context_type": "preprocessing",
+          "value": "data have been collated to reflect five-year cotton sustainability reporting targets",
+          "original_text": "To align with the cotton sustainability reporting targets that use five-year reporting intervals, data have been collated to best reflect that timeframe to the extent possible.",
+          "page": 6
+        },
+        {
+          "context_id": "aghealth2024_014a",
+          "context_type": "preprocessing",
+          "value": "the first interval (2008-09 to 2011-12) is only three years",
+          "original_text": "As such, it should be noted that the first interval (2008-09 to 2011-12), is only three years in duration, compared to the data for subsequent years that is in five-year intervals.",
+          "page": 6
+        },
+        {
+          "context_id": "aghealth2024_014b",
+          "context_type": "time_period",
+          "value": {
+            "start": "2008-07-01",
+            "end": "2012-06-31"
+          },
+          "original_text": "As such, it should be noted that the first interval (2008-09 to 2011-12), is only three years in duration, compared to the data for subsequent years that is in five-year intervals.",
+          "page": 6
+        },
+        {
+          "context_id": "aghealth2024_015",
+          "context_type": "other",
+          "value": "annual means included for ease of comparison",
+          "original_text": "Consequently, annual means have also been included in the data to allow for ease of comparison.",
+          "page": 6
+        },
+        {
+          "context_id": "aghealth2024_016",
+          "context_type": "study_design",
+          "value": "report does not include rates of injury and death as they are not available",
+          "original_text": "Firstly, accurate denominator data to ascertain rates of injury and death are not available and have not been presented in this report",
+          "page": 9
+        },
+        {
+          "context_id": "aghealth2024_015",
+          "context_type": "assumption",
+          "value": "Fatality and workers compensation data may be underreported for the most recent years due to potentially unidentified cases",
+          "original_text": "Secondly, for both the fatality and workers compensation data, additional cases may yet be identified in the most recent years. This will add to the body of evidence and also the associated costs",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "document": "doc_hedayati2019",
+      "contexts":
+      [
+        {
+          "context_id": "hedayati2019_001a",
+          "context_type": "geographic_region",
+          "value": "Northwest New South Wales",
+          "original_text": "The foreground data for the study were for the three production seasons from 2011-2012 to 2013-2014 in northwest New South Wales, with a functional unit of one tonne of cotton lint at port.",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_001b",
+          "context_type": "study_design",
+          "value": "3 production seasons",
+          "original_text": "The foreground data for the study were for the three production seasons from 2011-2012 to 2013-2014 in northwest New South Wales, with a functional unit of one tonne of cotton lint at port.",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_001c",
+          "context_type": "time_period",
+          "value": {
+            "start": "2011-01-01",
+            "end": "2014-12-31"
+          },
+          "original_text": "The foreground data for the study were for the three production seasons from 2011-2012 to 2013-2014 in northwest New South Wales, with a functional unit of one tonne of cotton lint at port.",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_001d",
+          "context_type": "functional_unit",
+          "value": "One tonne of cotton lint at port",
+          "original_text": "The foreground data for the study were for the three production seasons from 2011-2012 to 2013-2014 in northwest New South Wales, with a functional unit of one tonne of cotton lint at port.",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_002",
+          "context_type": "preprocessing",
+          "value": "Applied emissions formulae and factors from the Australian National Inventory Report",
+          "original_text": "To ensure consistency between our approach and that applied to meet international emissions reporting obligations, we applied emissions formulae and factors from the Australian National Inventory Report, except where more specific published data were available",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_003a",
+          "context_type": "assumption",
+          "value": "96% of production from irrigated systems with 85% of irrigation water pumped by diesel-powered irrigation pumps for a median irrigated yield of 10.3 bales per ha",
+          "original_text": "We assumed that 96% of production was from irrigated systems, with 85% of irrigation water pumped by diesel-powered irrigation pumps and a median irrigated yield of 10.3 bales per ha",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_003b",
+          "context_type": "assumption",
+          "value": "85% of irrigation water pumped by diesel-powered irrigation pumps for a median irrigated yield of 10.3 bales per ha",
+          "original_text": "We assumed that 96% of production was from irrigated systems, with 85% of irrigation water pumped by diesel-powered irrigation pumps and a median irrigated yield of 10.3 bales per ha",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_003c",
+          "context_type": "assumption",
+          "value": "median irrigated yield of 10.3 bales per ha",
+          "original_text": "We assumed that 96% of production was from irrigated systems, with 85% of irrigation water pumped by diesel-powered irrigation pumps and a median irrigated yield of 10.3 bales per ha",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_004",
+          "context_type": "study_design",
+          "value": "Farm-level mitigation strategies with potential to minimise life cycle GHG emissions were placed in the context of the cradle-to-gate system to account for associated changes in pre-farm and post-farm emissions",
+          "original_text": "Farm level management options with potential to minimise life cycle GHG emissions were: reducing N fertiliser rate from a commercial rate of 255 kg N/ha to 240 kg N/ha or 180 kg N/ha (2.6% and 13.2% emissions reduction); use of controlled-release and stabilised N fertilisers (5.9% reduction), changing from diesel to solar-powered irrigation pumps (8.1% reduction), changing from diesel to biofuel-powered farm machinery (3.4% reduction), changing from continuous cotton to a cotton-legume crop rotation (3.9% reduction) and use of N fertigation (2.1% reduction). Whilst we focused on farm-level mitigation strategies, these changes were placed in the context of the cradle-to-gate system, to account for associated changes in pre-farm and post-farm emissions.",
+          "page": 1
+        },
+        {
+          "context_id": "hedayati2019_005",
+          "context_type": "study_design",
+          "value": "Opportunities to sequester carbon were not included due to uncertainties",
+          "original_text": "Opportunities to sequester carbon may also be available but were not included in the primary assessment of this paper due to uncertainties.",
+          "page": 2
+        },
+        {
+          "context_id": "hedayati2019_006",
+          "context_type": "geographic_region",
+          "value": "Focused on Namoi and Gwydir regions in northwest NSW as this area is strongly representative of Australian cotton production",
+          "original_text": "We chose to focus on the Namoi and Gwydir regions in northwest NSW, as production in this area is strongly representative of Australian cotton production (Hedayati, 2015).",
+          "page": 2
+        },
+        {
+          "context_id": "hedayati2019_007",
+          "context_type": "study_design",
+          "value": "Limited study to climate change impact of cotton production on GHG emissions",
+          "original_text": "Whilst Life Cycle Assessment (LCA) can be applied across a broad array of impact categories, we limited this study to the climate change impact of cotton production on GHG emissions.",
+          "page": 2
+        },
+        {
+          "context_id": "hedayati2019_008",
+          "context_type": "study_design",
+          "value": "Focused on farm-level emissions from cotton production",
+          "original_text": "Given the significance of farm-level emissions from cotton production, we focused on this component of the supply chain",
+          "page": 2
+        },
+        {
+          "context_id": "hedayati2019_009",
+          "context_type": "study_design",
+          "value": "Applied LCA method to calculate the GHG emissions profile of cotton production and associated GHG mitigation strategies.",
+          "original_text": "We applied the LCA method to calculate the GHG emissions profile of cotton production and associated GHG mitigation strategies.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_010",
+          "context_type": "study_design",
+          "value": "Environmental assessment was limited to climate change impact.",
+          "original_text": "The scope of the environmental assessment was limited to climate change impact.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_011",
+          "context_type": "functional_unit",
+          "value": "One metric tonne cotton fibre (lint) delivered for export at port.",
+          "original_text": "The functional unit of the LCA study was one metric tonne cotton fibre (lint) produced in a continuous cotton production system and delivered for export at port.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_012a",
+          "context_type": "country",
+          "value": "Australia",
+          "original_text": "The geographical scope of the LCA was the cotton growing region of northwest NSW Australia, in the Namoi-Gwydir regions including the towns of Narrabri, Moree and Walgett.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_012b",
+          "context_type": "geographic_region",
+          "value": "The towns of Narrabri, Moree and Walgett in the cotton-growing Namoi-Gwydir regions of northwest NSW.",
+          "original_text": "The geographical scope of the LCA was the cotton growing region of northwest NSW Australia, in the Namoi-Gwydir regions including the towns of Narrabri, Moree and Walgett.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_0013a",
+          "context_type": "study_design",
+          "value": "3 production seasons",
+          "original_text": "The temporal scope of the LCA was the three cotton production seasons of 2011-2012, 2012-2013, and 2013-2014.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_013b",
+          "context_type": "time_period",
+          "value": {
+            "start": "2011-01-01",
+            "end": "2014-12-31"
+          },
+          "original_text": "The temporal scope of the LCA was the three cotton production seasons of 2011-2012, 2012-2013, and 2013-2014.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_014",
+          "context_type": "study_design",
+          "value": "The system boundary of the LCA study included the pre-farm, on-farm and post-farm stages to provide an understanding of the full life cycle consequences of practice changes in these stages.",
+          "original_text": "The system boundary of the LCA study (Fig. 1) included the prefarm stage (i.e. production and transport of raw materials), the onfarm stage (i.e. cotton farming practices) and the post-farm stage (i.e. cotton ginning and the transport of cotton lint to an export port). This approach provided an understanding of the full life cycle consequences of pre-farm, on-farm and post-farm practice changes.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_015",
+          "context_type": "assumption",
+          "value": "80% of irrigation water sourced from surface water versus 20% from groundwater.",
+          "original_text": "The percentage of irrigation water sourced from surface water (80%) versus groundwater (20%) assumed for this study is based on the percentage reported for extractive agricultural use in NSW in 2012-2013 (ABS, 2014).",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_016",
+          "context_type": "assumption",
+          "value": "85% of irrigation water pumped by diesel-powered irrigation pumps and 15% by electric pumps.",
+          "original_text": "We assumed that 85% of the irrigation water was pumped by diesel-powered irrigation pumps and 15% by electric pumps (Foley et al., 2015).",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_017a",
+          "context_type": "assumption",
+          "value": "Total dynamic heads for water pumped from surface water assumed to be 8m.",
+          "original_text": "The total dynamic heads for water pumped from surface water and groundwater were assumed to be 8 m (Welke, 2011) and 35 m (NSW Water, 2009a; b), respectively.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_017b",
+          "context_type": "assumption",
+          "value": "Total dynamic heads for water pumped from ground water assumed to be 35m.",
+          "original_text": "The total dynamic heads for water pumped from surface water and groundwater were assumed to be 8 m (Welke, 2011) and 35 m (NSW Water, 2009a; b), respectively.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_018",
+          "context_type": "assumption",
+          "value": "Applied the relative contributions of cotton lint, cottonseed, and gin trash for a typical Australian ginning plant",
+          "original_text": "We applied the relative contributions of cotton lint (42%), cottonseed (49%) and gin trash (9%) for a typical Australian ginning plant (RIRDC, 2014).",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_019",
+          "context_type": "exclusion_criteria",
+          "value": "Process flows with a cumulative mass or energy of less than 1% were excluded",
+          "original_text": "All process flows with a cumulative mass or energy of less than 1% were excluded, e.g. packaging glues used at the cotton gin.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_020",
+          "context_type": "study_design",
+          "value": "N fertiliser application rate was modified from a commercial rate (255 kg N/ha) to the rate at which lint yield is reported to be maximised (240 kg N/ha) and also to the economically optimum rate (180 kg N/ha).",
+          "original_text": "When assessing mitigation options, the N fertiliser application rate was modified from a commercial rate of 255 kg N/ha to 240 kg N/ha, the rate at which lint yield is reported to be maximised (Macdonald et al., 2015), and also to 180 kg N/ha, the economically optimum rate according to Visser et al. (2015).",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_021",
+          "context_type": "study_design",
+          "value": "Controlled release and stabilised fertilisers were included in the analysis.",
+          "original_text": "The controlled release (polymer-coated urea) and stabilised fertilisers (urea treated with a nitrification inhibitor) were included in the analysis.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_022",
+          "context_type": "assumption",
+          "value": "Applied a 52% reduction in each emissions factor during the on-farm phase.",
+          "original_text": "We applied a 52% reduction in each emissions factor during the onfarm phase, as per Tian et al. (2015). The increase in fertiliser manufacturing emissions required to produce these products was negligible and below the 1% cut-off for inclusion in the LCA.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_023",
+          "context_type": "assumption",
+          "value": "Fertigation was assessed as a mitigation strategy by removing the pre-plant fertiliser operation and reducing the N2O produced from applied N by 80%.",
+          "original_text": "The use of fertigation as a mitigation strategy was assessed by removing the pre-plant fertiliser operation and reducing the N2O produced from applied N by 80% (Antille, 2018).",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_024",
+          "context_type": "study_design",
+          "value": "Chickpea was modelled to represent a typical legume crop grown in rotation with cotton.",
+          "original_text": "Chickpea was modelled as a surrogate representing a typical legume crop grown in rotation with cotton, given the ready availability of data on emissions from chickpea production specific to northwest NSW.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_025",
+          "context_type": "study_design",
+          "value": "Did not credit the cotton with the N fixed during growth of the chickpea crop, instead applied a yield increase to account for break-crop effects.",
+          "original_text": "For the purpose of this study, we did not credit the cotton with the N fixed during growth of the chickpea crop, instead applying a yield increase to account for break-crop effects.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_026",
+          "context_type": "study_design",
+          "value": "Did not debit the system with carbon sequestration during legume production due to low biomass of legume crops.",
+          "original_text": "Also, we did not debit the system with the foregone carbon sequestration that occurs during legume production due to the lower biomass of legume crops.",
+          "page": 3
+        },
+        {
+          "context_id": "hedayati2019_027",
+          "context_type": "assumption",
+          "value": "3 kW solar panels assumed to be the power source for solar-powered irrigation pumps.",
+          "original_text": "For solar-powered irrigation pumps, 3 kW solar panels were assumed as the power source.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_028a",
+          "context_type": "assumption",
+          "value": "Biodiesel produced as methyl ester from rapeseed assumed to be the fuel for biofuel-powered farm machinery.",
+          "original_text": "For biofuel-powered farm machinery, biodiesel was assumed to be produced as methyl ester from rapeseed, with the CO2 emissions from the combustion of biodiesel considered biogenic and thus not included in the impact assessment.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_028b",
+          "context_type": "exclusion_criteria",
+          "value": "CO2 emissions from the combustion of biodiesel considered biogenic and thus not included in the impact assessment.",
+          "original_text": "For biofuel-powered farm machinery, biodiesel was assumed to be produced as methyl ester from rapeseed, with the CO2 emissions from the combustion of biodiesel considered biogenic and thus not included in the impact assessment.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_029a",
+          "context_type": "preprocessing",
+          "value": "Background data were modified for Australian conditions.",
+          "original_text": "Background data, such as those about fertiliser and diesel manufacture, diesel combustion and manufacture of plant protection products, were obtained from the Australian Life Cycle Inventory (AusLCI) database (ALCAS, 2013; RIRDC, 2014) and international databases (e.g. Ecoinvent), modified for Australian conditions.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_029b",
+          "context_type": "data_source",
+          "value": "Australian Life Cycle Inventory (AusLCI)",
+          "original_text": "Background data, such as those about fertiliser and diesel manufacture, diesel combustion and manufacture of plant protection products, were obtained from the Australian Life Cycle Inventory (AusLCI) database (ALCAS, 2013; RIRDC, 2014) and international databases (e.g. Ecoinvent), modified for Australian conditions.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_030",
+          "context_type": "study_design",
+          "value": "Data about plant production products were grouped and then modelled as three major inputs.",
+          "original_text": "Data about plant production products (herbicides, insecticides and growth regulators) were grouped and then modelled as three major inputs.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_031",
+          "context_type": "study_design",
+          "value": "Representatives from two ginning plants were interviewed to obtain data about the post-farm stage.",
+          "original_text": "Representatives from two ginning plants located in northwest NSW were interviewed to obtain data about the postfarm stage.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_032",
+          "context_type": "study_design",
+          "value": "Applied the most representative data in the economic analysis.",
+          "original_text": "The economic analysis data was based on Powell and Scott (2011). We applied the most representative, rather than average yield data.",
+          "page": 4
+        },
+        {
+          "context_id": "hedayati2019_033",
+          "context_type": "study_design",
+          "value": "Global warming potentials (GWPs) applied for CO2, N2O, and CH4 were 1, 298, and 25, respectively.",
+          "original_text": "The global warming potentials (GWPs) applied for CO2, N2O, and CH4 were 1, 298, and 25, respectively (Australian Government, 2015a).",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_034",
+          "context_type": "exclusion_criteria",
+          "value": "CO2 absorbed by the cotton crop during its growth and the CO2 released from the decomposition of cotton residues in the field were excluded from the primary LCA.",
+          "original_text": "As the NIR methods do not include CH4 emissions on-farm, CH4 is only reported as a component of pre-farm processes, where it is expressed in CO2-equivalents (CO2e). For consistency with these guidelines, we excluded CO2 absorbed by the cotton crop during its growth and the CO2 released from the decomposition of cotton residues in the field (i.e. biogenic CO2) from the primary LCA.",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_035",
+          "context_type": "data_source",
+          "value": "External data was used to calculate fertiliser-related emissions and emissions from the decomposition of cotton residues.",
+          "original_text": "We drew data from an Australian cotton-related publication (Australian Government, 2015b) when calculating fertiliser-related emissions and accessed data from Muhammad (2011) when calculating emissions from the decomposition of cotton residues.",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_036a",
+          "context_type": "study_design",
+          "value": "Applied an average cotton lint price of $2070/t ($470/bale)",
+          "original_text": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint.",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_036b",
+          "context_type": "study_design",
+          "value": "Applied an average cottonseed price of $300/t",
+          "original_text": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint.",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_036c",
+          "context_type": "time_period",
+          "value": {
+            "start": "2011-01-01",
+            "end": "2014-12-31"
+          },
+          "original_text": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint.",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_036d",
+          "context_type": "assumption",
+          "value": "Allocated approximately 86% of the life cycle climate change impact to lint",
+          "original_text": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint.",
+          "page": 5
+        },
+        {
+          "context_id": "hedayati2019_037",
+          "context_type": "assumption",
+          "value": "Applied a fraction of 20% of cottonseed as animal feed",
+          "original_text": "So, we applied a fraction of 20% of cottonseed as animal feed and then conducted sensitivity testing to determine the effect of this assumption.",
+          "page": 6
+        },
+        {
+          "context_id": "hedayati2019_038",
+          "context_type": "assumption",
+          "value": "Extrapolated the results for northwest New South Wales to other regions due to the gap in knowledge about the greenhouse gas emissions intensity associated with Australian cotton production.",
+          "original_text": "Given the gap in knowledge about the greenhouse gas emissions intensity associated with Australian cotton production, we extrapolated the results for northwest New South Wales to other regions and tested the sensitivity of the emissions profile to our given system assumptions.",
+          "page": 9
+        },
+        {
+          "context_id": "hedayati2019_039",
+          "context_type": "study_design",
+          "value": "Did not adjust emissions factors for lower soil moisture given the small contribution of dryland cotton (4%) to overall production volumes.",
+          "original_text": "Whilst we accounted for lower N fertiliser requirements in dryland systems, we did not adjust emissions factors for lower soil moisture, given the small contribution of dryland cotton (4%) to overall production volumes.",
+          "page": 9
+        }
+      ]
+    },
+    {
+      "document": "doc_voconiq2025",
+      "contexts":
+      [
+        {
+          "context_id": "voconiq2025_001a",
+          "context_type": "collection_method",
+          "value": "Online survey methodology",
+          "original_text": "In line with previous surveys in this program, an online survey methodology was used to access the views of Australians over the age of 18 years.",
+          "page": 5
+        },
+        {
+          "context_id": "voconiq2025_001b",
+          "context_type": "inclusion_criteria",
+          "value": "Australians over the age of 18 years.",
+          "original_text": "In line with previous surveys in this program, an online survey methodology was used to access the views of Australians over the age of 18 years.",
+          "page": 5
+        },
+        {
+          "context_id": "voconiq2025_002",
+          "context_type": "collection_method",
+          "value": "An online research panel was used to ensure a representative sample of Australians by age and gender.",
+          "original_text": "An online research panel was used to ensure a representative sample of Australians by age and gender in line with Australian Bureau of Statistics data.",
+          "page": 5
+        },
+        {
+          "context_id": "voconiq2025_003",
+          "context_type": "time_period",
+          "value": {
+            "start": "2025-10-30",
+            "end": "2014-11-17"
+          },
+          "original_text": "Participants were recruited across the country between 30 October and 17 November 2025.",
+          "page": 5
+        },
+        {
+          "context_id": "voconiq2025_004",
+          "context_type": "sample_population",
+          "value": "3063 survey responses included for analysis after data cleaning.",
+          "original_text": "3,063 surveys were included for analysis after data cleaning.",
+          "page": 5
+        },
+        {
+          "context_id": "voconiq2025_005",
+          "context_type": "other",
+          "value": "Path modelling used as a statistical technique.",
+          "original_text": "Using a statistical technique called path modelling, we are able to identify what matters most to the community when it comes to their trust and acceptance of the cotton industry",
+          "page": 9
+        }
+      ]
+    }
+  ],
+
   "statistics": [
     { "id": "aghealth2019_01", "document_id": "doc_aghealth2019", "variable": "confirmed cotton-related deaths, 2001-13", "value": 9, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "2001-2013", "page": 3 },
     { "id": "aghealth2019_02", "document_id": "doc_aghealth2019", "variable": "additional confirmed deaths found since initial review", "value": 2, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "ambiguous, needs cross-reference to resolve", "page": 3 },
