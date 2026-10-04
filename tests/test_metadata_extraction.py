@@ -115,7 +115,7 @@ def test_reference_can_list_acceptable_answers() -> None:
 
 @pytest.mark.skipif(
     not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")),
-    reason="no GEMINI_API_KEY/GOOGLE_API_KEY set -- skipping live API call",
+    reason="no GEMINI_API_KEY/GOOGLE_API_KEY set, skipping live API call",
 )
 def test_live_extraction_on_aghealth2019() -> None:
     from pathlib import Path

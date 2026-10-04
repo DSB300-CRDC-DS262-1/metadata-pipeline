@@ -9,7 +9,7 @@ research PDFs into structured JSON (`documents` / `contexts` /
 `statistics`, per `data/schema_worked_examples.json`). Text-layer
 statistics only: tables and images are a separate team's scope.
 
-Status: ingestion (layout detection, glyph repair, image fallback) and
+Status: ingestion (layout detection, symbol repair, image fallback) and
 document metadata extraction are built and tested, running on local models
 by default. Statistics extraction is on `main`; contexts are not built yet.
 
@@ -146,12 +146,12 @@ Some PDFs draw characters whose fonts carry no text (Voconiq prints "73%",
 the text layer reads "3%"). The loader counts these per page
 (`Page.unreadable_glyphs`) and warns.
 
-Some fonts label a glyph with the wrong character (Hedayati's "974e985" is
-really "974–985"). The loader flags a single glyph set in a different font
+Some fonts label a symbol with the wrong character (Hedayati's "974e985" is
+really "974–985"). The loader flags a single character set in a different font
 from its neighbours, reads an image of that word with a vision model
 (`load_document(..., read_text=...)`), and once two reads agree saves a rule
 to `data/symbol_rules.json`. Saved rules apply on every load with no model.
-Ligatures (ﬁ, ﬂ) are expanded to plain letters.
+Joined letters (ﬁ, ﬂ) are split back into plain letters.
 
 Flagged or empty pages can be re-read from the page image:
 
@@ -178,8 +178,8 @@ about 3 seconds (12B takes 7) with the same accuracy; output goes to `output/vis
 src/crdc_pipeline/
   ingestion/
     layout.py    column detection (pure function, no PDF library dependency)
-    loader.py    PDF -> Document/Page; text, glyph repair and image fallback
-    symbols.py   finds mislabelled and hidden glyphs, learns font rules
+    loader.py    PDF -> Document/Page; text, symbol repair and image fallback
+    symbols.py   finds wrongly labelled and hidden characters, learns font rules
   extraction/
     backends.py  Gemini and Ollama backends, one interface
     metadata.py  metadata schema, prompt, extraction and tidy rules
@@ -196,7 +196,7 @@ scripts/
   verify_ground_truth.py          checks reference statistics against the PDFs
 tests/
   test_layout.py, test_loader.py   column detection and loading (synthetic PDFs)
-  test_symbols.py                  mislabelled-glyph detection and rule learning
+  test_symbols.py                  wrongly labelled symbol detection and rule learning
   test_metadata_extraction.py      schema, prompt and tidy rules
   test_printed.py                  article history, DOI, journal header, ISSN
   test_backends.py                 backends with mocked HTTP (no server needed)
@@ -208,7 +208,7 @@ data/
   schema_worked_examples.json      reference documents, contexts and statistics
   ground_truth_all_documents.json  48-statistic reference set for recall
   organisation_names.json          standard name and known variants per organisation
-  symbol_rules.json                learned corrections for mislabelled font glyphs
+  symbol_rules.json                learned corrections for wrongly labelled symbols
 docs/
   weaknesses_and_fixes.md          known extraction problems and planned fixes
   architecture.md                  design notes for the ingestion module
