@@ -1,6 +1,6 @@
 """Run metadata extraction on the sample documents and compare with the reference.
 
-Usage: python scripts/run_metadata_extraction.py [--backend ollama --model gemma3:12b]
+Usage: python scripts/run_metadata_extraction.py [--model gemma4:12b] [--backend gemini]
 """
 
 from __future__ import annotations
@@ -17,13 +17,11 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from crdc_pipeline.extraction import extract_metadata, make_backend  # noqa: E402
-from crdc_pipeline.extraction.scoring import strict_equal  # noqa: E402
+from crdc_pipeline.extraction.scoring import SCORED_FIELDS, field_value, matches  # noqa: E402
 from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "metadata"
-
-COMPARED_FIELDS = ["title", "authors", "organisation", "publisher", "funder", "publication_date", "submission_date", "acceptance_date", "source_url"]
 
 
 def load_manifest() -> list[dict]:
@@ -42,17 +40,30 @@ def slug(text: str) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--backend", choices=["gemini", "ollama"], default="gemini")
-    parser.add_argument("--model", help="model name (required for ollama)")
+    parser.add_argument("--backend", choices=["gemini", "ollama"], default="ollama")
+    parser.add_argument("--model", help="model name (defaults: gemma4:e4b local, gemini-3.5-flash-lite)")
+    parser.add_argument("--think", choices=["default", "on", "off"], default="default",
+                        help="reasoning step for local models that support it")
+    parser.add_argument("--seed", type=int, help="fixed sampling seed for local models")
+    parser.add_argument("--num-ctx", type=int, help="context window for local models (default 32768)")
+    parser.add_argument("--num-gpu", type=int, help="model layers to put on the GPU (for smaller GPUs)")
+    parser.add_argument("--suffix", default="", help="appended to the output folder, e.g. r2 for a repeat run")
     return parser.parse_args()
 
 
 def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # Windows consoles default to cp1252
     args = parse_args()
     load_dotenv(PROJECT_ROOT / ".env")
-    backend = make_backend(args.backend, args.model)
+    think = {"default": None, "on": True, "off": False}[args.think]
+    options = {"think": think, "seed": args.seed} if args.backend == "ollama" else {}
+    if args.num_ctx and args.backend == "ollama":
+        options["num_ctx"] = args.num_ctx
+    if args.num_gpu is not None and args.backend == "ollama":
+        options["num_gpu"] = args.num_gpu
+    backend = make_backend(args.backend, args.model, **options)
     reference = load_reference_metadata()
-    out_dir = OUTPUT_ROOT / slug(backend.label)
+    out_dir = OUTPUT_ROOT / slug(backend.label + (f"__{args.suffix}" if args.suffix else ""))
     out_dir.mkdir(parents=True, exist_ok=True)
 
     matched = compared = 0
@@ -79,6 +90,7 @@ def main() -> None:
             "seconds": round(extraction.seconds, 2),
             "prompt_tokens": extraction.prompt_tokens,
             "output_tokens": extraction.output_tokens,
+            "retrieved_from": entry.get("retrieved_from"),
             **metadata.model_dump(),
         }
         out_path = out_dir / f"{document_id}.json"
@@ -90,14 +102,13 @@ def main() -> None:
         )
 
         ref = reference.get(document_id, {})
-        for field in COMPARED_FIELDS:
-            extracted, expected = getattr(metadata, field), ref.get(field)
-            if expected is None and field not in ref:
-                continue
-            ok = strict_equal(extracted, expected)
+        found = metadata.model_dump()
+        for field in SCORED_FIELDS:
+            extracted, expected = field_value(found, field), field_value(ref, field)
+            ok = matches(field, extracted, expected)
             matched += ok
             compared += 1
-            print(f"  {'OK' if ok else '??'} {field:<17} {extracted!s:<45} ref: {expected!s}")
+            print(f"  {'OK' if ok else '??'} {field.removeprefix('journal_article.'):<17} {extracted!s:<45} ref: {expected!s}")
 
     print(
         f"\n{backend.label}: {matched}/{compared} reference fields matched, "
