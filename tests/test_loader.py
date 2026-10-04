@@ -48,3 +48,54 @@ def test_missing_file_raises() -> None:
     except FileNotFoundError:
         return
     raise AssertionError("expected FileNotFoundError for a missing PDF path")
+
+
+def _pdf(tmp_path, draw):
+    from reportlab.pdfgen import canvas
+
+    path = tmp_path / "doc.pdf"
+    c = canvas.Canvas(str(path), pagesize=(612, 792))
+    draw(c)
+    c.showPage()
+    c.save()
+    return path
+
+
+def test_email_addresses_kept_unless_redaction_is_switched_on(tmp_path, monkeypatch) -> None:
+    from crdc_pipeline.ingestion import loader
+
+    def draw(c):
+        c.setFont("Helvetica", 11)
+        c.drawString(72, 740, "Contact: jane.citizen@example.gov.au for details.")
+
+    path = _pdf(tmp_path, draw)
+    assert "jane.citizen@example.gov.au" in load_document(path, "t").pages[0].text
+
+    monkeypatch.setattr(loader, "REDACT_EMAILS", True)
+    page = load_document(path, "t").pages[0]
+    assert "example.gov.au" not in page.text
+    assert "[email removed]" in page.text
+
+
+def test_vision_is_used_for_pages_without_text(tmp_path) -> None:
+    seen = []
+
+    def vision(png: bytes) -> str:
+        seen.append(png[:8])
+        return "Scanned page text 73%"
+
+    path = _pdf(tmp_path, lambda c: c.rect(100, 100, 200, 200))
+    page = load_document(path, "t", vision=vision).pages[0]
+    assert page.extraction_method == "vision"
+    assert page.text == "Scanned page text 73%"
+    assert seen == [b"\x89PNG\r\n\x1a\n"]
+
+
+def test_failed_vision_keeps_text_layer_with_warning(tmp_path) -> None:
+    def vision(png: bytes) -> str:
+        raise RuntimeError("model returned nothing")
+
+    path = _pdf(tmp_path, lambda c: c.rect(100, 100, 200, 200))
+    page = load_document(path, "t", vision=vision).pages[0]
+    assert page.extraction_method == "pdfplumber_layout"
+    assert any("vision fallback failed" in w for w in page.warnings)
