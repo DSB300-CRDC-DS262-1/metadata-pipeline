@@ -44,7 +44,7 @@ def test_sample_document_layout_matches_ground_truth(entry: dict) -> None:
         f"{[p.column_count for p in doc.pages]}"
     )
 
-    failed_pages = [p.page_number for p in doc.pages if p.warnings]
+    failed_pages = [p.page_number for p in doc.pages if p.char_count == 0]
     if failed_pages:
         pytest.skip(
             f"{entry['document_id']}: pages {failed_pages} produced no text "

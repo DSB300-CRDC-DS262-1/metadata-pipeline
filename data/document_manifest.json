@@ -5,25 +5,30 @@
       "document_id": "doc_aghealth2019",
       "filename": "aghealth2019.pdf",
       "expected_layout": "single column, portrait, A4",
-      "expected_page_count": 11
+      "expected_page_count": 11,
+      "retrieved_from": "https://www.insidecotton.com/sites/default/files/article-files/Sentinel_Cotton_Industry_Injury_And_Safety_Data_FINAL_Website_Copy.pdf"
     },
     {
       "document_id": "doc_aghealth2024",
       "filename": "aghealth2024.pdf",
       "expected_layout": "single column, portrait, letter",
-      "expected_page_count": 10
+      "expected_page_count": 10,
+      "retrieved_from": "https://www.insidecotton.com/sites/default/files/article-files/US%2010905%20Cotton%20Industry%20Injury%20And%20Safety%20Data_Final.pdf"
     },
     {
       "document_id": "doc_hedayati2019",
       "filename": "hedayati2019.pdf",
       "expected_layout": "two column, portrait, journal typesetting",
-      "expected_page_count": 12
+      "expected_page_count": 12,
+      "retrieved_from": "https://www.sciencedirect.com/science/article/abs/pii/S0959652618335935"
     },
     {
       "document_id": "doc_voconiq2025",
       "filename": "voconiq2025.pdf",
       "expected_layout": "single column, portrait, A4, chart and pull-quote heavy",
-      "expected_page_count": 23
+      "expected_page_count": 23,
+      "retrieved_from": "https://www.insidecotton.com/sites/default/files/article-files/FINAL%20Community%20Trust%20in%20Cotton%202023.pdf",
+      "retrieved_from_note": "link names the 2023 report; the PDF held is the December 2025 report"
     }
   ]
 }
