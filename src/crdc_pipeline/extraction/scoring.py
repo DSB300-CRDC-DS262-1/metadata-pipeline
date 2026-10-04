@@ -1,49 +1,44 @@
+"""Scoring extracted metadata against the reference file."""
+
 from __future__ import annotations
 
-from datetime import datetime
+from .names import ORGANISATION_FIELDS, canonical_names
 
-DATE_FIELDS = {"publication_date", "submission_date", "acceptance_date"}
-DATE_FORMATS = [
-    ("%Y-%m-%d", 3),
-    ("%B %d, %Y", 3),
-    ("%d %B %Y", 3),
-    ("%Y-%m", 2),
-    ("%B %Y", 2),
-    ("%Y", 1),
+# Free-text fields (supersedes_note, series wording) are not scored.
+SCORED_FIELDS = [
+    "title", "document_type", "authors", "organisation", "publisher", "funder", "copyright_holder",
+    "publication_date", "doi", "keywords", "contact_emails",
+    "journal_article.journal", "journal_article.volume", "journal_article.issue_year",
+    "journal_article.pages", "journal_article.issn", "journal_article.submission_date",
+    "journal_article.revised_date", "journal_article.acceptance_date",
 ]
 
 
-def parse_date(value: str) -> tuple[tuple[int, ...], int] | None:
-    """Return (year, month, day) truncated to the precision the text states, and that precision."""
-    text = value.strip()
-    for fmt, precision in DATE_FORMATS:
-        try:
-            parsed = datetime.strptime(text, fmt)
-        except ValueError:
-            continue
-        return (parsed.year, parsed.month, parsed.day)[:precision], precision
-    return None
+def field_value(record: dict | None, name: str):
+    """Look up a field by dotted name; a missing block (e.g. no journal_article) gives None."""
+    for part in name.split("."):
+        if not isinstance(record, dict):
+            return None
+        record = record.get(part)
+    return record
 
 
-def strict_equal(a, b) -> bool:
-    if isinstance(a, list) and isinstance(b, list):
-        return {str(x).strip().lower() for x in a} == {str(x).strip().lower() for x in b}
+def matches(field: str, extracted, expected) -> bool:
+    """Score one field. A reference of {"accept": [...]} lists every acceptable answer."""
+    if isinstance(expected, dict) and "accept" in expected:
+        return any(matches(field, extracted, option) for option in expected["accept"])
+    if field in ORGANISATION_FIELDS and isinstance(extracted, str) and isinstance(expected, str):
+        extracted, expected = canonical_names(extracted), canonical_names(expected)
+    return same(extracted, expected)
+
+
+def same(a, b) -> bool:
+    """Equal ignoring case and surrounding spaces; lists and '; '-separated values ignore order."""
     if a is None or b is None:
         return a == b
-    return str(a).strip().lower() == str(b).strip().lower()
+    return _parts(a) == _parts(b)
 
 
-def dates_equal(a: str | None, b: str | None) -> bool:
-    if a is None or b is None:
-        return a == b
-    left, right = parse_date(a), parse_date(b)
-    if left is None or right is None:
-        return strict_equal(a, b)
-    precision = min(left[1], right[1])
-    return left[0][:precision] == right[0][:precision]
-
-
-def field_matches(field: str, extracted, expected, normalise_dates: bool = False) -> bool:
-    if normalise_dates and field in DATE_FIELDS:
-        return dates_equal(extracted, expected)
-    return strict_equal(extracted, expected)
+def _parts(value) -> set[str]:
+    items = value if isinstance(value, list) else str(value).split(";")
+    return {str(item).strip().lower() for item in items if str(item).strip()}
