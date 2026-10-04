@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .names import ORGANISATION_FIELDS, canonical_names
+from .names import ORGANISATION_FIELDS, canonical_names, without_title
 
 # Free-text fields (supersedes_note, series wording) are not scored.
 SCORED_FIELDS = [
@@ -29,6 +29,8 @@ def matches(field: str, extracted, expected) -> bool:
         return any(matches(field, extracted, option) for option in expected["accept"])
     if field in ORGANISATION_FIELDS and isinstance(extracted, str) and isinstance(expected, str):
         extracted, expected = canonical_names(extracted), canonical_names(expected)
+    if field == "authors" and isinstance(extracted, list) and isinstance(expected, list):
+        extracted, expected = [without_title(a) for a in extracted], [without_title(a) for a in expected]
     return same(extracted, expected)
 
 

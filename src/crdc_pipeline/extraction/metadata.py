@@ -8,7 +8,13 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator
 
 from .backends import Backend
-from .names import ORGANISATION_FIELDS, canonical_names, is_known_organisation, organisations_named_in
+from .names import (
+    ORGANISATION_FIELDS,
+    canonical_names,
+    is_known_organisation,
+    organisations_named_in,
+    without_title,
+)
 from .printed import iso_date, printed_fields
 
 # A quote backing these fields names every body that holds the role, so all of them are kept.
@@ -19,6 +25,7 @@ ROLE_STATEMENTS = {
     "copyright_holder": re.compile(r"©|copyright", re.I),
 }
 KEYWORDS_LABEL = re.compile(r"\bkey\s*words?\b", re.I)
+DOCUMENT_TYPES = ("report", "brief", "journal article", "survey report", "conference paper", "other")
 JOURNAL_DATES = ("submission_date", "revised_date", "acceptance_date")
 
 LEADING_PAGES = 2
@@ -71,7 +78,7 @@ class DocumentMetadata(_Cleaned):
     )
     document_type: str | None = Field(
         default=None,
-        description="One of: report, brief, journal article, survey report, conference paper, other.",
+        description="One of: " + ", ".join(DOCUMENT_TYPES) + ".",
     )
     authors: list[str] = Field(
         default_factory=list,
@@ -216,6 +223,7 @@ def tidy(metadata: DocumentMetadata, pages: list[str] | None = None) -> Document
             setattr(metadata, field, value)
     if pages is not None and not KEYWORDS_LABEL.search(" ".join(pages[:LEADING_PAGES])):
         metadata.keywords = []  # keywords only count when the document prints a keyword list
+    metadata.authors = [without_title(a) for a in metadata.authors]
     metadata.publication_date = iso_date(metadata.publication_date)
     if metadata.journal_article:
         for field in JOURNAL_DATES:
@@ -227,6 +235,7 @@ def tidy(metadata: DocumentMetadata, pages: list[str] | None = None) -> Document
     if metadata.doi:
         metadata.doi = re.sub(r"^(https?://)?(dx\.)?doi\.org/", "", metadata.doi.strip())
     _complete_from_quotes(metadata)
+    metadata.document_type = _document_type(metadata)
     if not metadata.organisation and metadata.authors and all(is_known_organisation(a) for a in metadata.authors):
         metadata.organisation = canonical_names("; ".join(metadata.authors))  # a corporate author did the work
     return metadata
@@ -248,6 +257,15 @@ def _complete_from_quotes(metadata: DocumentMetadata) -> None:
         if named:
             current = [p.strip() for p in (getattr(metadata, field) or "").split(";") if p.strip()]
             setattr(metadata, field, "; ".join(dict.fromkeys(current + named)))
+
+
+def _document_type(metadata: DocumentMetadata) -> str | None:
+    """Lower case, and the most specific type named in the model's own quote ("Survey Report", not "report")."""
+    answer = metadata.document_type.strip().lower() if metadata.document_type else None
+    quotes = " ".join(e.quote for e in metadata.evidence if e.field == "document_type").lower()
+    named = [t for t in DOCUMENT_TYPES if re.search(rf"\b{t}\b", quotes)]
+    specific = [t for t in named if answer is None or (t != answer and t.endswith(answer))]
+    return max(specific, key=len) if specific else answer
 
 
 class MetadataExtractionResult(BaseModel):

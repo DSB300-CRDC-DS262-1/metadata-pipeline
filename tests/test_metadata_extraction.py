@@ -152,6 +152,22 @@ def test_corporate_author_fills_an_empty_organisation() -> None:
     assert tidy(DocumentMetadata(authors=["Jane Citizen"])).organisation is None
 
 
+def test_authors_are_recorded_without_titles() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    assert tidy(DocumentMetadata(authors=["Hon. A/Prof Tony Lower", "Drew Miles"])).authors == [
+        "Tony Lower", "Drew Miles"
+    ]
+
+
+def test_document_type_takes_the_most_specific_type_in_its_quote() -> None:
+    from crdc_pipeline.extraction.metadata import FieldEvidence, tidy
+
+    quote = FieldEvidence(field="document_type", page=1, quote="2025 Survey Report", basis="stated")
+    assert tidy(DocumentMetadata(document_type="Report", evidence=[quote])).document_type == "survey report"
+    assert tidy(DocumentMetadata(document_type="Journal Article")).document_type == "journal article"
+
+
 def test_keywords_kept_only_when_the_document_prints_them() -> None:
     from crdc_pipeline.extraction.metadata import tidy
 

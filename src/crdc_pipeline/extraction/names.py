@@ -11,6 +11,9 @@ NAMES_PATH = Path(__file__).resolve().parents[3] / "data" / "organisation_names.
 ORGANISATION_FIELDS = ("organisation", "publisher", "funder", "copyright_holder")
 _ACRONYM = r"(?:\s*\([A-Z][A-Z ]+\))?"
 _SEPARATOR = r"\s*(?:;|,|&|\band\b)\s*"
+_TITLE = re.compile(
+    r"^(?:(?:Hon|Dr|Prof|A/Prof|Assoc\.?\s*Prof|Associate Professor|Professor|Emeritus|Mr|Mrs|Ms|Miss)\.?\s+)+", re.I
+)
 
 
 @lru_cache(maxsize=1)
@@ -56,8 +59,22 @@ def _split_known(value: str) -> list[str] | None:
 
 
 def canonical_names(value: str) -> str:
-    """Standardise organisations into a '; '-separated list of standard names."""
+    """Standardise organisations into a '; '-separated list of standard names.
+
+    A part naming exactly one known organisation becomes that organisation, so sub-units
+    ("Faculty of Science, The University of Sydney") are recorded at the top level.
+    """
     known = _split_known(value)
     if known is not None:
         return "; ".join(known)
-    return "; ".join(canonical_name(part) for part in value.split(";") if part.strip())
+    parts = []
+    for part in value.split(";"):
+        if part.strip():
+            named = organisations_named_in(part)
+            parts.append(named[0] if len(named) == 1 else canonical_name(part))
+    return "; ".join(dict.fromkeys(parts))
+
+
+def without_title(name: str) -> str:
+    """A person's name without titles such as 'Hon.', 'Dr' or 'A/Prof'."""
+    return _TITLE.sub("", name.strip())

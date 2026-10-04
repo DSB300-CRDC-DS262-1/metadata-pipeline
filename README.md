@@ -121,7 +121,7 @@ Results on the current schema (76 checks across the four documents):
 |---|---|---|---|---|
 | Gemma 4 12B, `--think off` | 75-76 | 7 | 9.5 GB | Fastest on a 16 GB GPU; sometimes misses Voconiq's copyright holder |
 | Phi-4 | 75 | 10 | 11.7 GB | Same score every run; leaves Hedayati's organisation empty |
-| Gemma 4 E4B (default) | 74-76 | 8 | 5.3 GB | Smallest; fits 4-8 GB GPUs; answers can differ on a fresh run |
+| Gemma 4 E4B (default) | 76 | 8 | 5.3 GB | Smallest; fits 4-8 GB GPUs; 76 on every fresh run since the latest rules |
 | Gemma 4 26B (A4B), `--think off` | 72 | 9 | 14.3 GB | Does not fit a 16 GB GPU fully |
 
 Measured on an RTX 5070 Ti (16 GB). Energy and memory can be re-measured
@@ -133,8 +133,8 @@ context), so expect laptops to be slower:
 
 | GPU memory | Best choice | Layers on GPU (`--num-gpu`) | Score | Seconds per doc |
 |---|---|---|---|---|
-| 8 GB | `gemma4:e4b` | 42 (all) | 75 | 10 |
-| 4 GB | `gemma4:e4b` | 40 | 74 | 13 |
+| 8 GB | `gemma4:e4b` | 42 (all) | 76 | 10 |
+| 4 GB | `gemma4:e4b` | 40 | 76 | 12 |
 | 2 GB | `gemma4:12b --think off` | 8 | 74 | 52 |
 
 The first call loads the model (20-80 seconds). Earlier comparison runs are

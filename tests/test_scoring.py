@@ -20,3 +20,14 @@ def test_organisation_fields_compare_standard_names() -> None:
                    "Cotton Research and Development Corporation")
     assert not matches("title", "Australian Cotton Research and Development Corporation (CRDC)",
                        "Cotton Research and Development Corporation")
+
+
+def test_sub_units_count_as_their_organisation() -> None:
+    assert matches("organisation",
+                   "NSW DPI; Faculty of Science, Sydney Institute of Agriculture, The University of Sydney",
+                   "NSW Department of Primary Industries; The University of Sydney")
+
+
+def test_authors_compare_without_titles() -> None:
+    assert matches("authors", ["Tony Lower"], ["Hon. A/Prof Tony Lower"])
+    assert not matches("authors", ["Tony Lower"], ["Kerri-Lynn Peachey"])
