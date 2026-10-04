@@ -2,77 +2,134 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+import re
+from typing import Literal
+
+from pydantic import BaseModel, Field, field_validator
 
 from .backends import Backend
+from .names import ORGANISATION_FIELDS, canonical_names, is_known_organisation, organisations_named_in
+from .printed import iso_date, printed_fields
+
+# A quote backing these fields names every body that holds the role, so all of them are kept.
+ROLE_STATEMENTS = {
+    "funder": re.compile(
+        r"financial (?:contribution|support)|funded by|funding|commissioned|undertaken for|grant", re.I
+    ),
+    "copyright_holder": re.compile(r"©|copyright", re.I),
+}
+KEYWORDS_LABEL = re.compile(r"\bkey\s*words?\b", re.I)
+JOURNAL_DATES = ("submission_date", "revised_date", "acceptance_date")
 
 LEADING_PAGES = 2
 TRAILING_PAGES = 1
+EXCERPT_CHAR_LIMIT = 6000
+EMPTY_WORDS = {"", "null", "none", "n/a", "not stated", "unknown"}
+
+# Lines on other pages that usually carry funding, rights or "this updates..." statements.
+EXCERPT_PATTERN = re.compile(
+    r"fund|financial|commission|undertaken for|acknowledg|copyright|update|revis|replac|supersed",
+    re.I,
+)
 
 
-class DocumentMetadata(BaseModel):
+class _Cleaned(BaseModel):
+    @field_validator("*", mode="before")
+    @classmethod
+    def _empty_words_to_none(cls, value):
+        """Models sometimes write the word "null" instead of leaving a field empty."""
+        if isinstance(value, str) and value.strip().lower() in EMPTY_WORDS:
+            return None
+        if isinstance(value, list):
+            return [v for v in value if not (isinstance(v, str) and v.strip().lower() in EMPTY_WORDS)]
+        return value
 
+
+class JournalArticle(_Cleaned):
+    journal: str | None = Field(default=None, description="Journal name.")
+    volume: str | None = Field(default=None, description="Journal volume.")
+    issue_year: str | None = Field(default=None, description="Year of the journal issue.")
+    pages: str | None = Field(default=None, description="Page range, e.g. '974-985'.")
+    issn: str | None = Field(default=None, description="ISSN, if printed.")
+    submission_date: str | None = Field(default=None, description="'Received' date. ISO 8601.")
+    revised_date: str | None = Field(default=None, description="'Received in revised form' date. ISO 8601.")
+    acceptance_date: str | None = Field(default=None, description="'Accepted' date. ISO 8601.")
+
+
+class FieldEvidence(BaseModel):
+    field: str = Field(description="Name of the metadata field this supports.")
+    page: int = Field(description="Page number from the '=== page N ===' marker.")
+    quote: str = Field(description="Short exact quote from that page.")
+    basis: Literal["stated", "inferred"] = Field(
+        description="'stated' if the page says it directly, 'inferred' if deduced from it."
+    )
+
+
+class DocumentMetadata(_Cleaned):
     title: str | None = Field(
-        default=None, description="The document's full title, as printed."
+        default=None, description="The document's full title, as printed on the cover or first page."
+    )
+    document_type: str | None = Field(
+        default=None,
+        description="One of: report, brief, journal article, survey report, conference paper, other.",
     )
     authors: list[str] = Field(
         default_factory=list,
-        description="Author names as printed, in the order given. Empty list if none are named "
-        "(e.g. the document credits an organisation rather than individuals).",
+        max_length=50,
+        description="Author names as printed, in order. If the citation credits an organisation "
+        "as author (e.g. 'Voconiq (2025)'), list that organisation. Never list contact people "
+        "or people only thanked in acknowledgements.",
     )
     organisation: str | None = Field(
         default=None,
-        description="The author's affiliated institution ONLY (e.g. the university or research "
-        "institute an author works for). Never the publisher or the funder, even if the "
-        "author's own organisation also funded or published the work; use the publisher/funder "
-        "fields for those. If a document is credited to an organisation rather than named "
-        "individuals, that organisation still belongs here, not in authors."
+        description="Who did the work: every institution the authors belong to, at the top level "
+        "(a university or government department, not its faculties or research sites), separated "
+        "by '; '. If the document is credited to an organisation rather than people, that "
+        "organisation. Never the publisher, a funder or the body the work was undertaken for, "
+        "unless an author belongs to it.",
     )
     publisher: str | None = Field(
         default=None,
-        description="The entity that published or distributes the document (e.g. a journal "
-        "publisher, a government agency releasing its own report). Distinct from organisation "
-        "(author affiliation) and funder, even when the same name could plausibly fill more "
-        "than one role."
+        description="Who published or distributes the document, only if named (e.g. a journal "
+        "publisher, or the body named in the document's own citation line).",
     )
     funder: str | None = Field(
         default=None,
-        description="The entity that funded or commissioned the work, if the document credits "
-        "one explicitly (e.g. 'commissioned by the Cotton Research and Development "
-        "Corporation'). Distinct from organisation and publisher."
+        description="Every body that funded, financially supported, commissioned or had the work "
+        "undertaken for it, from any explicit statement anywhere in the text. Separate several "
+        "with '; '.",
+    )
+    copyright_holder: str | None = Field(
+        default=None, description="Who holds copyright, from a copyright line."
     )
     publication_date: str | None = Field(
         default=None,
-        description="The document's main publication or issue date, exactly as it can be "
-        "determined from the text (ISO 8601 'YYYY-MM-DD' if a full date is given, 'YYYY' if "
-        "only a year is stated). This is the date that answers 'how new or old is this "
-        "document', which is its primary use downstream, so prefer the officially published/"
-        "issued date over a submission or acceptance date when a document states more than one."
+        description="When the document was first made public: for a journal article the "
+        "'Available online' date, otherwise the date printed on the document. ISO 8601: "
+        "'YYYY-MM-DD', 'YYYY-MM' or 'YYYY', as precise as the text allows.",
     )
-    submission_date: str | None = Field(
+    journal_article: JournalArticle | None = Field(
         default=None,
-        description="The date the work was originally submitted, if the document states one "
-        "separately from its publication date (common in journal articles). Same date format "
-        "as publication_date. Null if not stated or not distinguishable from publication_date."
+        description="Only for a journal article: its journal details and review dates. Null for "
+        "any other kind of document.",
     )
-    acceptance_date: str | None = Field(
-        default=None,
-        description="The date the work was accepted for publication, if the document states "
-        "one separately from its publication date. Same date format as publication_date. Null "
-        "if not stated or not distinguishable from publication_date."
-    )
-    source_url: str | None = Field(
-        default=None,
-        description="A DOI or URL for this document, ONLY if one literally appears in the "
-        "given text. Never construct or guess one. Keep this field even when null: most "
-        "documents in this corpus have no in-text URL, but future documents or ingestion "
-        "sources may supply one, and the field stays part of the schema either way."
+    doi: str | None = Field(default=None, description="DOI only, e.g. '10.1016/j.jclepro.2018.11.190'.")
+    keywords: list[str] = Field(default_factory=list, max_length=20, description="Keywords, only if listed.")
+    series: str | None = Field(
+        default=None, description="Name of the ongoing program or report series, if any."
     )
     supersedes_note: str | None = Field(
         default=None,
-        description="Quote or closely paraphrase any sentence where the document explicitly "
-        "describes itself as updating, revising, or replacing an earlier report. Null if the "
-        "document makes no such claim about itself."
+        description="Quote or closely paraphrase any sentence where the document says it updates, "
+        "revises or replaces an earlier report. Null if it makes no such claim.",
+    )
+    contact_emails: list[str] = Field(
+        default_factory=list, max_length=20, description="Email addresses printed in the document."
+    )
+    evidence: list[FieldEvidence] = Field(
+        default_factory=list,
+        max_length=25,
+        description="One entry for every non-empty field above, citing where it came from.",
     )
 
 
@@ -81,29 +138,24 @@ government research agency's document pipeline. Accuracy matters more than compl
 much better to return null for a field than to guess or infer a plausible-sounding value.
 
 Rules:
-- Use ONLY information literally present in the text below.
-- If a field cannot be determined from this text, return null (or an empty list for authors).
-- A document commonly involves several distinct organisations. Keep them separate rather than \
-picking whichever one is most prominent:
-  - organisation: the author's own affiliated institution (e.g. the university or research \
-institute an author works for), never the publisher or funder.
-  - publisher: who published or distributes the document (e.g. a journal publisher, or a \
-government agency releasing its own report).
-  - funder: who funded or commissioned the work, only if the document says so explicitly (e.g. \
-"commissioned by X").
-  The same real-world entity can genuinely fill more than one of these roles for a given \
-document (e.g. an agency that both commissioned and published a report); when the text supports \
-it, fill in more than one field rather than forcing a single choice.
-- A document can state more than one date (publication/issue date, submission date, acceptance \
-date). Use publication_date for whichever one represents the document's official publication or \
-issue date, since that is the date used downstream to judge how current the document is. Only \
-fill submission_date or acceptance_date when the document distinguishes them from the \
-publication date explicitly.
-- Do not fabricate a source_url. Only return one if a DOI or URL is actually printed in the text.
-- For supersedes_note: only fill this in if the document itself explicitly says it updates, \
-revises, or replaces an earlier report. Do not infer this from context alone.
+- Use ONLY information present in the text below.
+- If a field cannot be determined from this text, return null (or an empty list).
+- Keep organisation, publisher and funder separate. The body a study was "undertaken for" is a \
+funder, never the organisation. The same body can fill more than one role when the text supports it.
+- funder lists every body named in a funding statement ("funding source", "financial \
+contribution", "funded by") and every body the work was commissioned by or undertaken for. These \
+statements are often in acknowledgements or the method, not on the cover: check the excerpts. \
+When one statement names several bodies ("thank X and Y for their financial contribution"), list \
+every one of them, not just the first. Only bodies credited with money or commissioning count: \
+never bodies thanked for data, assistance, access or comments.
+- publication_date for a journal article is the "Available online" date, not the issue year.
+- Dates use ISO 8601 ('YYYY-MM-DD', 'YYYY-MM' or 'YYYY'), never the printed format.
+- Record email addresses only in contact_emails, never in other fields.
+- Do not fabricate a DOI. Only record one printed in the text.
+- For every field you fill, add an evidence entry with the page number from the nearest \
+'=== page N ===' marker, a short exact quote, and whether the value is stated or inferred.
 
-Document text (leading and trailing pages; other pages omitted):
+Document text (first pages, last page, and excerpts from other pages):
 ---
 {text}
 ---
@@ -111,17 +163,91 @@ Document text (leading and trailing pages; other pages omitted):
 Extract the metadata now."""
 
 
+def _without_reference_list(pages: list[str]) -> list[tuple[int, str]]:
+    """Numbered pages up to the reference list; citations of other works carry their metadata."""
+    kept = []
+    for n, text in enumerate(pages, start=1):
+        lines = text.splitlines()
+        cut = next((i for i, line in enumerate(lines) if line.strip().lower() == "references"), None)
+        if cut is not None:
+            if "\n".join(lines[:cut]).strip():
+                kept.append((n, "\n".join(lines[:cut])))
+            break
+        kept.append((n, text))
+    return kept
+
+
 def build_context_text(pages: list[str]) -> str:
-    """Join the first two and last pages, which carry the metadata."""
-    if len(pages) <= LEADING_PAGES + TRAILING_PAGES:
-        selected = pages
-    else:
-        selected = pages[:LEADING_PAGES] + pages[-TRAILING_PAGES:]
-    return "\n\n=== page break ===\n\n".join(selected)
+    """First two pages, last page, and keyword excerpts from the pages in between."""
+    numbered = _without_reference_list(pages)
+    if len(numbered) <= LEADING_PAGES + TRAILING_PAGES:
+        return "\n\n".join(f"=== page {n} ===\n{text}" for n, text in numbered)
+
+    leading = numbered[:LEADING_PAGES]
+    trailing = numbered[-TRAILING_PAGES:]
+    middle = numbered[LEADING_PAGES:-TRAILING_PAGES]
+
+    parts = [f"=== page {n} ===\n{text}" for n, text in leading]
+    budget = EXCERPT_CHAR_LIMIT
+    for n, text in middle:
+        lines = text.splitlines()
+        keep = sorted({j for i, line in enumerate(lines) if EXCERPT_PATTERN.search(line)
+                       for j in (i - 1, i, i + 1) if 0 <= j < len(lines)})
+        excerpt = "\n".join(lines[j] for j in keep).strip()
+        if excerpt and budget > 0:
+            excerpt = excerpt[:budget]
+            budget -= len(excerpt)
+            parts.append(f"=== page {n} (excerpt) ===\n{excerpt}")
+    parts += [f"=== page {n} ===\n{text}" for n, text in trailing]
+    return "\n\n".join(parts)
 
 
 def build_prompt(pages: list[str]) -> str:
     return PROMPT_TEMPLATE.format(text=build_context_text(pages))
+
+
+def tidy(metadata: DocumentMetadata, pages: list[str] | None = None) -> DocumentMetadata:
+    """Printed facts over model answers, ISO dates, standard names and a bare DOI."""
+    for field, value in printed_fields(pages or []).items():
+        if field in JournalArticle.model_fields:
+            metadata.journal_article = metadata.journal_article or JournalArticle()
+            setattr(metadata.journal_article, field, value)
+        else:
+            setattr(metadata, field, value)
+    if pages is not None and not KEYWORDS_LABEL.search(" ".join(pages[:LEADING_PAGES])):
+        metadata.keywords = []  # keywords only count when the document prints a keyword list
+    metadata.publication_date = iso_date(metadata.publication_date)
+    if metadata.journal_article:
+        for field in JOURNAL_DATES:
+            setattr(metadata.journal_article, field, iso_date(getattr(metadata.journal_article, field)))
+    for field in ORGANISATION_FIELDS:
+        value = getattr(metadata, field)
+        if value:
+            setattr(metadata, field, canonical_names(value))
+    if metadata.doi:
+        metadata.doi = re.sub(r"^(https?://)?(dx\.)?doi\.org/", "", metadata.doi.strip())
+    _complete_from_quotes(metadata)
+    if not metadata.organisation and metadata.authors and all(is_known_organisation(a) for a in metadata.authors):
+        metadata.organisation = canonical_names("; ".join(metadata.authors))  # a corporate author did the work
+    return metadata
+
+
+def _complete_from_quotes(metadata: DocumentMetadata) -> None:
+    """Add every known body named in the model's own funding or copyright quote.
+
+    Models sometimes stop after the first name ("thank X and Y for their financial contribution"
+    giving only X). Quotes without the role's wording (thanks for data or comments) are ignored.
+    """
+    for field, statement in ROLE_STATEMENTS.items():
+        named = [
+            name
+            for item in metadata.evidence
+            if item.field == field and statement.search(item.quote)
+            for name in organisations_named_in(item.quote)
+        ]
+        if named:
+            current = [p.strip() for p in (getattr(metadata, field) or "").split(";") if p.strip()]
+            setattr(metadata, field, "; ".join(dict.fromkeys(current + named)))
 
 
 class MetadataExtractionResult(BaseModel):
@@ -135,7 +261,7 @@ class MetadataExtractionResult(BaseModel):
 def extract_metadata(pages: list[str], backend: Backend) -> MetadataExtractionResult:
     result = backend.generate(build_prompt(pages), DocumentMetadata)
     return MetadataExtractionResult(
-        metadata=result.parsed,
+        metadata=tidy(result.parsed, pages),
         resolved_model=result.model,
         seconds=result.seconds,
         prompt_tokens=result.prompt_tokens,
