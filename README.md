@@ -11,7 +11,7 @@ statistics only: tables and images are a separate team's scope.
 
 Status: ingestion (layout detection, symbol repair, image fallback) and
 document metadata extraction are built and tested, running on local models
-by default. Statistics extraction is on `main`; contexts are not built yet.
+by default. Statistics and context extraction run through Gemini (see below).
 
 ## Setup
 
@@ -123,6 +123,20 @@ time and token counts, and each field is printed against the reference.
 | `--no-vision` | Keep the text layer as it is. By default, pages whose text is garbled (poor OCR of a scan), empty, or has OCR-split email addresses are read from the page image |
 | `--documents` | Only these document IDs |
 
+## Running statistics and context extraction
+
+```bash
+.venv/Scripts/python.exe scripts/run_statistics_extraction.py
+.venv/Scripts/python.exe scripts/run_contexts_extraction.py
+```
+
+Both run the manifest documents through Gemini, write each result to
+`output/statistics/` or `output/contexts/`, and print a rough recall check
+against `data/ground_truth_all_documents.json`. The recall matches by exact
+string, so it under-counts whenever the model phrases a statistic or context
+differently to the ground truth: read the printed results, not just the
+recall percentage.
+
 ## Choosing a local model
 
 Results on the current schema (76 checks across the four documents):
@@ -197,8 +211,12 @@ src/crdc_pipeline/
     names.py     standard organisation names
     scoring.py   field matching against the reference
     vision.py    page and word reading from images
+    statistics.py  frontier-model (Gemini) quantitative statistics extraction
+    contexts.py    frontier-model (Gemini) context extraction
 scripts/
   run_metadata_extraction.py      runs metadata extraction across the manifest
+  run_statistics_extraction.py    runs statistics extraction across the manifest
+  run_contexts_extraction.py      runs context extraction across the manifest
   compare_metadata_runs.py        compares saved runs against the reference
   measure_compute.py              GPU memory, power and energy per model
   transcribe_unreadable_pages.py  re-reads flagged pages with a vision model
@@ -211,6 +229,7 @@ tests/
   test_printed.py                  article history, DOI, journal header, ISSN
   test_backends.py                 backends with mocked HTTP (no server needed)
   test_scoring.py                  field matching
+  test_statistics_extraction.py    statistics prompt and schema tests
   test_sample_documents.py         checks against the real sample PDFs
 data/
   raw_pdfs/                        the four source PDFs (gitignored)
