@@ -115,14 +115,18 @@ class ContextEntry(BaseModel):
 
     page: int
 
-
-class ContextExtraction(BaseModel):
-    document: str
-
+class ContextsExtraction(BaseModel):
     contexts: list[ContextEntry]
 
-class ContextExtraction(BaseModel):
-    contexts: list[ContextEntry]
+class ContextEntryWithIds(BaseModel):
+    context_group_id: str
+    context_id: str
+
+    context_type: ContextType
+    value: ContextValue
+
+    original_text: str
+    page: int
 
 PROMPT_TEMPLATE = """
  You are an information extraction system.
@@ -376,8 +380,8 @@ def build_prompt(pages: list[str]) -> str:
     return PROMPT_TEMPLATE.format(text=build_context_text(pages))
 
 
-class StatisticsExtractionResult(BaseModel):
-    statistics: list[StatisticEntry]
+class ContextsExtractionResult(BaseModel):
+    contexts: list[ContextEntry]
     #: See metadata.py's MetadataExtractionResult for why this is kept.
     resolved_model: str
 
@@ -385,7 +389,7 @@ class StatisticsExtractionResult(BaseModel):
 def _generate_with_retry(client: genai.Client, model: str, prompt: str):
     config = types.GenerateContentConfig(
         response_mime_type="application/json",
-        response_schema=StatisticsExtraction,
+        response_schema=ContextsExtraction,
         temperature=0,
     )
     last_error: errors.ServerError | None = None
@@ -399,12 +403,13 @@ def _generate_with_retry(client: genai.Client, model: str, prompt: str):
     raise last_error
 
 
-def extract_statistics(
+def extract_contexts(
+    document_id: str,
     pages: list[str],
     client: genai.Client,
     model: str = DEFAULT_MODEL,
-) -> StatisticsExtractionResult:
-    """Extract StatisticEntry records from a document's page texts.
+) -> ContextsExtractionResult:
+    """Extract ContextEntry records from a document's page texts.
 
     `pages` is a document's full list of per-page text (e.g.
     `[p.text for p in document.pages]` from crdc_pipeline.ingestion).
@@ -416,34 +421,40 @@ def extract_statistics(
     else:
         # Fallback if the SDK didn't auto-parse for some reason --
         # validate the raw JSON text against the same schema ourselves.
-        extraction = StatisticsExtraction.model_validate(json.loads(response.text))
+        extraction = ContextsExtraction.model_validate(json.loads(response.text))
+    doc_contexts = assign_context_ids(extraction.contexts, document_id)
     resolved_model = getattr(response, "model_version", None) or model
-    return StatisticsExtractionResult(statistics=extraction.statistics, resolved_model=resolved_model)
+    return ContextsExtractionResult(contexts=doc_contexts, resolved_model=resolved_model)
 
 def assign_context_ids(
-    extraction: ContextExtraction,
-    document_id: str,
+    contexts: list[ContextEntry],
+    document_id: str
 ):
-    counters = {}
+    counters: dict[int, int] = {}
 
-    for ctx in extraction.contexts:
+    output = []
+
+    for ctx in contexts:
 
         group = ctx.source_group
 
-        counters.setdefault(group, 0)
-        counters[group] += 1
+        counters[group] = counters.get(group, 0) + 1
 
         suffix = chr(ord("a") + counters[group] - 1)
 
-        ctx.context_group_id = (
-            f"{document_id}_{group:03d}"
-        )
+        context_group_id = f"{document_id}_{group:03d}"
 
-        ctx.context_id = (
+        context_id = (
             f"{document_id}_{group:03d}{suffix}"
         )
 
-    return extraction
+        output.append({
+            "context_group_id": context_group_id,
+            "context_id": context_id,
+            **ctx.model_dump()
+        })
+
+    return output
 
 def make_client() -> genai.Client:
     """Build a Gemini client, failing with a clear message if no API

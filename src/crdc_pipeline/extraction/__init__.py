@@ -1,5 +1,6 @@
 from .metadata import DocumentMetadata, MetadataExtractionResult, extract_metadata
 from .statistics import StatisticEntry, StatisticsExtractionResult, extract_statistics
+from .contexts import ContextEntry, ContextsExtractionResult, extract_contexts
 
 __all__ = [
     "DocumentMetadata",
@@ -8,4 +9,7 @@ __all__ = [
     "StatisticEntry",
     "StatisticsExtractionResult",
     "extract_statistics",
+    "ContextEntry",
+    "ContextsExtractionResult",
+    "extract_contexts"
 ]
