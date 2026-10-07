@@ -1,10 +1,4 @@
-"""Shared fixtures for building synthetic test PDFs with reportlab.
-
-These stand in for the real sample documents until they're added under
-data/raw_pdfs/ -- they're deliberately simple (no real prose) because
-their only job is to exercise the ingestion module's column-routing
-logic against known, controlled geometry.
-"""
+"""Synthetic test PDFs built with reportlab."""
 
 from __future__ import annotations
 
@@ -13,13 +7,9 @@ from pathlib import Path
 import pytest
 from reportlab.pdfgen import canvas
 
-PAGE_WIDTH, PAGE_HEIGHT = 612, 792  # US letter, points
+PAGE_WIDTH, PAGE_HEIGHT = 612, 792
 
-# Cycling filler word-counts so each line ends at a different x position --
-# real single-column body text has ragged line lengths from word-wrap, and
-# a detector needs to see that variation. Uniform-length lines leave a
-# consistent gap near the right margin that looks exactly like a column
-# gutter (this is what the first version of this fixture got wrong).
+# Varying line lengths, like real wrapped text (uniform lines look like a gutter).
 _FILLER_WORD_COUNTS = [0, 5, 10, 2, 8, 1, 11, 4, 7, 0, 9, 3, 6, 10, 1, 8, 4, 11, 2, 6]
 _FILLER_WORDS = (
     "across multiple sites over consecutive seasons under varying "
@@ -55,19 +45,12 @@ def single_column_pdf(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def two_column_pdf(tmp_path: Path) -> Path:
-    """A page with a left column (LEFT-1..LEFT-10) and a right column
-    (RIGHT-1..RIGHT-10), interleaved row by row -- the way a real
-    two-column PDF's content stream is often ordered, which is exactly
-    what breaks plain reading-order assumptions. A correct loader must
-    still emit all LEFT lines before all RIGHT lines.
-    """
+    """Left and right column lines drawn interleaved, as in real PDFs."""
     path = tmp_path / "two_column.pdf"
     c = canvas.Canvas(str(path), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
     c.setFont("Helvetica", 11)
     y = 740
     for i in range(1, 11):
-        # Interleaved draw order: right-column text is written to the
-        # content stream before the left-column text on the same row.
         c.drawString(320, y, f"RIGHT-{i} column sentence about topic B.")
         c.drawString(72, y, f"LEFT-{i} column sentence about topic A.")
         y -= 14
@@ -78,9 +61,7 @@ def two_column_pdf(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def mixed_layout_pdf(tmp_path: Path) -> Path:
-    """Page 1 single-column, page 2 two-column -- exercises per-page
-    (not per-document) layout detection and the "mixed" summary label.
-    """
+    """Page 1 single-column, page 2 two-column."""
     path = tmp_path / "mixed_layout.pdf"
     c = canvas.Canvas(str(path), pagesize=(PAGE_WIDTH, PAGE_HEIGHT))
 

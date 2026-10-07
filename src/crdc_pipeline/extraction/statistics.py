@@ -1,494 +1,232 @@
-"""Quantitative statistics extraction via a frontier model (Gemini).
+"""Statistics and context extraction, page by page, in two passes.
 
-Pulls explicit, prose-reported quantitative findings (percentages,
-counts, dollar figures, emissions figures, etc.) from a document's own
-ingested text -- the harder half of the CRDC AI Metadata Pipeline's
-extraction stage, scoped around value_status / record_type as used in
-data/ground_truth_all_documents.json.
+Pass 1 lists each page's context items (how numbers were produced and should be read). Pass 2
+lists each page's statistics, and pass 3 links them to those items by ID. Pages are processed one at a
+time so a small local model never needs the whole document in its context window. IDs, page
+numbers and contexts are set in code.
 
-Deliberately does NOT attempt:
-- context_id linking (geographic region, sample/population, collection
-  method, etc.) -- that needs its own extraction pass and/or dedup
-  against other statistics sharing the same underlying survey question
-  or methodology description. This module extracts each statistic's
-  own self-contained facts only.
-- supersedes_statistic_id linking -- like metadata's
-  supersedes_document_id, this needs corpus-wide reconciliation
-  (matching one document's revised figure to another document's
-  original one), not something a single document's own text can
-  answer alone. Left as a separate, not-yet-built step.
-- Recovering values that are visible only in a chart/image rendering
-  and never appear in the text layer at all (see the
-  "extraction_failed" entries in the ground truth) -- this module
-  works from extracted text only, so those are expected, known misses,
-  not bugs.
+The prompts are in statistics_prompts.py, and the plain-code rules applied to the model's answers in
+statistics_filters.py (what to leave out), statistics_values.py (each value's reading and labels),
+statistics_periods.py (periods) and statistics_document.py (scope, duplicates and links).
 """
 
 from __future__ import annotations
 
-import json
-import os
-import time
-
-from google import genai
-from google.genai import errors, types
 from pydantic import BaseModel, Field
 
-#: See metadata.py for why this retry exists (free-tier 503s).
-MAX_RETRIES = 4
-RETRY_BACKOFF_SECONDS = 5
+from .backends import Backend
+from .findings import STATISTIC_LEVEL, Context, ContextItem, Statistic, group_contexts
+from .statistics_document import (
+    answers_to_questions,
+    drop_conversions,
+    drop_duplicates,
+    duplicate_candidates,
+    duplicate_prompt,
+    merge_ranges,
+    modelled_results,
+    pair_numbers,
+    sharpen_scope,
+    trim_links,
+)
+from .statistics_filters import (
+    CAPTION,
+    before_references,
+    is_label,
+    is_structural,
+    is_table_row,
+    without_tables,
+    word_number_note,
+)
+from .statistics_periods import date_survey_answers, survey_year, with_item_period, with_period
+from .statistics_prompts import (
+    CONTEXT_PROMPT,
+    DOCUMENT_CONTEXT_PROMPT,
+    DOCUMENT_LINK_PROMPT,
+    LINK_PROMPT,
+    MAX_METHOD_ITEMS,
+    METHOD_KINDS,
+    METHOD_SCOPE_PROMPT,
+    SCOPE_PROMPT,
+    STATISTICS_PROMPT,
+    DocumentContextItems,
+    DocumentLinks,
+    PageContextItems,
+    PageLinks,
+    PageStatistics,
+    SamePairs,
+    StudyItems,
+)
+from .statistics_values import label_change, label_cited, label_survey_answer, label_type, shared_unit, tidy_statistic
 
-#: See metadata.py for why this is pinned rather than an alias.
-DEFAULT_MODEL = "gemini-3.5-flash"
-
-class AssociatedDateTimes(BaseModel):
-    start: str | None = Field(
-        default=None,
-        description="ISO-8601 date (YYYY-MM-DD) representing the beginning of the reporting period."
-    )
-
-    end: str | None = Field(
-        default=None,
-        description="ISO-8601 date (YYYY-MM-DD) representing the end of the reporting period."
-    )
-
-
-class StatisticEntry(BaseModel):
-    variable: str = Field(
-        description=(
-            "The real-world quantity being measured. "
-            "Use a concise noun phrase such as "
-            "'cotton-related deaths', "
-            "'injury rate', "
-            "'water use efficiency', "
-            "'survey agreement with industry sustainability practices'."
-        )
-    )
-
-    value: float | None = Field(
-        description=(
-            "The reported numeric value. "
-            "Null only when the document deliberately withholds the value "
-            "(e.g. 'fewer than five cases')."
-        )
-    )
-
-    reported_text: str = Field(
-        description=(
-            "The exact value expression as written in the document. "
-            "Examples: '47%', '$2.8 million', "
-            "'fewer than five', 'eight'."
-        )
-    )
-
-    unit: str | None = Field(
-        default=None,
-        description=(
-            "Unit associated with the value. "
-            "Examples: '%', 'deaths', 'respondents', "
-            "'kg CO2e per tonne lint', 'AUD million'."
-        )
-    )
-
-    statistic_type: str = Field(
-        description=(
-            "One of: "
-            "count, percentage, rate, average, median, "
-            "ratio, monetary_value, duration, index, other."
-        )
-    )
-
-    value_status: str = Field(
-        description=(
-            "One of: "
-            "exact, approximate, censored_below, censored_above."
-        )
-    )
-
-    constraints: list[str] = Field(
-        default_factory=list,
-        description=(
-            "Logical constraints on the value. "
-            "Examples: "
-            "'non_negative', "
-            "'integer_count', "
-            "'percentage_range_0_100'."
-        )
-    )
-
-    associated_datetimes: AssociatedDateTimes | None = Field(
-        default=None,
-        description=(
-            "Reporting period associated with the statistic."
-        )
-    )
-
-    limitations: list[str] = Field(
-        default_factory=list,
-        description=(
-            "Limitations, caveats, assumptions or data-quality concerns "
-            "explicitly stated in the surrounding text."
-        )
-    )
-
-    page: int = Field(
-        description="Page number where the statistic occurs."
-    )
-
-    source_text: str = Field(
-        description=(
-            "The complete contextual passage used for extraction. "
-            "Include enough surrounding text to verify the value, "
-            "time period and limitations."
-        )
-    )
-
-class StatisticsExtraction(BaseModel):
-    statistics: list[StatisticEntry]
-
-PROMPT_TEMPLATE = """You are an information extraction system.
-Your task is to extract quantitative findings from a research document.
-Return structured records describing quantitative findings, not merely isolated numbers.
-
-A finding consists of:
-- the variable being measured
-- the reported value
-- any unit
-- the reporting period
-- explicit limitations
-- supporting source text
-
-CRITICAL RULES
-1. Use ONLY information explicitly present in the supplied text.
-2. Never calculate, estimate, infer or invent values.
-3. If a value is deliberately withheld
-   (e.g. "fewer than five cases"),
-   set:
-       value = null
-       value_status = "censored_below"
-   and preserve the original wording in reported_text.
-4. Capture limitations whenever they are explicitly stated nearby
-   or in immediately preceding contextual paragraphs that apply
-   to the finding being reported.
-5. Extract complete findings rather than isolated numbers.
-   A finding may require multiple consecutive sentences or paragraphs
-   to establish the variable, reporting period, limitations and final value.
-6. Extract final reported values as primary findings, not multiple values
-   that describe the evolution of the same underlying statistic
-   (e.g. original count, revised count, updated total).
-   Do not create separate records solely for intermediate values
-   unless the document explicitly treats them as distinct findings.
-7. Preserve document provenance:
-   - page must match the page marker
-   - source_text must contain all text required
-     to verify the extraction.
-8. Do not create findings that are unsupported by source_text.
-9. If information is genuinely unavailable, return null rather than guessing.
-10. Return every distinct quantitative finding as a separate record.
-11. source_text should contain every sentence used to determine:
-    - the value
-    - the variable
-    - the reporting period
-    - limitations
-    - assumptions
-    Do not truncate source_text to a single sentence if adjacent
-    sentences were required to interpret the finding.
-
----------------------------------------
-FINDING CONSOLIDATION AND DEDUPLICATION
----------------------------------------
-
-A record represents a complete quantitative finding, not an isolated number.
-
-Before creating a record:
-1. Locate the primary quantitative statement.
-2. Expand context backward and forward until:
-   - the variable is unambiguous
-   - units are identified
-   - reporting periods are identified
-   - limitations and assumptions are identified
-3. Include all contextual sentences used in interpretation
-   within source_text.
-4. If several numbers describe the evolution of the same
-   finding (e.g. an initial value, revisions, additions,
-   updates, or a final total), extract a single record using
-   the final reported value and preserve supporting context in source_text.
-5. If multiple candidate records describe the same variable,
-   population and reporting period, keep only the most complete record.
-
-Return no duplicate findings.
-
----------------------
-DEDUPLICATION EXAMPLE
----------------------
-
-Input text:
-
-The previous review identified a total of six deaths
-that definitely occurred within cotton production
-in the 2014-19 period.
-
-Since the previous review, two additional cases
-were identified to have occurred during this period,
-taking the total for the 2014-2019 period to eight.
-
-Incorrect extraction:
-
-[
-  {{
-    "variable": "cotton-related deaths",
-    "value": 6,
-    "unit": "deaths"
-  }},
-  {{
-    "variable": "additional cotton-related deaths",
-    "value": 2,
-    "unit": "deaths"
-  }},
-  {{
-    "variable": "cotton-related deaths",
-    "value": 8,
-    "unit": "deaths"
-  }}
-]
-
-Reason:
-
-The values 6 and 2 are intermediate values used to
-explain the final reported total of 8. These are not separate findings.
-
-Correct extraction:
-
-[
-  {{
-    "variable": "cotton-related deaths",
-    "value": 8,
-    "reported_text": "eight",
-    "unit": "deaths",
-    "statistic_type": "count",
-    "value_status": "exact",
-    "constraints": [
-      "non_negative",
-      "integer_count"
-    ],
-    "associated_datetimes": {{
-      "start": "2014-01-01",
-      "end": "2019-12-31"
-    }},
-    "limitations": [],
-    "source_text": "The previous review identified a total of six deaths that definitely occurred within cotton production in the 2014-19 period. Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight."
-  }}
-]
-
-Rule:
-
-When multiple numeric values describe intermediate steps,
-revisions, additions, or calculations that lead to a final
-reported total, extract a single statistic record using the
-final reported value and preserve the supporting context
-within source_text.
-
---------------------------------------------------
-FIELD DEFINITIONS
---------------------------------------------------
-
-variable
-- The real-world quantity being measured.
-- Use concise noun phrases.
-- Examples:
-    "cotton-related deaths"
-    "injury rate"
-    "survey agreement"
-
-value
-- Numeric value only.
-- No units.
-- Null only for censored values.
-
-reported_text
-- Exact wording used by the document.
-
-unit
-- Measurement unit.
-Examples:
-- deaths
-- %
-- respondents
-- AUD million
-
-statistic_type
-Must be one of:
-- count
-- percentage
-- rate
-- average
-- median
-- ratio
-- monetary_value
-- duration
-- index
-- other
-
-value_status
-Must be one of:
-- exact
-- approximate
-- censored_below
-- censored_above
-
-constraints
-Examples:
-- non_negative
-- integer_count
-- percentage_range_0_100
-
-associated_datetimes
-Where possible convert reporting periods to:
-{{
-  "start": "YYYY-MM-DD",
-  "end": "YYYY-MM-DD"
-}}
-
-Examples:
-"2014-2019" becomes
-{{
-  "start": "2014-01-01",
-  "end": "2019-12-31"
-}}
-
-If insufficient information exists,
-set either field to null.
-
-limitations
-Capture explicit limitations, caveats,
-assumptions, exclusions, uncertainties,
-data quality issues, or under-reporting concerns.
-
-source_text
-Include all surrounding sentences required to:
-- verify value
-- verify unit
-- verify reporting period
-- verify limitations
-
---------------------------------------------------
-EXAMPLE
---------------------------------------------------
-
-Input text:
-
-The previous review identified a total of six deaths
-that definitely occurred within cotton production
-in the 2014-19 period.
-
-Since the previous review,
-two additional cases were identified to have occurred
-during this period,
-taking the total for the 2014-2019 period to eight.
-
-Output:
-
-{{
-  "variable": "cotton-related deaths",
-  "value": 8,
-  "reported_text": "eight",
-  "unit": "deaths",
-  "statistic_type": "count",
-  "value_status": "exact",
-  "constraints": [
-    "non_negative",
-    "integer_count"
-  ],
-  "associated_datetimes": {{
-    "start": "2014-01-01",
-    "end": "2019-12-31"
-  }},
-  "limitations": [],
-  "page": 3,
-  "source_text": "The previous review identified a total of six deaths that definitely occurred within cotton production in the 2014-19 period. Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight."
-}}
-
---------------------------------------------------
-DOCUMENT TEXT
---------------------------------------------------
-{text}
---------------------------------------------------
-EXTRACT ALL QUANTITATIVE FINDINGS
---------------------------------------------------"""
-
-
-def build_context_text(pages: list[str]) -> str:
-    """Join all pages with explicit page-number markers.
-
-    Unlike metadata extraction, statistics can appear on any page, so
-    (unlike metadata.py's build_context_text) nothing is trimmed here.
-    Exposed separately from extract_statistics so this can be
-    unit-tested without a live API call.
-    """
-    parts = [f"=== page {i} ===\n{page_text}" for i, page_text in enumerate(pages, start=1)]
-    return "\n\n".join(parts)
-
-
-def build_prompt(pages: list[str]) -> str:
-    return PROMPT_TEMPLATE.format(text=build_context_text(pages))
-
-
-class StatisticsExtractionResult(BaseModel):
-    statistics: list[StatisticEntry]
-    #: See metadata.py's MetadataExtractionResult for why this is kept.
+class FindingsExtractionResult(BaseModel):
+    context_items: list[ContextItem]
+    contexts: list[Context]
+    statistics: list[Statistic]
+    context_ids: dict[str, str | None]
     resolved_model: str
+    seconds: float
+    prompt_tokens: int = 0
+    output_tokens: int = 0
+    failed_steps: list[str] = Field(default_factory=list)
+    study_item_ids: list[str] = Field(default_factory=list)
+
+def document_link_prompt(items: list[ContextItem], statistics: list[Statistic]) -> str:
+    listed = "\n".join(f"{s.statistic_id} | {s.page} | {s.variable} | {s.reported_text} | {s.quote}" for s in statistics)
+    return DOCUMENT_LINK_PROMPT.format(items=item_list(items), statistics=listed)
 
 
-def _generate_with_retry(client: genai.Client, model: str, prompt: str):
-    config = types.GenerateContentConfig(
-        response_mime_type="application/json",
-        response_schema=StatisticsExtraction,
-        temperature=0,
-    )
-    last_error: errors.ServerError | None = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            return client.models.generate_content(model=model, contents=prompt, config=config)
-        except errors.ServerError as exc:
-            last_error = exc
-            if attempt < MAX_RETRIES:
-                time.sleep(RETRY_BACKOFF_SECONDS * attempt)
-    raise last_error
+def relink(
+    items: list[ContextItem], statistics: list[Statistic], backend: Backend, document_id: str
+) -> tuple[list[Statistic], list[Context], dict[str, str | None], list[str]]:
+    """Replaces every statistic's links with one whole-document linking call; returns failures too."""
+    known = {i.item_id for i in items}
+    try:
+        links = backend.generate(document_link_prompt(items, statistics), DocumentLinks).parsed.links
+    except RuntimeError as exc:
+        return statistics, *group_contexts(document_id, items, statistics), [f"document links: {exc}"]
+    chosen = {entry.statistic_id: [i for i in dict.fromkeys(entry.item_ids) if i in known] for entry in links}
+    linked = [s.model_copy(update={"context_item_ids": chosen.get(s.statistic_id, [])}) for s in statistics]
+    return linked, *group_contexts(document_id, items, linked), []
 
 
-def extract_statistics(
+def item_list(items: list[ContextItem]) -> str:
+    return "\n".join(f"{i.item_id} | {i.item_type} | {i.value}" for i in items) or "(none)"
+
+
+def extract_findings(
     pages: list[str],
-    client: genai.Client,
-    model: str = DEFAULT_MODEL,
-) -> StatisticsExtractionResult:
-    """Extract StatisticEntry records from a document's page texts.
+    backend: Backend,
+    document_id: str,
+    exclude_tables: bool = False,
+    link: bool = True,
+    scope: bool = True,
+    context_backend: Backend | None = None,
+    whole_document: bool = False,
+    dedupe: bool = True,
+) -> FindingsExtractionResult:
+    """Context items, then statistics, for every page with text.
 
-    `pages` is a document's full list of per-page text (e.g.
-    `[p.text for p in document.pages]` from crdc_pipeline.ingestion).
+    `scope` asks once which items describe the document's own study as a whole and links them to
+    every statistic that is not cited from elsewhere; `link` adds a linking pass per page.
+    `context_backend` runs the context, scope and linking steps on a different model; each step
+    runs over all pages before the next, so two local models are swapped as rarely as possible.
+    `whole_document` runs the context and linking steps once over the whole document instead of
+    page by page (statistics stay page by page).
     """
-    prompt = build_prompt(pages)
-    response = _generate_with_retry(client, model, prompt)
-    if response.parsed is not None:
-        extraction = response.parsed
+    pages = before_references(pages)
+    if exclude_tables:
+        pages = [without_tables(p) for p in pages]
+    context_backend = context_backend or backend
+    usage = {"seconds": 0.0, "prompt_tokens": 0, "output_tokens": 0}
+    models: list[str] = []
+    failed: list[str] = []
+
+    def generate(prompt: str, schema: type[BaseModel], step: str, model: Backend) -> BaseModel:
+        try:
+            result = model.generate(prompt, schema)
+        except RuntimeError as exc:  # e.g. the model looping until the server stops it
+            failed.append(f"{step}: {exc}")
+            return schema()
+        usage["seconds"] += result.seconds
+        usage["prompt_tokens"] += result.prompt_tokens or 0
+        usage["output_tokens"] += result.output_tokens or 0
+        if result.model not in models:
+            models.append(result.model)
+        return result.parsed
+
+    numbered = [(n, text) for n, text in enumerate(pages, start=1) if text.strip()]
+    items: list[ContextItem] = []
+    if whole_document:
+        document = "\n\n".join(f"=== page {n} ===\n{text}" for n, text in numbered)
+        found = generate(DOCUMENT_CONTEXT_PROMPT.format(text=document), DocumentContextItems, "document context", context_backend).items
+        pages_with_text = {n for n, _ in numbered}
+        for k, item in enumerate((i for i in found if i.page in pages_with_text), start=1):
+            items.append(item.model_copy(update={"item_id": f"p{item.page}_i{k:03d}"}))
     else:
-        # Fallback if the SDK didn't auto-parse for some reason --
-        # validate the raw JSON text against the same schema ourselves.
-        extraction = StatisticsExtraction.model_validate(json.loads(response.text))
-    resolved_model = getattr(response, "model_version", None) or model
-    return StatisticsExtractionResult(statistics=extraction.statistics, resolved_model=resolved_model)
+        for n, text in numbered:
+            prompt = CONTEXT_PROMPT.format(page=n, text=text)
+            for k, item in enumerate(generate(prompt, PageContextItems, f"page {n} context", context_backend).items, start=1):
+                items.append(item.model_copy(update={"item_id": f"p{n}_i{k:02d}", "page": n}))
+    # A figure or table caption only says what a chart shows; it never matched a real context fact.
+    items = [with_item_period(i) for i in items if not CAPTION.match(i.quote) and not is_label(i, pages[i.page - 1])]
 
+    known = {i.item_id for i in items}
+    study: list[str] = []
+    if scope and items:
+        chosen = generate(SCOPE_PROMPT.format(items=item_list(items)), StudyItems, "study scope", context_backend).item_ids
+        per_statistic = {i.item_id for i in items if i.item_type in STATISTIC_LEVEL}
+        study = sharpen_scope([i for i in dict.fromkeys(chosen) if i in known and i not in per_statistic], items)
+        # The first call favours the key kinds; a second, narrower question finds whole-study method facts.
+        methods = [i for i in items if i.item_type in METHOD_KINDS]
+        if methods:
+            picked = generate(METHOD_SCOPE_PROMPT.format(items=item_list(methods)), StudyItems, "method scope",
+                              context_backend).item_ids
+            method_ids = {i.item_id for i in methods}
+            study += [i for i in dict.fromkeys(picked) if i in method_ids and i not in study][:MAX_METHOD_ITEMS]
 
-def make_client() -> genai.Client:
-    """Build a Gemini client, failing with a clear message if no API
-    key is configured rather than a raw SDK error.
+    by_page: list[tuple[int, list[Statistic]]] = []
+    for n, text in numbered:
+        prompt = STATISTICS_PROMPT.format(page=n, text=text, items=item_list(items), word_numbers=word_number_note(text))
+        found = [s for s in generate(prompt, PageStatistics, f"page {n} statistics", backend).statistics
+                 if not is_table_row(s, text) and not is_structural(s)]
+        kept = merge_ranges(drop_conversions([with_period(label_type(shared_unit(label_change(label_cited(label_survey_answer(s, text))))))
+                                 for s in (tidy_statistic(s) for s in found) if s is not None]))
+        by_page.append((n, [
+            statistic.model_copy(update={
+                "statistic_id": f"p{n}_s{k:02d}",
+                "page": n,
+                "context_item_ids": [i for i in statistic.context_item_ids if i in known],
+            })
+            for k, statistic in enumerate(kept, start=1)
+        ]))
 
-    Duplicated from metadata.py deliberately -- both extraction
-    modules should be independently importable/usable without one
-    depending on the other.
-    """
-    if not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
-        raise RuntimeError(
-            "No GEMINI_API_KEY (or GOOGLE_API_KEY) found in the environment. "
-            "Copy .env.example to .env and fill in your key, or export it directly."
+    if link and whole_document and any(stats for _, stats in by_page):
+        prompt = document_link_prompt(items, [s for _, stats in by_page for s in stats])
+        links = generate(prompt, DocumentLinks, "document links", context_backend).links
+        extra = {entry.statistic_id: [i for i in entry.item_ids if i in known] for entry in links}
+        by_page = [
+            (n, [s.model_copy(update={"context_item_ids": list(dict.fromkeys(s.context_item_ids + extra.get(s.statistic_id, [])))})
+                 for s in stats])
+            for n, stats in by_page
+        ]
+
+    statistics: list[Statistic] = []
+    for n, page_statistics in by_page:
+        if link and not whole_document and page_statistics:
+            listed = "\n".join(
+                f"{s.statistic_id} | {s.variable} | {s.reported_text} | {s.quote}" for s in page_statistics
+            )
+            prompt = LINK_PROMPT.format(page=n, items=item_list(items), statistics=listed)
+            links = generate(prompt, PageLinks, f"page {n} links", context_backend).links
+            extra = {entry.statistic_id: [i for i in entry.item_ids if i in known] for entry in links}
+            page_statistics = [
+                s.model_copy(update={"context_item_ids": list(dict.fromkeys(s.context_item_ids + extra.get(s.statistic_id, [])))})
+                for s in page_statistics
+            ]
+        # The study's own conditions apply to all of its numbers, but not to figures cited from other studies.
+        statistics.extend(
+            s if s.record_type == "cited" else s.model_copy(update={"context_item_ids": list(dict.fromkeys(study + s.context_item_ids))})
+            for s in page_statistics
         )
-    return genai.Client()
+
+    if dedupe:
+        pairs = duplicate_candidates(statistics)
+        if pairs:
+            chosen = generate(duplicate_prompt(pairs), SamePairs, "duplicates", backend).pair_ids
+            statistics = drop_duplicates(statistics, pair_numbers(chosen, len(pairs)), pairs)
+    statistics = trim_links(statistics, items, study)
+    statistics = modelled_results(answers_to_questions(statistics, items), items)
+    statistics = date_survey_answers(statistics, survey_year(items, study))
+    contexts, assigned = group_contexts(document_id, items, statistics)
+    return FindingsExtractionResult(
+        context_items=items,
+        contexts=contexts,
+        statistics=statistics,
+        context_ids=assigned,
+        resolved_model=" + ".join(models),
+        seconds=usage["seconds"],
+        prompt_tokens=usage["prompt_tokens"],
+        output_tokens=usage["output_tokens"],
+        failed_steps=failed,
+        study_item_ids=study,
+    )

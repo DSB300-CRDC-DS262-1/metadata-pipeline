@@ -16,7 +16,7 @@ reaches an LLM.
 
 `layout.detect_columns()` takes a list of word bounding boxes (from
 pdfplumber's `extract_words()`) and page width, with no PDF library
-dependency of its own -- it's a pure function over geometry, which is
+dependency of its own. It is a pure function over geometry, which is
 what makes it unit-testable without any real PDF file (see
 `tests/test_layout.py`).
 
@@ -30,7 +30,7 @@ Two passes:
 
 2. **Validate it against actual lines.** A global gap in the word
    histogram can also come from a full-width heading, abstract, or
-   figure sitting above/below a two-column body -- exactly the case in
+   figure sitting above/below a two-column body, which is exactly the case in
    the Hedayati paper, where the ground truth cites its abstract
    ("page: abstract") separately from the two-column body pages. So the
    candidate gutter only counts if a majority of the page's actual text
@@ -50,7 +50,7 @@ what extraction routing actually uses.
 Testing against the actual sample PDFs (not just synthetic reportlab
 fixtures) surfaced two problems no synthetic test had anticipated:
 
-1. **The real gutter is narrow -- about 3% of page width (~18pt on a
+1. **The real gutter is narrow, about 3% of page width (~18pt on a
    595pt-wide A4 page)**, not the wider magazine-style gap a first
    guess might assume. `min_gap_ratio` is tuned to 0.02 (2%) with
    400 histogram bins so the search has enough resolution not to lose
@@ -76,7 +76,7 @@ turned out to be an unexamined default, not a technical requirement:
 pdfplumber's own `extract_text(layout=True)` reconstructs whitespace
 the same way, and testing it against `pdftotext -layout` on real
 single-column pages (including a stats-heavy table page) showed
-matching content -- if anything, pdfplumber preserved table row
+matching content; if anything, pdfplumber preserved table row
 alignment slightly better on one page. Dropping `pdftotext` removes an
 external binary dependency and the fragility that comes with it: the
 `pdftotext` bundled with Git for Windows is Xpdf-derived and doesn't
@@ -88,7 +88,7 @@ on a given machine's PATH. Everything now goes through pdfplumber.
 ### pdfplumber's word-spacing on tightly-kerned text
 
 Extraction initially reproduced text like
-`agriculturalresources(Kongetal.,2015)` on the Hedayati PDF -- missing
+`agriculturalresources(Kongetal.,2015)` on the Hedayati PDF, with missing
 spaces between words, confirmed (during the `pdftotext` comparison
 above) to be a pdfplumber-specific issue: plain `pdftotext` renders the
 same page as `agricultural resources (Kong et al., 2015)`. This is
@@ -114,7 +114,7 @@ that to every consumer downstream.
 
 - **Single-column pages**: `pdfplumber.extract_text(layout=True)`.
   Position-preserving mode is exactly what you want when there's only
-  one column -- it keeps paragraph structure and avoids re-flowing text
+  one column, because it keeps paragraph structure and avoids re-flowing text
   across line breaks awkwardly.
 - **Two-column pages**: the same library, cropped at the detected
   gutter x into left and right halves, each extracted independently and
@@ -128,8 +128,8 @@ that to every consumer downstream.
 - **Text-layer gaps (issue 2)**: a page that produces zero characters
   gets a warning (`Page.warnings`), not a silent empty string, and not
   an attempted fix. Recovering those values needs OCR or a multimodal
-  model reading the rendered page image -- a separate fallback stage,
-  scoped but not built here.
+  model reading the rendered page image. That fallback is now built
+  (`extraction/vision.py`).
 - **`value_status` / `record_type` / cross-referencing / context
   deduplication** (issues 3-8): these are extraction-stage and schema
   concerns, not ingestion. This module's job ends at handing clean,
