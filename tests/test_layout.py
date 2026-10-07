@@ -85,3 +85,28 @@ def test_full_width_running_header_does_not_hide_a_narrow_gutter() -> None:
 
     result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT, min_gap_ratio=0.02)
     assert result.column_count == 2
+
+
+def test_full_width_table_above_two_columns_still_detects_the_gutter() -> None:
+    """A table spanning both columns leaves no empty strip, but the columns below still count."""
+    words: list[Word] = []
+    for row in range(6):
+        words += _line(["Label", "12.5", "13.0", "14.2", "15.1", "16.0", "17.3", "18.8"], row * 15.0, x0=50, word_width=55)
+    for row in range(6, 20):
+        top = row * 15.0
+        words += _line(["left"] * 5, top, x0=50)
+        words += _line(["right"] * 5, top, x0=330)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
+    assert result.column_count == 2
+    assert 270 < result.gutter_x < 330
+
+
+def test_table_page_with_prose_on_one_side_is_single_column() -> None:
+    """Table rows (a label beside numbers) leave a gap, but there is prose on only one side."""
+    words: list[Word] = []
+    for row in range(12):
+        top = row * 15.0
+        words += _line(["Falls", "on", "the", "same", "level"], top, x0=50)
+        words += _line(["25", "(6)", "60", "(12)"], top, x0=350)
+    result = detect_columns(words, PAGE_WIDTH, PAGE_HEIGHT)
+    assert result.column_count == 1

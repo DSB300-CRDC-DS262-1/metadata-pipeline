@@ -211,3 +211,221 @@ def test_copyright_holders_named_in_the_copyright_line_are_all_kept() -> None:
                    "quote": "© Cotton Australia and Cotton Research and Development Corporation"}],
     )
     assert tidy(cut_short).copyright_holder == "Cotton Australia; Cotton Research and Development Corporation"
+
+
+def test_citation_year_replaces_a_survey_year() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    pages = ["Cotton Growing Practices 2016", "", "Citation Roth Rural (2017) Cotton Growing Practices 2016"]
+    assert tidy(DocumentMetadata(publication_date="2016"), pages).publication_date == "2017"
+    assert tidy(DocumentMetadata(publication_date="December 2023"), ["CITATION Voconiq (2023)"]).publication_date == "2023-12"
+
+
+def test_document_types_outside_the_list_map_to_the_nearest_allowed_type() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    assert tidy(DocumentMetadata(document_type="Sustainability Report")).document_type == "report"
+    assert tidy(DocumentMetadata(document_type="factsheet")).document_type == "other"
+
+
+CITATION_PAGES = ["Cotton Growing Practices 2016", "Roth Rural for the CRDC",
+                  "Citation Roth Rural (2017) Cotton Growing Practices 2016: Findings of the CRDC's survey of cotton "
+                  "growers. Cotton Research and Development Corporation, Narrabri. Disclaimer"]
+
+
+def test_citation_sets_publisher_full_title_and_who_did_the_work() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(
+        title="Findings of CRDC's Survey of Cotton Growers", organisation="CRDC", funder="CRDC"), CITATION_PAGES)
+    assert metadata.title == "Cotton Growing Practices 2016: Findings of the CRDC's survey of cotton growers"
+    assert metadata.publisher == "Cotton Research and Development Corporation"
+    assert metadata.organisation == "Roth Rural"
+
+
+def test_citation_leaves_a_separate_organisation_and_a_different_title_alone() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(title="Community Trust 2025 Survey Report", organisation="Voconiq",
+                                     funder="CRDC"), CITATION_PAGES)
+    assert metadata.organisation == "Voconiq"
+    assert metadata.title == "Community Trust 2025 Survey Report"
+    people = ["Citation Lower T, Peachey K (2019) Sentinel Health. AgHealth Australia, Dubbo."]
+    assert tidy(DocumentMetadata(organisation="CRDC", funder="CRDC"), people).organisation == "Cotton Research and Development Corporation"
+
+
+
+def test_emails_and_published_date_come_from_the_whole_document() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    pages = ["Annual Report 2023-24", "Contact crdc@crdc.com.au"] + ["Body"] * 5 + [
+        "© CRDC 2024 Published: October 2024 Email: crdc@crdc.com.au or marketing@austcottonshippers.\ncom.au"]
+    metadata = tidy(DocumentMetadata(publication_date="2023-24", contact_emails=[]), pages)
+    assert metadata.publication_date == "2024-10"
+    assert metadata.contact_emails == ["crdc@crdc.com.au", "marketing@austcottonshippers.com.au"]
+
+
+def test_funders_backed_only_by_a_source_line_or_an_inferred_quote_are_dropped() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    figure = DocumentMetadata(funder="CRDC", evidence=[
+        {"field": "funder", "page": 25, "quote": "Source: CRDC commissioned research.", "basis": "stated"}])
+    guessed = DocumentMetadata(funder="Cotton Australia", evidence=[
+        {"field": "funder", "page": 9, "basis": "inferred",
+         "quote": "Cotton Australia: the industry's peak body, funded by voluntary grower levies"}])
+    stated = DocumentMetadata(funder="CRDC", evidence=[
+        {"field": "funder", "page": 2, "quote": "This project was funded by CRDC", "basis": "stated"}])
+    assert tidy(figure).funder is None
+    assert tidy(guessed).funder is None
+    assert tidy(stated).funder == "Cotton Research and Development Corporation"
+
+
+def test_a_corporate_author_named_in_the_organisation_quote_is_the_organisation() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    quote = "This Sustainability Report has been developed by the Sustainability Working Group on behalf of the industry."
+    metadata = tidy(DocumentMetadata(
+        authors=["Sustainability Working Group (on behalf of the Australian cotton industry)"],
+        organisation="Cotton Australia",
+        evidence=[{"field": "organisation", "page": 37, "quote": quote, "basis": "stated"}]))
+    assert metadata.authors == ["Sustainability Working Group"]
+    assert metadata.organisation == "Sustainability Working Group"
+
+
+def test_a_publisher_among_joint_copyright_holders_publishes_with_them() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(publisher="Cotton Australia", copyright_holder="CRDC; Cotton Australia"))
+    assert metadata.publisher == "Cotton Research and Development Corporation; Cotton Australia"
+
+
+def test_a_later_copyright_year_sets_the_publication_year() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    pages = ["Australian Cotton Sustainability Report 2024", "© CRDC 2025. © Cotton Australia 2025."]
+    assert tidy(DocumentMetadata(publication_date="2024"), pages).publication_date == "2025"
+    assert tidy(DocumentMetadata(publication_date="2018-11-22"), ["© 2018 Elsevier Ltd."]).publication_date == "2018-11-22"
+
+
+def test_a_survey_in_the_title_makes_a_survey_report() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    title = "Cotton Growing Practices 2016: Findings of the CRDC's survey of cotton growers"
+    assert tidy(DocumentMetadata(title=title, document_type="report")).document_type == "survey report"
+
+
+def test_organisation_names_damaged_by_ocr_take_the_known_name() -> None:
+    from crdc_pipeline.extraction.names import canonical_names
+
+    assert canonical_names("Australian Cotton Q--owers Research Association Incorporated") == (
+        "Australian Cotton Growers Research Association")
+    assert canonical_names("Australian Cotton Growers Association") == "Australian Cotton Growers Association"
+    assert canonical_names("Australia's cotton growers, Australian Government") == (
+        "Australia's cotton growers; Australian Government")
+
+
+def test_bodies_that_only_received_funding_are_not_funders() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    received = {"field": "funder", "page": 3, "basis": "stated",
+                "quote": "Cotton Australia and ACSA received ATMAC funding from the Australian Government"}
+    supported = {"field": "funder", "page": 3, "basis": "stated",
+                 "quote": "funded by this grant, with additional support from Cotton Australia, ACSA and CRDC"}
+    only = tidy(DocumentMetadata(funder="Australian Government; Cotton Australia; ACSA", evidence=[received]))
+    both = tidy(DocumentMetadata(funder="Australian Government", evidence=[received, supported]))
+    assert only.funder == "Australian Government"
+    assert set(both.funder.split("; ")) == {"Australian Government", "Cotton Australia",
+                                            "Australian Cotton Shippers Association",
+                                            "Cotton Research and Development Corporation"}
+
+
+def test_a_corporate_author_credited_with_the_work_is_the_organisation() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(
+        authors=["Sustainability Working Group"], organisation="Cotton Australia",
+        evidence=[{"field": "authors", "page": 37, "basis": "stated",
+                   "quote": "This Sustainability Report has been developed by the Sustainability Working Group"},
+                  {"field": "organisation", "page": 9, "basis": "stated",
+                   "quote": "Cotton Australia: the industry's peak body"}]))
+    assert metadata.organisation == "Sustainability Working Group"
+
+
+def test_collaborating_bodies_in_the_organisation_quote_are_all_kept() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(organisation="Cotton Australia", evidence=[
+        {"field": "organisation", "page": 2, "basis": "stated",
+         "quote": "Cotton Australia, ACSA and CRDC are collaborating on the roadmap"}]))
+    assert metadata.organisation == (
+        "Cotton Australia; Australian Cotton Shippers Association; Cotton Research and Development Corporation")
+
+
+def test_a_copyright_line_is_not_a_funding_statement() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(funder="CRDC", evidence=[
+        {"field": "funder", "page": 37, "quote": "© CRDC 2025.", "basis": "stated"}]))
+    assert metadata.funder is None
+
+
+def test_copyright_holders_need_a_printed_copyright_line() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    assert tidy(DocumentMetadata(copyright_holder="AB Hearn"), ["Prepared by AB Hearn"]).copyright_holder is None
+    filled = tidy(DocumentMetadata(), ["Annual Report", "© Cotton Research and Development Corporation 2024"])
+    assert filled.copyright_holder == "Cotton Research and Development Corporation"
+
+
+def test_the_citation_credits_a_corporate_author_over_a_contact_person() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    pages = ["Community Trust", "Citation Voconiq (2023) Community Trust in the Australian Cotton Industry. Voconiq, Australia."]
+    assert tidy(DocumentMetadata(authors=["Kieren Moffat"]), pages).authors == ["Voconiq"]
+
+
+def test_a_bodys_own_report_without_named_authors_is_credited_to_it() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    metadata = tidy(DocumentMetadata(organisation="CRDC", publisher="CRDC"))
+    assert metadata.authors == ["Cotton Research and Development Corporation"]
+
+
+def test_a_body_that_only_managed_the_project_is_not_an_author() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    managed = tidy(DocumentMetadata(authors=["Aither"], evidence=[
+        {"field": "authors", "page": 10, "quote": "This project is managed by Aither, www.aither.com.au.", "basis": "stated"}]))
+    prepared = tidy(DocumentMetadata(authors=["Aither"], evidence=[
+        {"field": "authors", "page": 1, "quote": "Prepared by Aither", "basis": "stated"}]))
+    assert managed.authors == []
+    assert prepared.authors == ["Aither"]
+
+
+def test_journal_articles_list_every_affiliated_institution() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    page = ("ABSTRACT Results. M.T. Plumblee*, Clemson University, Department of Plant Sciences, Blackville; "
+            "D.M. Dodds, Mississippi State University, Department of Plant and Soil Sciences, Starkville; "
+            "L.J. Krutz, Mississippi State University, Mississippi Water Resources Research Institute; and "
+            "J.N. Jenkins, United States Department of Agriculture, Agricultural Research Service, Starkville. "
+            "*Corresponding author: mplumbl@clemson.edu")
+    metadata = tidy(DocumentMetadata(
+        organisation="Clemson University", journal_article={"journal": "The Journal of Cotton Science"},
+        evidence=[{"field": "organisation", "page": 1, "basis": "stated",
+                   "quote": "M.T. Plumblee*, Clemson University, Department of Plant Sciences, Blackville"}]), [page])
+    assert metadata.organisation == (
+        "Clemson University; Mississippi State University; United States Department of Agriculture")
+
+
+def test_a_journal_is_not_its_own_publisher_and_its_copyright_line_is_not_funding() -> None:
+    from crdc_pipeline.extraction.metadata import tidy
+
+    header = "The Journal of Cotton Science 25:1-6 (2021) http://journal.cotton.org, © The Cotton Foundation 2021"
+    metadata = tidy(DocumentMetadata(
+        publisher="The Journal of Cotton Science", copyright_holder="The Cotton Foundation", funder="The Cotton Foundation",
+        evidence=[{"field": "funder", "page": 1, "basis": "stated", "quote": "© The Cotton Foundation 2021"}]), [header])
+    assert metadata.publisher == "The Cotton Foundation"
+    assert metadata.funder is None
+    assert (metadata.journal_article.volume, metadata.journal_article.pages, metadata.journal_article.issue_year) == (
+        "25", "1-6", "2021")

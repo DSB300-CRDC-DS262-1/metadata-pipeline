@@ -90,6 +90,14 @@ In the reference file a field can list several acceptable answers as
      than its answer, they are added (models often stop after the first).
    - Keywords are dropped unless a keyword list is printed; a corporate
      author fills an empty organisation.
+   - The document's own suggested citation settles the year, publisher, full
+     title and a corporate author; a printed copyright line sets the copyright
+     holder and a later copyright year the publication year.
+   - Funders need a funding statement (not a figure's source line, a copyright
+     line or a sentence where they only received money); someone who only
+     managed the project is not an author; for journal articles every
+     institution in the affiliation list is an organisation.
+   - Long organisation names damaged by OCR take the closest known name.
 
 Email addresses are kept; set `REDACT_EMAILS = True` in `loader.py` to strip
 them before any text reaches a model.
@@ -112,6 +120,8 @@ time and token counts, and each field is printed against the reference.
 | `--num-ctx` | Context window (default 32768). 8192 is enough for metadata and saves GPU memory |
 | `--num-gpu` | How many model layers go on the GPU; the rest run on the CPU (see below) |
 | `--seed`, `--suffix` | Fixed sampling seed; suffix for repeat runs (`r2`, `r3`) |
+| `--no-vision` | Keep the text layer as it is. By default, pages whose text is garbled (poor OCR of a scan), empty, or has OCR-split email addresses are read from the page image |
+| `--documents` | Only these document IDs |
 
 ## Choosing a local model
 

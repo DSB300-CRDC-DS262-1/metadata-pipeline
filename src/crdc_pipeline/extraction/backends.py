@@ -52,6 +52,22 @@ class Backend(Protocol):
     ) -> GenerationResult: ...
 
 
+def gemini_schema(schema: type[BaseModel]) -> dict:
+    """The JSON schema without maxItems, which Gemini rejects on lists of objects.
+
+    The limits only stop local models looping; the answer is still validated against the full schema.
+    """
+
+    def strip(node):
+        if isinstance(node, dict):
+            return {k: strip(v) for k, v in node.items() if k != "maxItems"}
+        if isinstance(node, list):
+            return [strip(v) for v in node]
+        return node
+
+    return strip(schema.model_json_schema())
+
+
 class GeminiBackend:
     def __init__(self, model: str = DEFAULT_GEMINI_MODEL) -> None:
         if not (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")):
@@ -75,7 +91,7 @@ class GeminiBackend:
 
         config = types.GenerateContentConfig(
             response_mime_type="application/json",
-            response_schema=schema,
+            response_json_schema=gemini_schema(schema),
             temperature=0,
         )
         start = time.monotonic()
@@ -89,17 +105,18 @@ class GeminiBackend:
             except (errors.ServerError, errors.ClientError) as exc:
                 rate_limited = getattr(exc, "code", None) == 429
                 if not (rate_limited or isinstance(exc, errors.ServerError)):
-                    raise
+                    raise RuntimeError(f"Gemini request failed: {exc}") from exc
                 last_error = exc
                 if attempt == MAX_RETRIES:
-                    raise last_error
+                    raise RuntimeError(f"Gemini request failed after {MAX_RETRIES} attempts: {exc}") from exc
                 wait = RATE_LIMIT_BACKOFF_SECONDS if rate_limited else RETRY_BACKOFF_SECONDS
                 time.sleep(wait * attempt)
         seconds = time.monotonic() - start
 
-        parsed = response.parsed
-        if parsed is None:
+        try:
             parsed = schema.model_validate(json.loads(response.text))
+        except ValueError as exc:  # also pydantic's ValidationError, e.g. a list over its limit
+            raise RuntimeError(f"Gemini answer did not fit the schema: {exc}") from exc
         usage = response.usage_metadata
         return GenerationResult(
             parsed=parsed,

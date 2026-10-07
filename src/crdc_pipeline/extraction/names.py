@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import json
 import re
+from difflib import get_close_matches
 from functools import lru_cache
 from pathlib import Path
 
 NAMES_PATH = Path(__file__).resolve().parents[3] / "data" / "organisation_names.json"
+# Only long names are matched loosely; short ones ("CSRO", "ACSA") are too easy to confuse.
+OCR_MATCH_MIN_LENGTH = 20
+OCR_MATCH_CUTOFF = 0.92
 ORGANISATION_FIELDS = ("organisation", "publisher", "funder", "copyright_holder")
 _ACRONYM = r"(?:\s*\([A-Z][A-Z ]+\))?"
 _SEPARATOR = r"\s*(?:;|,|&|\band\b)\s*"
@@ -25,9 +29,17 @@ def _aliases() -> dict[str, str]:
 
 
 def canonical_name(name: str) -> str:
-    """The standard name for one organisation, dropping a bracketed acronym like '(CRDC)'."""
+    """The standard name for one organisation, dropping a bracketed acronym like '(CRDC)'.
+
+    A long name a few characters away from a known one (poor OCR, 'Cotton Q--owers') takes
+    the known name.
+    """
     cleaned = re.sub(_ACRONYM + r"\s*$", "", name.strip())
-    return _aliases().get(cleaned.lower(), cleaned)
+    if cleaned.lower() in _aliases():
+        return _aliases()[cleaned.lower()]
+    close = get_close_matches(cleaned.lower(), [a for a in _aliases() if len(a) >= OCR_MATCH_MIN_LENGTH],
+                              n=1, cutoff=OCR_MATCH_CUTOFF) if len(cleaned) >= OCR_MATCH_MIN_LENGTH else []
+    return _aliases()[close[0]] if close else cleaned
 
 
 def organisations_named_in(text: str) -> list[str]:
@@ -66,7 +78,7 @@ def canonical_names(value: str) -> str:
     """
     known = _split_known(value)
     if known is not None:
-        return "; ".join(known)
+        return "; ".join(dict.fromkeys(known))
     parts = []
     for part in value.split(";"):
         if part.strip():

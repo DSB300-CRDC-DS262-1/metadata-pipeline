@@ -99,3 +99,37 @@ def test_failed_vision_keeps_text_layer_with_warning(tmp_path) -> None:
     page = load_document(path, "t", vision=vision).pages[0]
     assert page.extraction_method == "pdfplumber_layout"
     assert any("vision fallback failed" in w for w in page.warnings)
+
+
+def test_full_width_block_is_its_own_band() -> None:
+    from crdc_pipeline.ingestion.loader import _bands
+
+    def word(x0, x1, top):
+        return {"x0": x0, "x1": x1, "top": top, "bottom": top + 10}
+
+    column = [word(50, 250, t) for t in (0, 15)] + [word(350, 550, t) for t in (0, 15)]
+    table = [word(50, 550, t) for t in (40, 55, 70)]
+    stray = [word(200, 400, 95)]  # one crossing line stays in the columns
+    below = [word(50, 250, t) for t in (110, 125)]
+    bands = _bands(column + table + stray + below, gutter_x=300)
+    assert [full for full, _, _ in bands] == [False, True, False]
+
+
+def test_garbled_text_is_recognised() -> None:
+    from crdc_pipeline.ingestion.loader import is_garbled
+
+    prose = "The economic model includes loss of future earnings and household contributions. " * 4
+    ocr = "Devel pm i te ated. f 11. ate sf ariage tsy co o rodi. ICti ,,, g R I @F. 70 re\"@t r, @\", v, @ " * 3
+    spaced = "C o t t o n G r o w i n g P r a c t i c e s 2 0 1 6 F i n d i n g s " * 2
+    assert not is_garbled(prose)
+    assert is_garbled(ocr)
+    assert is_garbled(spaced)
+    assert not is_garbled("Figure 1 @@ ## 3")  # too short to judge
+
+
+def test_emails_split_by_ocr_are_recognised() -> None:
+    from crdc_pipeline.ingestion.loader import has_broken_email
+
+    assert has_broken_email("Email sunil. tennakoon@CSiro. au, scott. johnslon@CSiro. all")
+    assert not has_broken_email("Email sunil.tennakoon@csiro.au")
+    assert not has_broken_email("marketing@austcottonshippers.\ncom.au")

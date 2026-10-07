@@ -18,6 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from crdc_pipeline.extraction import extract_metadata, make_backend  # noqa: E402
 from crdc_pipeline.extraction.scoring import SCORED_FIELDS, field_value, matches  # noqa: E402
+from crdc_pipeline.extraction.vision import make_page_transcriber, make_vision_backend  # noqa: E402
 from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
@@ -47,7 +48,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, help="fixed sampling seed for local models")
     parser.add_argument("--num-ctx", type=int, help="context window for local models (default 32768)")
     parser.add_argument("--num-gpu", type=int, help="model layers to put on the GPU (for smaller GPUs)")
+    parser.add_argument("--no-vision", action="store_true",
+                        help="keep the text layer even where it is unreadable; by default pages with garbled or "
+                             "no text are read from the page image (local vision model)")
     parser.add_argument("--suffix", default="", help="appended to the output folder, e.g. r2 for a repeat run")
+    parser.add_argument("--documents", nargs="*", help="document_ids to run (default all)")
     return parser.parse_args()
 
 
@@ -62,6 +67,7 @@ def main() -> None:
     if args.num_gpu is not None and args.backend == "ollama":
         options["num_gpu"] = args.num_gpu
     backend = make_backend(args.backend, args.model, **options)
+    transcribe = make_page_transcriber(make_vision_backend("ollama")) if not args.no_vision else None
     reference = load_reference_metadata()
     out_dir = OUTPUT_ROOT / slug(backend.label + (f"__{args.suffix}" if args.suffix else ""))
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -71,6 +77,8 @@ def main() -> None:
 
     for entry in load_manifest():
         document_id = entry["document_id"]
+        if args.documents and document_id not in args.documents:
+            continue
         filename = entry.get("filename")
         pdf_path = DATA_DIR / "raw_pdfs" / filename if filename else None
         if not pdf_path or not pdf_path.is_file():
@@ -78,7 +86,7 @@ def main() -> None:
             continue
 
         print(f"\n=== {document_id} ({filename}) ===")
-        document = load_document(pdf_path, document_id=document_id)
+        document = load_document(pdf_path, document_id=document_id, vision=transcribe, vision_on_unreadable=False)
         extraction = extract_metadata([p.text for p in document.pages], backend)
         metadata = extraction.metadata
         total_seconds += extraction.seconds

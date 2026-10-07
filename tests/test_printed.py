@@ -54,3 +54,11 @@ def test_issn_check_digit_rejects_look_alikes() -> None:
 
     assert valid_issn("0959-6526")
     assert not valid_issn("2011-2012")
+
+
+def test_citation_year_comes_from_the_suggested_citation() -> None:
+    from crdc_pipeline.extraction.printed import citation_year
+
+    assert citation_year(["Cover", "Title", "Citation Roth Rural (2017) Cotton Growing Practices 2016"]) == "2017"
+    assert citation_year(["CITATION Voconiq (2023) Community Trust in the"]) == "2023"
+    assert citation_year(["Received 19 May 2018 (Smith, 2015)"]) is None
