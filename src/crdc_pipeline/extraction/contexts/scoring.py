@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import math
+import re
+from collections import Counter
 from difflib import SequenceMatcher
 
 
@@ -28,12 +31,47 @@ def _quotes_overlap(first: str, second: str) -> bool:
     return overlap >= ITEM_OVERLAP * min(len(a), len(b))
 
 
+# A quote the model reworded ("Safe Work Australia Australia", "Earlier data costs (2012 dollars) were updated to
+# 2018 Australian dollars") still states the reference fact if it shares most of its key words with it.
+KEY_WORDS_SHARED = 0.7
+COMMON_WORDS = set(
+    "the a an of to in for and or is are be was were been that this these those it its on by with as at from their they "
+    "our we you not can all have has had which who also than then there such into over under more most other each any per"
+    .split())
+
+
+def key_words(text: str) -> set[str]:
+    """Words that carry the fact: no common words, short words or plural endings; numbers kept ("2018", "1.5")."""
+    found = re.findall(r"[a-z0-9]+(?:\.[0-9]+)?", text.lower())
+    return {w.rstrip("s") if len(w) > 4 else w for w in found if w not in COMMON_WORDS and len(w) > 2}
+
+
+def _reworded_match(reference_items: list[dict], extracted: dict) -> set[str]:
+    """The reference item sharing most of the extracted quote's key words, weighted so rarer words count more.
+
+    Words found in many of the document's reference quotes ("cotton", "data") say little about which fact it is.
+    """
+    words = key_words(extracted.get("quote", ""))
+    if not words or not reference_items:
+        return set()
+    stated = {r["item_id"]: key_words(" ".join([r["quote"], *(q["quote"] for q in r.get("also_stated", []))]))
+              for r in reference_items}
+    count = Counter(w for ws in stated.values() for w in ws)
+    weight = {w: math.log((len(stated) + 1) / (count[w] + 1)) + 1 for w in words}
+    total = sum(weight.values())
+    best, share = max(((item_id, sum(weight[w] for w in words & ws) / total) for item_id, ws in stated.items()),
+                      key=lambda pair: pair[1])
+    return {best} if share >= KEY_WORDS_SHARED else set()
+
+
 def item_map(reference_items: list[dict], extracted_items: list[dict]) -> dict[str, set[str]]:
-    """Each extracted item ID mapped to the reference items stating the same fact."""
-    return {
-        e["item_id"]: {r["item_id"] for r in reference_items if same_fact(r, e)}
-        for e in extracted_items
-    }
+    """Each extracted item ID mapped to the reference items stating the same fact: by overlapping quotes, or
+    failing that, by the key words of a reworded quote."""
+    mapping = {}
+    for e in extracted_items:
+        same = {r["item_id"] for r in reference_items if same_fact(r, e)}
+        mapping[e["item_id"]] = same or _reworded_match(reference_items, e)
+    return mapping
 
 
 def context_links(pairs: list[tuple[dict, dict]], reference: dict, extracted: dict) -> tuple[int, int, int, int]:
