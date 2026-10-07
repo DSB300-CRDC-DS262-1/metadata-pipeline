@@ -193,3 +193,14 @@ def test_a_key_kind_missing_from_the_scope_is_taken_from_the_method_page() -> No
              item("d", "data_source", "an online research panel", 5), item("other", "data_source", "Kmart Q&A", 9)]
     assert sharpen_scope(["t", "s"], items) == ["t", "s", "d"]
     assert sharpen_scope(["t", "s", "other"], items) == ["t", "s", "other"]  # a source was chosen: keep it
+
+
+def test_a_statistic_keeps_only_the_survey_questions_it_answers() -> None:
+    from crdc_pipeline.extraction.contexts.links import fit_questions
+
+    items = [ContextItem(item_id=i, item_type="survey_question", value=v, quote=f"{v}.", page=11)
+             for i, v in (("water", "the cotton industry uses water responsibly"),
+                          ("pesticides", "the use of pesticides really bothers me"))]
+    answer = stat("47%", 47, unit="%", record_type="survey_response", variable="agree with: the cotton industry uses water responsibly",
+                  context_item_ids=["region", "water", "pesticides"])
+    assert fit_questions([answer], items)[0].context_item_ids == ["region", "water"]

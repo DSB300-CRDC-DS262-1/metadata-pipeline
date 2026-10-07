@@ -102,3 +102,30 @@ def trim_links(statistics: list[Statistic], items: list[ContextItem], study: lis
                 keep.append(i)
         trimmed.append(s if keep == s.context_item_ids else s.model_copy(update={"context_item_ids": keep}))
     return trimmed
+
+
+# Words too common to show that a statistic answers a particular survey question.
+COMMON_WORDS = set("the a an of to in for and or is are be was were that this it its on by with as at from their they "
+                   "our we you not can all have has".split())
+QUESTION_WORDS_FOUND = 0.4  # share of a question's words that must appear in the statistic's variable or sentence
+
+
+def _content_words(text: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z]+", text.lower()) if w not in COMMON_WORDS and len(w) > 2}
+
+
+def fit_questions(statistics: list[Statistic], items: list[ContextItem]) -> list[Statistic]:
+    """Takes off survey questions a statistic does not answer.
+
+    The linking step often adds questions from other pages; a statistic answering a question repeats its
+    words ("agree with: the cotton industry uses water responsibly"), so a question whose words are mostly
+    absent from the statistic's variable and sentence belongs to another number.
+    """
+    questions = {i.item_id: _content_words(i.value) for i in items if i.item_type == "survey_question"}
+    fitted = []
+    for s in statistics:
+        text = _content_words(f"{s.variable} {s.quote}")
+        keep = [i for i in s.context_item_ids
+                if i not in questions or (questions[i] and len(questions[i] & text) >= QUESTION_WORDS_FOUND * len(questions[i]))]
+        fitted.append(s if keep == s.context_item_ids else s.model_copy(update={"context_item_ids": keep}))
+    return fitted
