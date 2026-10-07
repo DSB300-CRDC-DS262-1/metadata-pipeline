@@ -10,7 +10,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from ..backends import Backend
-from ..contexts.links import document_link_prompt, item_list, trim_links
+from ..contexts.links import document_link_prompt, fit_study_links, item_list, trim_links
 from ..contexts.prompts import (
     CONTEXT_PROMPT,
     DOCUMENT_CONTEXT_PROMPT,
@@ -26,7 +26,7 @@ from ..contexts.prompts import (
     StudyItems,
 )
 from ..contexts.schema import STATISTIC_LEVEL, Context, ContextItem, group_contexts
-from ..contexts.scope import is_label, sharpen_scope
+from ..contexts.scope import is_label, not_a_condition, running_lines, sharpen_scope
 from .duplicates import (
     drop_conversions,
     drop_duplicates,
@@ -110,8 +110,11 @@ def extract_findings(
             prompt = CONTEXT_PROMPT.format(page=n, text=text)
             for k, item in enumerate(generate(prompt, PageContextItems, f"page {n} context", context_backend).items, start=1):
                 items.append(item.model_copy(update={"item_id": f"p{n}_i{k:02d}", "page": n}))
-    # A figure or table caption only says what a chart shows; it never matched a real context fact.
-    items = [with_item_period(i) for i in items if not CAPTION.match(i.quote) and not is_label(i, pages[i.page - 1])]
+    # A figure or table caption only says what a chart shows; it never matched a real context fact. Running
+    # headers and footers, thanks and disclaimers, and generic words ("Survey") are not conditions either.
+    running = running_lines(pages)
+    items = [with_item_period(i) for i in items if not CAPTION.match(i.quote) and not is_label(i, pages[i.page - 1])
+             and not not_a_condition(i, running)]
 
     known = {i.item_id for i in items}
     study: list[str] = []
@@ -179,6 +182,7 @@ def extract_findings(
             statistics = drop_duplicates(statistics, pair_numbers(chosen, len(pairs)), pairs)
     statistics = trim_links(statistics, items, study)
     statistics = modelled_results(answers_to_questions(statistics, items), items)
+    statistics = fit_study_links(statistics, items, study)
     statistics = date_survey_answers(statistics, survey_year(items, study))
     contexts, assigned = group_contexts(document_id, items, statistics)
     return FindingsExtractionResult(

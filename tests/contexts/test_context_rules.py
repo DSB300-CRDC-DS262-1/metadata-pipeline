@@ -132,3 +132,44 @@ def test_a_collection_method_under_one_chart_gives_way_to_the_one_in_the_method(
              item("c1", "collection_method", "Survey responses", 15), item("c2", "collection_method", "a survey", 11)]
     assert sharpen_scope(["t", "c1", "c2"], items) == ["t", "m"]
     assert sharpen_scope(["t", "m"], items) == ["t", "m"]
+
+
+def test_running_headers_asides_and_generic_words_are_not_conditions() -> None:
+    from crdc_pipeline.extraction.contexts.scope import not_a_condition, running_lines
+
+    pages = ["Method\nData came from NCIS.\nSentinel Health and Safety Data for Cotton Farms 1",
+             "Results\nSix deaths were found.\nSentinel Health and Safety Data for Cotton Farms 2"]
+    running = running_lines(pages)
+
+    def item(value, quote, kind="data_source"):
+        return ContextItem(item_id="i", item_type=kind, value=value, quote=quote, page=1)
+
+    assert not_a_condition(item("Sentinel data", "Sentinel Health and Safety Data for Cotton Farms 2"), running)
+    assert not_a_condition(item("NCIS", "Our thanks are extended to the staff of the NCIS."), running)
+    assert not_a_condition(item("information may be incomplete",
+                                "The reader is advised that such information may be incomplete."), running)
+    assert not_a_condition(item("Survey", "73% of survey participants agreed.", "collection_method"), running)
+    assert not not_a_condition(item("national survey", "Who completed the 2025 national survey?", "collection_method"), running)
+    assert not not_a_condition(item("NCIS", "Data came from NCIS."), running)
+    assert not not_a_condition(item("Survey", "Survey", "survey_question"), running)
+
+
+def test_study_items_fit_the_statistics_they_reach() -> None:
+    from crdc_pipeline.extraction.contexts.links import fit_study_links
+
+    def item(item_id, kind, value):
+        return ContextItem(item_id=item_id, item_type=kind, value=value, quote=f"{value}.", page=1)
+
+    items = [item("region", "geographic_region", "northwest NSW"), item("unit", "functional_unit", "one tonne of lint"),
+             item("trust", "study_design", "Measured on a scale from 1 (Not at all) to 5 (Extremely)"),
+             item("likert", "study_design", "5-point agreement scales, 1 = Strongly disagree")]
+    study = ["region", "unit", "trust", "likert"]
+    input_value = stat("85%", 85, unit="%", record_type="model_assumption", context_item_ids=study)
+    share = stat("47%", 47, unit="%", record_type="survey_response", context_item_ids=study + ["q1"])
+    rating = stat("3.19", 3.19, record_type="survey_response", context_item_ids=study)
+    result = stat("1601", 1601, record_type="scenario_result", context_item_ids=study)
+    fitted = fit_study_links([input_value, share, rating, result], items, study)
+    assert fitted[0].context_item_ids == ["region"]  # a model input keeps the period, region and source
+    assert fitted[1].context_item_ids == ["region", "unit", "likert", "q1"]  # a share: the agreement scale only
+    assert fitted[2].context_item_ids == study  # a rating: both scales
+    assert fitted[3].context_item_ids == ["region", "unit"]  # not a survey answer: no rating scale

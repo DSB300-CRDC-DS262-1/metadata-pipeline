@@ -2,10 +2,46 @@
 
 from __future__ import annotations
 
+import re
+
 from ..backends import Backend
 from ..statistics.schema import Statistic
 from .prompts import DOCUMENT_LINK_PROMPT, DocumentLinks
 from .schema import Context, ContextItem, group_contexts
+
+
+# A model input is read with the study's period, region and data source, not its method or limitations.
+INPUT_KINDS = {"time_period", "geographic_region", "data_source"}
+RATING_SCALE = re.compile(r"\bscale\b|\b1\s*=|\bfrom\s+1\b", re.I)
+AGREEMENT = re.compile(r"\bagree", re.I)
+
+
+def fit_study_links(statistics: list[Statistic], items: list[ContextItem], study: list[str]) -> list[Statistic]:
+    """Takes study items off statistics they cannot qualify.
+
+    Model inputs keep only the study's period, region and data source. A rating scale reaches only
+    survey answers, and a scale without agreement wording ("1 (Not at all) to 5 (Extremely)") only
+    the average ratings, not the shares agreeing.
+    """
+    by_id = {i.item_id: i for i in items}
+
+    def fits(statistic: Statistic, item: ContextItem) -> bool:
+        if statistic.record_type == "model_assumption" and item.item_type not in INPUT_KINDS:
+            return False
+        text = f"{item.value} {item.quote}"
+        if RATING_SCALE.search(text):
+            if statistic.record_type != "survey_response":
+                return False
+            share = "%" in (statistic.unit or "") + statistic.reported_text
+            if share and not AGREEMENT.search(text):
+                return False
+        return True
+
+    fitted = []
+    for s in statistics:
+        keep = [i for i in s.context_item_ids if i not in study or i not in by_id or fits(s, by_id[i])]
+        fitted.append(s if keep == s.context_item_ids else s.model_copy(update={"context_item_ids": keep}))
+    return fitted
 
 
 def document_link_prompt(items: list[ContextItem], statistics: list[Statistic]) -> str:

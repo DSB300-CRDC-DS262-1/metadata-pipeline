@@ -183,7 +183,13 @@ model never needs the whole document at once:
    up the report (subgroup definitions, scale ends, "three main themes") are
    dropped; a bracketed unit conversion and the two ends of a printed range
    are kept as one statistic.
-5. **Duplicates**: numbers with the same value and unit are paired, and one
+5. **Context items that are not conditions** are dropped before scoping and
+   linking: running headers and footers, thanks, disclaimers and copyright
+   lines, and values that are only a generic word ("Survey", "Australians").
+   Study items are then fitted to each statistic: a model input keeps only the
+   study's period, region and data source, and a rating scale reaches only
+   survey answers (a 1 to 5 scale without agreement wording only the ratings).
+6. **Duplicates**: numbers with the same value and unit are paired, and one
    model call per document judges which pairs are the same measurement (the
    abstract repeating a result). The later one is dropped and the earlier
    keeps both sets of links; different survey questions or groups are kept
@@ -195,12 +201,12 @@ model never needs the whole document at once:
 ```
 
 Scored against `data/reference/statistics.json` and `contexts.json` (four
-documents, 238 statistics), the latest E4B run finds 98% of the reference
-statistics (233) at 88% precision. Field agreement on matched statistics:
-value reading 99%, type 92%, period 91%, record type 85% (repeat runs vary by
-a few points). Context links reach 79% of the facts the reference links, with
-39% precision. Key conditions are right for nearly all statistics: region 200
-of 203, time period 161 of 162, sample 106 of 115, data source 97 of 114. A
+documents, 238 statistics), the latest E4B run finds 99% of the reference
+statistics (236) at 87% precision. Field agreement on matched statistics:
+value reading 99%, type 92%, period 90%, record type 86% (repeat runs vary by
+a few points). Context links reach 78% of the facts the reference links, with
+48% precision. Key conditions are right for nearly all statistics: region 203
+of 206, time period 162 of 163, sample 107 of 117, data source 98 of 116. A
 run takes about 2 to 7 minutes per document.
 
 ## Pages the text layer cannot read

@@ -26,6 +26,43 @@ def is_label(item: ContextItem, page_text: str) -> bool:
     return any(" ".join(line.split()) == quote for line in page_text.splitlines())
 
 
+# Asides that are not about how the data were produced: thanks, disclaimers, copyright.
+ASIDE = re.compile(r"\b(?:our thanks|we thank|thanks are extended|acknowledge?ments?|disclaimer|the reader is advised|"
+                   r"general statements based on|accept(?:s)? no (?:liability|responsibility)|copyright)\b|©", re.I)
+# A value that is only a generic word for the survey or its people ("Survey", "Australians").
+GENERIC_WORDS = {"the", "survey", "surveys", "participants", "respondents", "australians", "community", "members",
+                 "responses", "response", "people", "data"}
+RUNNING_LINE_PAGES = 2
+RUNNING_LINE_MIN_WORDS = 3
+
+
+def _line_key(text: str) -> str:
+    return re.sub(r"\s*\d{1,3}$", "", " ".join(text.split())).lower()  # a trailing page number differs per page
+
+
+def running_lines(pages: list[str]) -> set[str]:
+    """Lines printed on several pages: running headers and footers such as the report's title."""
+    seen: dict[str, set[int]] = {}
+    for n, text in enumerate(pages):
+        for line in text.splitlines():
+            key = _line_key(line)
+            if len(key.split()) >= RUNNING_LINE_MIN_WORDS:
+                seen.setdefault(key, set()).add(n)
+    return {key for key, found in seen.items() if len(found) >= RUNNING_LINE_PAGES}
+
+
+def not_a_condition(item: ContextItem, running: set[str]) -> bool:
+    """An item that only repeats a running header or footer, an aside, or a generic word."""
+    if item.item_type in STATISTIC_LEVEL:
+        return False
+    if _line_key(item.quote) in running or _line_key(item.value) in running:
+        return True
+    if ASIDE.search(item.quote):
+        return True
+    words = re.findall(r"[a-z]+", item.value.lower())
+    return bool(words) and len(words) <= 3 and set(words) <= GENERIC_WORDS
+
+
 def sharpen_scope(study: list[str], items: list[ContextItem]) -> list[str]:
     """Swaps vague whole-study items for the specific ones in the method: the period, the sample, the
     collection method and the region.
