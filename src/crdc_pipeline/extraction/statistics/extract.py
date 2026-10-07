@@ -11,7 +11,14 @@ from pydantic import BaseModel, Field
 
 from ..backends import Backend
 from ..contexts.datasets import method_reach, split_by_dataset, with_study_items
-from ..contexts.links import document_link_prompt, fit_questions, fit_study_links, item_list, trim_links
+from ..contexts.links import (
+    document_link_prompt,
+    fit_questions,
+    fit_study_links,
+    item_list,
+    questions_from_quotes,
+    trim_links,
+)
 from ..contexts.prompts import (
     CONTEXT_PROMPT,
     DOCUMENT_CONTEXT_PROMPT,
@@ -211,6 +218,7 @@ def extract_findings(
     statistics = trim_links(statistics, items, study)
     statistics = modelled_results(answers_to_questions(statistics, items), items)
     statistics = fit_questions(fit_study_links(statistics, items, study), items)
+    statistics, items = questions_from_quotes(statistics, items)
     statistics = date_survey_answers(statistics, survey_year(items, study))
     contexts, assigned = group_contexts(document_id, items, statistics)
     return FindingsExtractionResult(

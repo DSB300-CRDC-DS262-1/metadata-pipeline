@@ -129,3 +129,35 @@ def fit_questions(statistics: list[Statistic], items: list[ContextItem]) -> list
                 if i not in questions or (questions[i] and len(questions[i] & text) >= QUESTION_WORDS_FOUND * len(questions[i]))]
         fitted.append(s if keep == s.context_item_ids else s.model_copy(update={"context_item_ids": keep}))
     return fitted
+
+
+# A statement quoted in the sentence: "agreed that 'the cotton industry uses water responsibly' (47%)".
+QUOTED = re.compile(r"[\"“‘�]([^\"”’�]{12,200})[\"”’�]")
+
+
+def questions_from_quotes(statistics: list[Statistic], items: list[ContextItem]) -> tuple[list[Statistic], list[ContextItem]]:
+    """A survey answer with no question takes the statement its sentence quotes, as a new survey_question item.
+
+    The context step often misses statements printed in running text; the statistic's own sentence quotes
+    them. With several quoted, the one sharing most words with the statistic's variable is taken.
+    """
+    by_text = {" ".join(i.value.lower().split()): i for i in items if i.item_type == "survey_question"}
+    questions = {i.item_id for i in items if i.item_type == "survey_question"}
+    added: list[ContextItem] = []
+    linked = []
+    for s in statistics:
+        quoted = QUOTED.findall(s.quote)
+        if s.record_type != "survey_response" or not quoted or questions & set(s.context_item_ids):
+            linked.append(s)
+            continue
+        variable = _content_words(s.variable)
+        phrase = max(quoted, key=lambda q: len(_content_words(q) & variable)).strip(" .,")
+        key = " ".join(phrase.lower().split())
+        item = by_text.get(key)
+        if item is None:
+            item = ContextItem(item_id=f"p{s.page}_q{len(added) + 1:02d}", item_type="survey_question", value=phrase,
+                               quote=phrase, page=s.page)
+            by_text[key] = item
+            added.append(item)
+        linked.append(s.model_copy(update={"context_item_ids": [*s.context_item_ids, item.item_id]}))
+    return linked, items + added

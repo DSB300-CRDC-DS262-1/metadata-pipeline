@@ -204,3 +204,19 @@ def test_a_statistic_keeps_only_the_survey_questions_it_answers() -> None:
     answer = stat("47%", 47, unit="%", record_type="survey_response", variable="agree with: the cotton industry uses water responsibly",
                   context_item_ids=["region", "water", "pesticides"])
     assert fit_questions([answer], items)[0].context_item_ids == ["region", "water"]
+
+
+def test_a_survey_answer_without_a_question_takes_the_statement_its_sentence_quotes() -> None:
+    from crdc_pipeline.extraction.contexts.links import questions_from_quotes
+
+    quote = ('Most agreed that "plays an important role in regional communities" (71%) and "creates an important '
+             'export product for Australia" (80%).')
+    first = stat("71%", 71, unit="%", record_type="survey_response", page=8, quote=quote,
+                 variable="agree with: plays an important role in regional communities")
+    again = first.model_copy(update={"statistic_id": "s2", "reported_text": "71"})
+    other = stat("80%", 80, unit="%", record_type="survey_response", page=8, quote=quote,
+                 variable="agree with: creates an important export product")
+    linked, items = questions_from_quotes([first, again, other], [])
+    assert [i.value for i in items] == ["plays an important role in regional communities",
+                                        "creates an important export product for Australia"]
+    assert [s.context_item_ids for s in linked] == [["p8_q01"], ["p8_q01"], ["p8_q02"]]
