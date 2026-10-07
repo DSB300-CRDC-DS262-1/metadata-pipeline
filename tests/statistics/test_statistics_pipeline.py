@@ -193,3 +193,27 @@ def test_the_pipeline_asks_about_same_value_pairs_and_drops_the_later_one() -> N
     result = extract_findings(["one", "two"], Same(), "doc_x", link=False, scope=False)
     assert [s.page for s in result.statistics] == [1]
     assert len(extract_findings(["one", "two"], Same(), "doc_x", link=False, scope=False, dedupe=False).statistics) == 2
+
+
+def test_items_marked_whole_document_join_the_study_unless_it_already_states_that_kind() -> None:
+    class Marked(FakeBackend):
+        def generate(self, prompt, schema, images=None):
+            if schema is PageContextItems:
+                if "=== page 1 ===" in prompt:
+                    found = [ContextItem(item_id="item_01", item_type="collection_method", value="online survey",
+                                         quote="An online survey methodology was used.", page=1)]
+                else:
+                    found = [ContextItem(item_id="item_01", item_type="collection_method", value="national survey",
+                                         quote="This national survey asked about trust.", page=2, whole_document=True),
+                             ContextItem(item_id="item_02", item_type="limitation", value="self-reported",
+                                         quote="All answers were self-reported by participants.", page=2, whole_document=True)]
+                return GenerationResult(parsed=PageContextItems(items=found), model="fake", seconds=1.0,
+                                        prompt_tokens=1, output_tokens=1)
+            if schema is StudyItems:
+                return GenerationResult(parsed=StudyItems(item_ids=["p1_i01"]), model="fake", seconds=1.0,
+                                        prompt_tokens=1, output_tokens=1)
+            return super().generate(prompt, schema, images)
+
+    result = extract_findings(["one", "two"], Marked(), "doc_x", link=False)
+    assert result.study_item_ids == ["p1_i01", "p2_i02"]
+    assert not any(i.whole_document for i in result.context_items)

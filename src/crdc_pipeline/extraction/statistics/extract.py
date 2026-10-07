@@ -27,7 +27,7 @@ from ..contexts.prompts import (
     StudyItems,
 )
 from ..contexts.schema import STATISTIC_LEVEL, Context, ContextItem, group_contexts
-from ..contexts.scope import is_label, not_a_condition, running_lines, sharpen_scope
+from ..contexts.scope import KEY_KINDS, is_label, not_a_condition, running_lines, sharpen_scope
 from .duplicates import (
     drop_conversions,
     drop_duplicates,
@@ -183,8 +183,13 @@ def extract_findings(
     if datasets:
         # Items the context step marked as applying to the whole document join the study's items, so they
         # are split by dataset too, instead of reaching every number (cover-page dates, one dataset's limits).
+        # A key kind the study already states (its period, region, sample, collection) is not added again: the
+        # scope step chose the method's own statement over vaguer ones ("national survey"). Data sources are,
+        # as a study with several datasets has several.
+        by_id = {i.item_id: i for i in items}
+        settled = {by_id[i].item_type for i in study} & (set(KEY_KINDS) - {"data_source"})
         study = study + [i.item_id for i in items if i.whole_document and i.item_type not in STATISTIC_LEVEL
-                         and i.item_id not in study]
+                         and i.item_id not in study and i.item_type not in settled]
         items = [i.model_copy(update={"whole_document": False}) if i.whole_document else i for i in items]
         shared = study
     if datasets and len(study) > 1 and statistics:
