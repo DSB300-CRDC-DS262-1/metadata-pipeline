@@ -1,0 +1,65 @@
+{
+  "20|‘": {
+    "votes": {
+      "'": 2
+    },
+    "example": ".The‘hot- -> t.The'hot-s",
+    "source": "hedayati2019"
+  },
+  "20|’": {
+    "votes": {
+      "'": 2
+    },
+    "example": "pots’with -> spots'within",
+    "source": "hedayati2019"
+  },
+  "AdvOTb0c9bf5d|©": {
+    "votes": {
+      "©": 1
+    },
+    "example": "526/©2018 -> 526/©2018",
+    "source": "hedayati2019"
+  },
+  "AdvPS44A44B|e": {
+    "votes": {
+      "–": 2
+    },
+    "example": ")974e985 -> )974–985",
+    "source": "hedayati2019"
+  },
+  "AdvP4C4E74|¼": {
+    "votes": {
+      "=": 2
+    },
+    "example": "*OC¼oilc -> *OC=oilco",
+    "source": "hedayati2019"
+  },
+  "AdvP4C4E74|þ": {
+    "votes": {
+      "+": 2
+    },
+    "example": "lintþseed -> flint+seed",
+    "source": "hedayati2019"
+  },
+  "AdvPS44A44B|d": {
+    "votes": {
+      "—": 2
+    },
+    "example": "ysisdchan -> lysis—chang",
+    "source": "hedayati2019"
+  },
+  "AdvP4C4E74|(cid:2)": {
+    "votes": {
+      "-": 2
+    },
+    "example": "ase((cid:2))in -> ease(-)in",
+    "source": "hedayati2019"
+  },
+  "AdvTT5843c571|&": {
+    "votes": {
+      "&": 2
+    },
+    "example": "tory&Life -> ntory&Life",
+    "source": "hedayati2019"
+  }
+}

@@ -3,20 +3,61 @@
     {
       "document_id": "doc_aghealth2019",
       "title": "Sentinel Health and Safety Data for Australian Cotton Farms",
-      "authors": ["Hon. A/Prof Tony Lower", "Kerri-Lynn Peachey"],
-      "organisation": "AgHealth Australia (The University of Sydney)",
+      "document_type": "report",
+      "authors": [
+        "Hon. A/Prof Tony Lower",
+        "Kerri-Lynn Peachey"
+      ],
+      "organisation": {
+        "accept": [
+          "AgHealth Australia (The University of Sydney)",
+          "AgHealth Australia",
+          "The University of Sydney"
+        ]
+      },
+      "publisher": {
+        "accept": [
+          null,
+          "AgHealth Australia",
+          "AgHealth Australia (The University of Sydney)"
+        ]
+      },
+      "funder": "Cotton Research and Development Corporation",
+      "copyright_holder": null,
       "publication_date": "2019-11-13",
-      "source_url": "https://www.insidecotton.com/sites/default/files/article-files/Sentinel_Cotton_Industry_Injury_And_Safety_Data_FINAL_Website_Copy.pdf",
+      "doi": null,
+      "keywords": [],
+      "series": "Cotton industry injury and safety data (CRDC)",
+      "supersedes_note": "This brief provides an update of an initial review (Cotton Industry Injury and Safety Profile) that was commissioned by the Cotton Research and Development Corporation in 2014.",
+      "contact_emails": [],
+      "retrieved_from": "https://www.insidecotton.com/sites/default/files/article-files/Sentinel_Cotton_Industry_Injury_And_Safety_Data_FINAL_Website_Copy.pdf",
       "page_count": 11,
       "supersedes_document_id": null
     },
     {
       "document_id": "doc_aghealth2024",
       "title": "Health and Safety Data for Australian Cotton Farms",
-      "authors": ["Hon. A/Prof Tony Lower", "Kerri-Lynn Peachey"],
-      "organisation": "AgHealth Australia (The University of Sydney)",
+      "document_type": "report",
+      "authors": [
+        "Hon. A/Prof Tony Lower",
+        "Kerri-Lynn Peachey"
+      ],
+      "organisation": {
+        "accept": [
+          "AgHealth Australia",
+          null
+        ]
+      },
+      "publisher": null,
+      "funder": "Cotton Research and Development Corporation",
+      "copyright_holder": null,
       "publication_date": "2024-01-22",
-      "source_url": null,
+      "doi": null,
+      "keywords": [],
+      "series": "Cotton industry injury and safety data (CRDC)",
+      "supersedes_note": "This brief provides an update to the previous review (Sentinel Health and Safety Data for Australian Cotton Farms).",
+      "contact_emails": [],
+      "retrieved_from": "https://www.insidecotton.com/sites/default/files/article-files/US%2010905%20Cotton%20Industry%20Injury%20And%20Safety%20Data_Final.pdf",
       "page_count": 10,
       "supersedes_document_id": "doc_aghealth2019",
       "note": "explicitly described in its own text as 'an update to the previous review'"
@@ -24,33 +65,92 @@
     {
       "document_id": "doc_hedayati2019",
       "title": "Farm-level strategies to reduce the life cycle greenhouse gas emissions of cotton production: An Australian perspective",
-      "authors": ["Mehdi Hedayati", "Philippa M. Brock", "Gunasekhar Nachimuthu", "Graeme Schwenke"],
-      "organisation": "NSW Department of Primary Industries",
+      "document_type": "journal article",
+      "authors": [
+        "Mehdi Hedayati",
+        "Philippa M. Brock",
+        "Gunasekhar Nachimuthu",
+        "Graeme Schwenke"
+      ],
+      "organisation": {
+        "accept": [
+          "NSW Department of Primary Industries; The University of Sydney",
+          "NSW Department of Primary Industries"
+        ]
+      },
+      "publisher": "Elsevier Ltd.",
+      "funder": "NSW Department of Primary Industries; Cotton Research and Development Corporation",
+      "copyright_holder": "Elsevier Ltd.",
       "publication_date": "2018-11-22",
-      "source_url": "https://doi.org/10.1016/j.jclepro.2018.11.190",
+      "journal_article": {
+        "journal": "Journal of Cleaner Production",
+        "volume": "212",
+        "issue_year": "2019",
+        "pages": "974-985",
+        "issn": "0959-6526",
+        "submission_date": "2018-05-19",
+        "revised_date": "2018-10-10",
+        "acceptance_date": "2018-11-21"
+      },
+      "doi": "10.1016/j.jclepro.2018.11.190",
+      "keywords": [
+        "Cotton production",
+        "Life cycle assessment",
+        "Sustainability",
+        "Climate mitigation",
+        "Nitrous oxide"
+      ],
+      "series": null,
+      "supersedes_note": null,
+      "contact_emails": [
+        "pip.brock@dpi.nsw.gov.au",
+        "guna.nachimuthu@dpi.nsw.gov.au",
+        "graeme.schwenke@dpi.nsw.gov.au"
+      ],
+      "retrieved_from": "https://www.sciencedirect.com/science/article/abs/pii/S0959652618335935",
       "page_count": 12,
       "supersedes_document_id": null
     },
     {
       "document_id": "doc_voconiq2025",
-      "title": "Community Trust in the Australian Cotton Industry, 2025 Survey Report",
-      "authors": ["Voconiq"],
-      "organisation": "Voconiq, commissioned by Cotton Australia and Cotton Research and Development Corporation",
-      "publication_date": "2025-12-01",
-      "source_url": null,
+      "title": {
+        "accept": [
+          "Community Trust in the Australian Cotton Industry 2025 Survey Report",
+          "Community Trust in the Australian Cotton Industry 2025",
+          "Community Trust in the Australian Cotton Industry"
+        ]
+      },
+      "document_type": "survey report",
+      "authors": [
+        "Voconiq"
+      ],
+      "organisation": "Voconiq",
+      "publisher": "Voconiq",
+      "funder": "Cotton Australia; Cotton Research and Development Corporation",
+      "copyright_holder": "Cotton Australia and Cotton Research and Development Corporation",
+      "publication_date": "2025-12",
+      "doi": null,
+      "keywords": [],
+      "series": "Community Trust in the Australian Cotton Industry",
+      "supersedes_note": null,
+      "contact_emails": [
+        "info@voconiq.com"
+      ],
+      "retrieved_from": "https://www.insidecotton.com/sites/default/files/article-files/FINAL%20Community%20Trust%20in%20Cotton%202023.pdf",
       "page_count": 23,
       "supersedes_document_id": null
     }
   ],
-
   "contexts": [
     {
       "context_id": "ctx_aghealth2019_deaths_2014_19",
       "document_id": "doc_aghealth2019",
       "geographic_region": "Australia, cotton growing postcode areas",
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
+      "data_source": "National Coroners Information System (NCIS), via AgHealth Australia",
       "collection_method": "case-by-case review of National Coroners Information System records",
       "time_period": "2014-01-01 to 2019-10-31",
+      "currency_basis": null,
       "limitations": "restricted to cases where a cotton link could be positively confirmed"
     },
     {
@@ -58,8 +158,10 @@
       "document_id": "doc_aghealth2024",
       "geographic_region": "Australia, cotton growing postcode areas",
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
+      "data_source": "National Coroners Information System (NCIS), via AgHealth Australia",
       "collection_method": "case-by-case review of National Coroners Information System records",
       "time_period": "2014-01-01 to 2019-10-31",
+      "currency_basis": null,
       "limitations": "restricted to cases where a cotton link could be positively confirmed"
     },
     {
@@ -67,8 +169,10 @@
       "document_id": "doc_aghealth2024",
       "geographic_region": "Australia, cotton growing postcode areas",
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
+      "data_source": "National Coroners Information System (NCIS), via AgHealth Australia",
       "collection_method": "case-by-case review of National Coroners Information System records",
       "time_period": "2019-11-01 to 2023-12-31",
+      "currency_basis": null,
       "limitations": "AgHealth Australia's ethics agreement for coronial data prohibits reporting an exact count when a category holds fewer than five cases"
     },
     {
@@ -76,10 +180,12 @@
       "document_id": "doc_hedayati2019",
       "geographic_region": "Namoi and Gwydir regions, northwest New South Wales",
       "sample_or_population": "modelled cotton lint production, cradle-to-port",
+      "data_source": "Foreground farm data from questionnaires and industry surveys; AusLCI and National Inventory Report emission factors",
       "collection_method": "Life Cycle Assessment, foreground data from 3 production seasons combined with published and survey data",
       "time_period": "2011-12 to 2013-14 production seasons",
       "functional_unit": "kg CO2e per tonne of cotton lint",
       "scenario_description": "commercial nitrogen fertiliser rate of 255 kg N/ha reduced to 240 kg N/ha, all other inputs held at baseline",
+      "currency_basis": null,
       "limitations": "modelled result, not a field measurement, depends on the stated baseline assumptions holding"
     },
     {
@@ -87,12 +193,13 @@
       "document_id": "doc_voconiq2025",
       "geographic_region": "Australia, national sample",
       "sample_or_population": "Australian community members responding to the Voconiq national survey",
+      "data_source": "Voconiq national online panel survey (n = 3,063), 30 October to 17 November 2025",
       "collection_method": "Voconiq annual national community trust survey",
       "survey_question_text": "The cotton industry in Australia uses water responsibly",
+      "currency_basis": null,
       "limitations": "single Likert-style agreement item, no margin of error stated in the source text"
     }
   ],
-
   "statistics": [
     {
       "id": "stat_aghealth2019_deaths_2014_19",
