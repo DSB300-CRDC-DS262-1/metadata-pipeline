@@ -15,7 +15,7 @@ This repository is for the development of a python application that can extract 
 > the local model in one pass, and the references are in `data/reference/` (metadata, statistics, contexts).
 >
 > **Results on the four documents:** metadata 76 of 76 fields; statistics recall 99% (237 of 239) and
-> precision 96%; context links recall 83% and precision 72% against the reference.
+> precision 96%; context links recall 83% and precision 73% against the reference.
 >
 > **Where to look:** the rules are in `src/crdc_pipeline/extraction/*/` and each one has a test in `tests/`;
 > "How metadata is extracted" and "Statistics and contexts" below explain them in order.
@@ -237,7 +237,7 @@ documents, 239 statistics), the latest E4B run finds 99% of the reference
 statistics (237) at 96% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 90%, record type 87% (repeat runs vary by
 a few points). Context links reach 83% of the facts the reference links, and
-72% of the links given are right (85% and 57% before the dataset steps). Key conditions are right for nearly all
+73% of the links given are right (85% and 57% before the dataset steps). Key conditions are right for nearly all
 statistics: region 204 of 207, time period 156 of 157, sample 102 of 109, data
 source 100 of 118. A
 run takes about 2 to 7 minutes per document.
