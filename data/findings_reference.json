@@ -197,6 +197,13 @@
           "value": "workers compensation data collated into five-year reporting intervals",
           "page": 7,
           "quote": "To align with the cotton sustainability reporting targets that use five-year reporting intervals, data have been collated to best reflect that timeframe to the extent possible."
+        },
+        {
+          "item_id": "i26",
+          "item_type": "preprocessing",
+          "value": "sensitivity analysis of the fatality cost estimates",
+          "page": 4,
+          "quote": "Findings were also subject to a sensitivity analysis."
         }
       ],
       "contexts": [
@@ -214,12 +221,6 @@
           "item_ids": [
             "i23",
             "i01",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
             "i10",
             "i11"
@@ -263,12 +264,6 @@
           "item_ids": [
             "i23",
             "i01",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
             "i10",
             "i11",
@@ -281,18 +276,13 @@
           "item_ids": [
             "i23",
             "i01",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
             "i10",
             "i12",
             "i13",
             "i14",
-            "i15"
+            "i15",
+            "i26"
           ]
         },
         {
@@ -332,7 +322,6 @@
             "i19",
             "i20",
             "i21",
-            "i22",
             "i24",
             "i25"
           ]
@@ -383,12 +372,6 @@
           "context_item_ids": [
             "i01",
             "i11",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
             "i10"
           ],
@@ -465,12 +448,6 @@
           "context_item_ids": [
             "i01",
             "i11",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
             "i10"
           ],
@@ -494,12 +471,6 @@
             "i01",
             "i11",
             "i12",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
             "i10"
           ],
@@ -526,14 +497,9 @@
             "i14",
             "i15",
             "i01",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
-            "i10"
+            "i10",
+            "i26"
           ],
           "page": 6,
           "quote": "the total direct impact of the seventeen fatal incidents since 2001 surpasses $48 million, with an overall average of $2.8 million per case.",
@@ -557,14 +523,9 @@
             "i14",
             "i15",
             "i01",
-            "i02",
-            "i03",
-            "i04",
-            "i05",
-            "i07",
-            "i08",
             "i09",
-            "i10"
+            "i10",
+            "i26"
           ],
           "page": 6,
           "quote": "with an overall average of $2.8 million per case.",
@@ -642,8 +603,7 @@
             "i21",
             "i24",
             "i25",
-            "i20",
-            "i22"
+            "i20"
           ],
           "page": 9,
           "quote": "Serious injury claims (5+ days), comprised virtually all of the time lost (~99%) and compensation costs (~90%) in the 2014/15 to 2016/17 period.",
@@ -669,8 +629,7 @@
             "i21",
             "i24",
             "i25",
-            "i20",
-            "i22"
+            "i20"
           ],
           "page": 9,
           "quote": "Serious injury claims (5+ days), comprised virtually all of the time lost (~99%) and compensation costs (~90%) in the 2014/15 to 2016/17 period.",
@@ -1147,6 +1106,7 @@
             "i24",
             "i25",
             "i26",
+            "i28",
             "i31"
           ]
         },
@@ -1195,6 +1155,8 @@
           "item_ids": [
             "i30",
             "i18",
+            "i20",
+            "i21",
             "i23",
             "i24",
             "i25",
@@ -1208,6 +1170,7 @@
           "item_ids": [
             "i30",
             "i18",
+            "i21",
             "i23",
             "i24",
             "i25",
@@ -1221,6 +1184,7 @@
             "i30",
             "i18",
             "i19",
+            "i21",
             "i23",
             "i24",
             "i25",
@@ -1504,7 +1468,8 @@
             "i25",
             "i31",
             "i24",
-            "i26"
+            "i26",
+            "i28"
           ],
           "page": 6,
           "quote": "However, in the most recent five-year period, there has been an increase in more serious claims, approaching 50 such claims each year.",
@@ -1640,7 +1605,9 @@
             "i25",
             "i27",
             "i24",
-            "i26"
+            "i26",
+            "i20",
+            "i21"
           ],
           "page": 8,
           "quote": "As can be seen, there was a sizeable reduction in the number of weeks lost in the two periods (~900 weeks).",
@@ -1660,7 +1627,8 @@
             "i23",
             "i25",
             "i31",
-            "i24"
+            "i24",
+            "i21"
           ],
           "page": 8,
           "quote": "Serious injury claims (5+ days), comprised virtually all of the time lost (~99%) and compensation costs (~90%) in the period.",
@@ -1681,7 +1649,8 @@
             "i23",
             "i25",
             "i31",
-            "i24"
+            "i24",
+            "i21"
           ],
           "page": 8,
           "quote": "Serious injury claims (5+ days), comprised virtually all of the time lost (~99%) and compensation costs (~90%) in the period.",
