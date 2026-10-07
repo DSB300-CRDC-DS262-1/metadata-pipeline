@@ -15,7 +15,7 @@ This repository is for the development of a python application that can extract 
 > the local model in one pass, and the references are in `data/reference/` (metadata, statistics, contexts).
 >
 > **Results on the four documents:** metadata 76 of 76 fields; statistics recall 99% (237 of 239) and
-> precision 96%; context links recall 85% and precision 57% against the reference.
+> precision 96%; context links recall 83% and precision 72% against the reference.
 >
 > **Where to look:** the rules are in `src/crdc_pipeline/extraction/*/` and each one has a test in `tests/`;
 > "How metadata is extracted" and "Statistics and contexts" below explain them in order.
@@ -189,7 +189,17 @@ model never needs the whole document at once:
    study reports itself, but not figures cited from other studies. A vague
    period, sample, collection method or region gives way to the one stated
    on the method's page, and a key kind the scope step left out is taken from
-   that page.
+   that page. Items the context step marked as whole-document join these,
+   unless the study already states their kind.
+   **By dataset**: a report with more than one dataset (AgHealth's coroners'
+   death records and workers compensation claims) has a source, method and
+   limitations for each. One call groups the study's items by dataset and a
+   second assigns each statistic to one, so it takes only its own dataset's
+   items and those shared by all. A group of method facts alone (path
+   modelling of the same survey) is not a dataset. A last call asks which
+   numbers each method fact covers, and a fact about one measure or analysis
+   (mean scores, path modelling) comes off the others; a fact kept on a third
+   or more of the numbers stays on all. `--no-datasets` turns these off.
 3. **Statistics** per page, then a **linking** call per page for the
    specific items each number needs (its survey question, scenario, source).
 4. **Plain-code rules**: the reading the wording states ("just over" is a
@@ -226,8 +236,8 @@ Scored against `data/reference/statistics.json` and `contexts.json` (four
 documents, 239 statistics), the latest E4B run finds 99% of the reference
 statistics (237) at 96% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 90%, record type 87% (repeat runs vary by
-a few points). Context links reach 85% of the facts the reference links, and
-57% of the links given are right. Key conditions are right for nearly all
+a few points). Context links reach 83% of the facts the reference links, and
+72% of the links given are right (85% and 57% before the dataset steps). Key conditions are right for nearly all
 statistics: region 204 of 207, time period 156 of 157, sample 102 of 109, data
 source 100 of 118. A
 run takes about 2 to 7 minutes per document.
