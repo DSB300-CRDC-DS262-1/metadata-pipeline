@@ -8,15 +8,16 @@ from .findings import ContextItem, Statistic
 from .statistics_prompts import DUPLICATE_PROMPT, MAX_DUPLICATE_PAIRS
 
 def sharpen_scope(study: list[str], items: list[ContextItem]) -> list[str]:
-    """Swaps vague whole-study items for the specific ones in the method: the period, then the sample.
+    """Swaps vague whole-study items for the specific ones in the method: the period, the sample, the
+    collection method and the region.
 
     A model asked for the study's period often picks a span of years ("2020-2025") over the
     fieldwork dates printed in the method ("30 October to 17 November 2025"). The period goes
     first because the sample is looked for on the method's page.
     """
     by_id = {i.item_id: i for i in items}
-    study = _sharpen_period(study, items, by_id)
-    return _sharpen_region(_sharpen_sample(study, items, by_id), items, by_id)
+    study = _sharpen_sample(_sharpen_period(study, items, by_id), items, by_id)
+    return _sharpen_region(_sharpen_collection(study, items, by_id), items, by_id)
 
 
 def _method_pages(study: list[str], by_id: dict[str, ContextItem]) -> set[int]:
@@ -31,6 +32,19 @@ def _sharpen_region(study: list[str], items: list[ContextItem], by_id: dict[str,
     if not chosen or any(by_id[i].page in pages for i in chosen):
         return study
     local = [i for i in items if i.item_type == "geographic_region" and i.page in pages]
+    if not local:
+        return study
+    return [local[0].item_id if i == chosen[0] else i for i in study if i not in chosen[1:]]
+
+
+def _sharpen_collection(study: list[str], items: list[ContextItem], by_id: dict[str, ContextItem]) -> list[str]:
+    """A collection method from outside the method ("Survey responses" under one chart) gives way to the
+    one stated on the page of the study's period, data source or sample ("online survey methodology")."""
+    chosen = [i for i in study if by_id[i].item_type == "collection_method"]
+    pages = {by_id[i].page for i in study if by_id[i].item_type in ("time_period", "data_source", "sample_population")}
+    if not chosen or any(by_id[i].page in pages for i in chosen):
+        return study
+    local = [i for i in items if i.item_type == "collection_method" and i.page in pages]
     if not local:
         return study
     return [local[0].item_id if i == chosen[0] else i for i in study if i not in chosen[1:]]

@@ -170,7 +170,9 @@ model never needs the whole document at once:
 2. **Whole-study scope**: one call picks the best item for each key kind
    (period, region, sample, source, method); a second, narrower call picks
    method facts that apply to all results. These reach every statistic the
-   study reports itself, but not figures cited from other studies.
+   study reports itself, but not figures cited from other studies. A vague
+   period, sample, collection method or region gives way to the one stated
+   on the method's page.
 3. **Statistics** per page, then a **linking** call per page for the
    specific items each number needs (its survey question, scenario, source).
 4. **Plain-code rules**: the reading the wording states ("just over" is a
@@ -196,8 +198,8 @@ Scored against `data/findings_reference.json` (four documents, 238
 statistics), the latest E4B run with `--vision` finds 98% of the reference
 statistics (233) at 88% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 91%, record type 85% (repeat runs vary by
-a few points). Context links reach 74% of the facts the reference links, with
-35% precision. Key conditions are right for nearly all statistics: region 200
+a few points). Context links reach 79% of the facts the reference links, with
+38% precision. Key conditions are right for nearly all statistics: region 200
 of 203, time period 161 of 162, sample 106 of 113, data source 93 of 110. A
 run takes about 2 to 7 minutes per document.
 

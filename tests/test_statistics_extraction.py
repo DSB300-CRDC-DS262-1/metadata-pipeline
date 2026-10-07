@@ -697,6 +697,20 @@ def test_a_region_from_the_abstract_gives_way_to_the_sites_in_the_method() -> No
     assert sharpen_scope(["r1", "t"], items) == ["r2", "t"]
 
 
+def test_a_collection_method_under_one_chart_gives_way_to_the_one_in_the_method() -> None:
+    from crdc_pipeline.extraction.statistics_document import sharpen_scope
+    from crdc_pipeline.extraction.statistics_periods import with_item_period
+
+    def item(item_id, kind, value, page):
+        made = ContextItem(item_id=item_id, item_type=kind, value=value, page=page, quote=f"The study reports {value}.")
+        return with_item_period(made)
+
+    items = [item("t", "time_period", "2025-10-30 to 2025-11-17", 5), item("m", "collection_method", "online survey", 5),
+             item("c1", "collection_method", "Survey responses", 15), item("c2", "collection_method", "a survey", 11)]
+    assert sharpen_scope(["t", "c1", "c2"], items) == ["t", "m"]
+    assert sharpen_scope(["t", "m"], items) == ["t", "m"]
+
+
 def test_p_values_bounds_symbols_and_physical_quantities() -> None:
     from crdc_pipeline.extraction.statistics_values import label_type, tidy_statistic
 
