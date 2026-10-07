@@ -198,9 +198,9 @@ Scored against `data/findings_reference.json` (four documents, 238
 statistics), the latest E4B run with `--vision` finds 98% of the reference
 statistics (233) at 88% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 91%, record type 85% (repeat runs vary by
-a few points). Context links reach 79% of the facts the reference links, with
-38% precision. Key conditions are right for nearly all statistics: region 200
-of 203, time period 161 of 162, sample 106 of 113, data source 93 of 110. A
+a few points). Context links reach 80% of the facts the reference links, with
+40% precision. Key conditions are right for nearly all statistics: region 200
+of 203, time period 161 of 162, sample 106 of 120, data source 97 of 114. A
 run takes about 2 to 7 minutes per document.
 
 ## Pages the text layer cannot read
