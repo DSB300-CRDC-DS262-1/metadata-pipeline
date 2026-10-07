@@ -113,13 +113,13 @@ them before any text reaches a model.
 .venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py                              # Gemma 4 E4B, local
 .venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --model gemma4:12b --think off
 .venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --backend gemini             # needs a key
-.venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --vision                     # read scanned pages from the image
+.venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --no-vision                  # keep unreadable text layers as they are
 ```
 
 Results go to `output/metadata/<backend>_<model>/<document_id>.json` with
 time and token counts, and each field is printed against the reference.
 
-With `--vision`, Gemma 4 E4B gets all 76 reference fields right across the
+Gemma 4 E4B gets all 76 reference fields right across the
 four documents (19 fields each), in about 10 seconds per document.
 
 | Option | Use |
@@ -129,7 +129,7 @@ four documents (19 fields each), in about 10 seconds per document.
 | `--num-ctx` | Context window (default 32768). 8192 is enough for metadata and saves GPU memory |
 | `--num-gpu` | How many model layers go on the GPU; the rest run on the CPU (see below) |
 | `--seed`, `--suffix` | Fixed sampling seed; suffix for repeat runs (`r2`, `r3`) |
-| `--vision` | Read pages whose text is garbled (poor OCR of a scan), empty, or has OCR-split email addresses from the page image |
+| `--no-vision` | Keep the text layer as it is. By default, pages whose text is garbled (poor OCR of a scan), empty, or has OCR-split email addresses are read from the page image |
 | `--documents` | Only these document IDs |
 
 ## Choosing a local model
@@ -190,12 +190,12 @@ model never needs the whole document at once:
    apart. `--no-dedupe` turns this off.
 
 ```bash
-.venv/Scripts/python.exe scripts/statistics/run_statistics_extraction.py --vision   # reference documents, local E4B
+.venv/Scripts/python.exe scripts/statistics/run_statistics_extraction.py             # reference documents, local E4B
 .venv/Scripts/python.exe scripts/statistics/run_statistics_extraction.py --score-only output/statistics/<run>
 ```
 
 Scored against `data/reference/statistics.json` and `contexts.json` (four
-documents, 238 statistics), the latest E4B run with `--vision` finds 98% of the reference
+documents, 238 statistics), the latest E4B run finds 98% of the reference
 statistics (233) at 88% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 91%, record type 85% (repeat runs vary by
 a few points). Context links reach 79% of the facts the reference links, with
@@ -216,7 +216,15 @@ from its neighbours, reads an image of that word with a vision model
 to `data/symbol_rules.json`. Saved rules apply on every load with no model.
 Joined letters (ﬁ, ﬂ) are split back into plain letters.
 
-Flagged or empty pages can be re-read from the page image:
+Both extraction scripts read such pages from the page image by default
+(`--no-vision` turns this off): for statistics, any page with two or more
+unreadable characters, garbled text or no text; for metadata, only garbled or
+empty pages. Whole pages are read rather than crops of the unreadable words:
+on Voconiq a word crop took about 1.3 seconds against about 2.8 for a page,
+flagged pages hold around ten such words, and small crops were read less
+reliably.
+
+Flagged or empty pages can also be transcribed on their own:
 
 ```bash
 .venv/Scripts/python.exe scripts/ingestion/transcribe_unreadable_pages.py

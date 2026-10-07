@@ -48,8 +48,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, help="fixed sampling seed for local models")
     parser.add_argument("--num-ctx", type=int, help="context window for local models (default 32768)")
     parser.add_argument("--num-gpu", type=int, help="model layers to put on the GPU (for smaller GPUs)")
-    parser.add_argument("--vision", action="store_true",
-                        help="read pages with garbled or no text from the page image (local vision model)")
+    parser.add_argument("--no-vision", action="store_true",
+                        help="keep the text layer even where it is unreadable; by default pages with garbled or "
+                             "no text are read from the page image (local vision model)")
     parser.add_argument("--suffix", default="", help="appended to the output folder, e.g. r2 for a repeat run")
     parser.add_argument("--documents", nargs="*", help="document_ids to run (default all)")
     return parser.parse_args()
@@ -66,7 +67,7 @@ def main() -> None:
     if args.num_gpu is not None and args.backend == "ollama":
         options["num_gpu"] = args.num_gpu
     backend = make_backend(args.backend, args.model, **options)
-    transcribe = make_page_transcriber(make_vision_backend("ollama")) if args.vision else None
+    transcribe = make_page_transcriber(make_vision_backend("ollama")) if not args.no_vision else None
     reference = load_reference_metadata()
     out_dir = OUTPUT_ROOT / slug(backend.label + (f"__{args.suffix}" if args.suffix else ""))
     out_dir.mkdir(parents=True, exist_ok=True)

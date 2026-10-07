@@ -39,8 +39,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--num-ctx", type=int, help="context window for local models (default 32768)")
     parser.add_argument("--num-gpu", type=int, help="model layers to put on the GPU (for smaller GPUs)")
     parser.add_argument("--documents", nargs="*", help="document_ids to run (default: those in the findings reference)")
-    parser.add_argument("--vision", action="store_true",
-                        help="read pages with unreadable characters or garbled text from the page image (local vision model)")
+    parser.add_argument("--no-vision", action="store_true",
+                        help="keep the text layer even where it is unreadable; by default pages with unreadable "
+                             "characters, garbled text or no text are read from the page image (local vision model)")
     parser.add_argument("--exclude-tables", action="store_true", help="drop table and chart lines before extraction")
     parser.add_argument("--no-link", action="store_true", help="skip the separate linking pass")
     parser.add_argument("--context-backend", choices=["gemini", "ollama"], help="backend for the context steps (default: --backend)")
@@ -157,7 +158,7 @@ def main() -> None:
     manifest = json.loads((DATA_DIR / "document_manifest.json").read_text(encoding="utf-8"))["documents"]
     scores = {}
     wanted = args.documents or list(reference)
-    transcribe = make_page_transcriber(make_vision_backend("ollama")) if args.vision else None
+    transcribe = make_page_transcriber(make_vision_backend("ollama")) if not args.no_vision else None
     for entry in manifest:
         document_id = entry["document_id"]
         if document_id not in wanted:
