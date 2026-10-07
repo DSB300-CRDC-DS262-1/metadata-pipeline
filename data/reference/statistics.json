@@ -154,7 +154,7 @@
           "reported_text": "surpasses $48 million",
           "unit": "AUD million",
           "statistic_type": "monetary_value",
-          "record_type": "measurement",
+          "record_type": "scenario_result",
           "value_status": "lower_bound",
           "period": {
             "start": "2001"
@@ -180,7 +180,7 @@
           "reported_text": "$2.8 million",
           "unit": "AUD million per fatality",
           "statistic_type": "average",
-          "record_type": "measurement",
+          "record_type": "scenario_result",
           "value_status": "exact",
           "period": {
             "start": "2001"
@@ -533,7 +533,7 @@
           "reported_text": "surpasses $73 million",
           "unit": "AUD million",
           "statistic_type": "monetary_value",
-          "record_type": "measurement",
+          "record_type": "scenario_result",
           "value_status": "lower_bound",
           "period": {
             "start": "2001",
@@ -568,7 +568,7 @@
           "reported_text": "approaching $3.5 million",
           "unit": "AUD million per fatality",
           "statistic_type": "average",
-          "record_type": "measurement",
+          "record_type": "scenario_result",
           "value_status": "upper_bound",
           "period": {
             "start": "2001",
@@ -878,15 +878,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13"
           ],
@@ -906,15 +897,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k53"
@@ -949,7 +931,7 @@
           ],
           "page": 1,
           "quote": "The climate change impact of cotton lint on a cradle-to-port basis was 1601 kg CO2e per tonne of cotton lint.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s04",
@@ -977,7 +959,7 @@
           ],
           "page": 1,
           "quote": "the production and use of synthetic nitrogen (N) fertilisers (46% of emissions)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s05",
@@ -1005,7 +987,7 @@
           ],
           "page": 1,
           "quote": "the production and use of electricity and diesel used for irrigation (10%)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s06",
@@ -1033,7 +1015,7 @@
           ],
           "page": 1,
           "quote": "the production and use of diesel for farm machinery (9%)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s07",
@@ -1047,15 +1029,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13"
           ],
@@ -1090,7 +1063,7 @@
           ],
           "page": 1,
           "quote": "reducing N fertiliser rate from a commercial rate of 255 kg N/ha to 240 kg N/ha or 180 kg N/ha (2.6% and 13.2% emissions reduction)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s09",
@@ -1119,7 +1092,7 @@
           ],
           "page": 1,
           "quote": "reducing N fertiliser rate from a commercial rate of 255 kg N/ha to 240 kg N/ha or 180 kg N/ha (2.6% and 13.2% emissions reduction)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s10",
@@ -1149,7 +1122,7 @@
           ],
           "page": 1,
           "quote": "use of controlled-release and stabilised N fertilisers (5.9% reduction)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_04"
         },
         {
           "statistic_id": "s11",
@@ -1178,7 +1151,7 @@
           ],
           "page": 1,
           "quote": "changing from diesel to solar-powered irrigation pumps (8.1% reduction)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s12",
@@ -1208,7 +1181,7 @@
           ],
           "page": 1,
           "quote": "changing from diesel to biofuel-powered farm machinery (3.4% reduction)",
-          "context_id": "doc_hedayati2019_ctx_04"
+          "context_id": "doc_hedayati2019_ctx_05"
         },
         {
           "statistic_id": "s13",
@@ -1240,7 +1213,7 @@
           ],
           "page": 1,
           "quote": "changing from continuous cotton to a cotton-legume crop rotation (3.9% reduction)",
-          "context_id": "doc_hedayati2019_ctx_05"
+          "context_id": "doc_hedayati2019_ctx_06"
         },
         {
           "statistic_id": "s14",
@@ -1269,7 +1242,7 @@
           ],
           "page": 1,
           "quote": "use of N fertigation (2.1% reduction)",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s15",
@@ -1285,7 +1258,7 @@
           ],
           "page": 2,
           "quote": "The global potential for soil organic carbon (SOC) sequestration through improved crop management practices is 0.9 Pg C/year",
-          "context_id": "doc_hedayati2019_ctx_06"
+          "context_id": "doc_hedayati2019_ctx_07"
         },
         {
           "statistic_id": "s16",
@@ -1303,7 +1276,7 @@
           "page": 2,
           "quote": "which may offset up to a third of the annual increase in atmospheric CO2",
           "note": "'a third' recorded as 33.3%",
-          "context_id": "doc_hedayati2019_ctx_06"
+          "context_id": "doc_hedayati2019_ctx_07"
         },
         {
           "statistic_id": "s17",
@@ -1319,7 +1292,7 @@
           ],
           "page": 2,
           "quote": "estimated at 3.3 Pg C/year (Lal, 2004)",
-          "context_id": "doc_hedayati2019_ctx_06"
+          "context_id": "doc_hedayati2019_ctx_07"
         },
         {
           "statistic_id": "s18",
@@ -1339,7 +1312,7 @@
           ],
           "page": 2,
           "quote": "The five year (2009-2014) average annual cotton production in Australia was 3.9 million bales",
-          "context_id": "doc_hedayati2019_ctx_07"
+          "context_id": "doc_hedayati2019_ctx_08"
         },
         {
           "statistic_id": "s19",
@@ -1359,7 +1332,7 @@
           ],
           "page": 2,
           "quote": "from 334,775 ha to 96,074 ha of irrigated and dryland systems, respectively",
-          "context_id": "doc_hedayati2019_ctx_07"
+          "context_id": "doc_hedayati2019_ctx_08"
         },
         {
           "statistic_id": "s20",
@@ -1379,7 +1352,7 @@
           ],
           "page": 2,
           "quote": "from 334,775 ha to 96,074 ha of irrigated and dryland systems, respectively",
-          "context_id": "doc_hedayati2019_ctx_07"
+          "context_id": "doc_hedayati2019_ctx_08"
         },
         {
           "statistic_id": "s21",
@@ -1399,7 +1372,7 @@
           ],
           "page": 2,
           "quote": "with an annual gross value of $2 billion (AU$)",
-          "context_id": "doc_hedayati2019_ctx_07"
+          "context_id": "doc_hedayati2019_ctx_08"
         },
         {
           "statistic_id": "s22",
@@ -1434,7 +1407,7 @@
           ],
           "page": 2,
           "quote": "Globally, Australia was the sixth largest cotton producer and the second largest cotton exporter by volume during the 2013-14 production season (Cotton Inc., 2018).",
-          "context_id": "doc_hedayati2019_ctx_08"
+          "context_id": "doc_hedayati2019_ctx_09"
         },
         {
           "statistic_id": "s24",
@@ -1454,7 +1427,7 @@
           ],
           "page": 2,
           "quote": "Globally, Australia was the sixth largest cotton producer and the second largest cotton exporter by volume during the 2013-14 production season (Cotton Inc., 2018).",
-          "context_id": "doc_hedayati2019_ctx_08"
+          "context_id": "doc_hedayati2019_ctx_09"
         },
         {
           "statistic_id": "s25",
@@ -1474,7 +1447,7 @@
           ],
           "page": 2,
           "quote": "Average lint yield in Australia is the highest in the world at 12 bales/ha (2.7 t/ha)",
-          "context_id": "doc_hedayati2019_ctx_09"
+          "context_id": "doc_hedayati2019_ctx_10"
         },
         {
           "statistic_id": "s26",
@@ -1494,7 +1467,7 @@
           ],
           "page": 2,
           "quote": "9.85 bales/ha (2.2 t/ha) (irrigated) in 2009-14 (Roth, 2014)",
-          "context_id": "doc_hedayati2019_ctx_07"
+          "context_id": "doc_hedayati2019_ctx_08"
         },
         {
           "statistic_id": "s27",
@@ -1510,7 +1483,7 @@
           ],
           "page": 2,
           "quote": "Approximately 45% of cotton growers participate voluntarily in the myBMP program",
-          "context_id": "doc_hedayati2019_ctx_10"
+          "context_id": "doc_hedayati2019_ctx_11"
         },
         {
           "statistic_id": "s28",
@@ -1527,7 +1500,7 @@
           ],
           "page": 3,
           "quote": "Cotton is an annual summer crop, with a 6-month production season.",
-          "context_id": "doc_hedayati2019_ctx_11"
+          "context_id": "doc_hedayati2019_ctx_12"
         },
         {
           "statistic_id": "s29",
@@ -1544,7 +1517,7 @@
           "page": 3,
           "quote": "half of the cotton production systems were back-to-back cotton",
           "note": "'half' recorded as 50%",
-          "context_id": "doc_hedayati2019_ctx_12"
+          "context_id": "doc_hedayati2019_ctx_13"
         },
         {
           "statistic_id": "s30",
@@ -1564,7 +1537,7 @@
           ],
           "page": 3,
           "quote": "(96% of total volume of cotton production in 2014-15)",
-          "context_id": "doc_hedayati2019_ctx_13"
+          "context_id": "doc_hedayati2019_ctx_14"
         },
         {
           "statistic_id": "s31",
@@ -1578,22 +1551,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k52"
           ],
           "page": 3,
           "quote": "The percentage of irrigation water sourced from surface water (80%) versus groundwater (20%) assumed for this study",
-          "context_id": "doc_hedayati2019_ctx_14"
+          "context_id": "doc_hedayati2019_ctx_15"
         },
         {
           "statistic_id": "s32",
@@ -1607,22 +1571,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k52"
           ],
           "page": 3,
           "quote": "The percentage of irrigation water sourced from surface water (80%) versus groundwater (20%) assumed for this study",
-          "context_id": "doc_hedayati2019_ctx_14"
+          "context_id": "doc_hedayati2019_ctx_15"
         },
         {
           "statistic_id": "s33",
@@ -1636,15 +1591,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k53"
@@ -1665,22 +1611,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k54"
           ],
           "page": 3,
           "quote": "The total dynamic heads for water pumped from surface water and groundwater were assumed to be 8 m (Welke, 2011) and 35 m (NSW Water, 2009a; b), respectively.",
-          "context_id": "doc_hedayati2019_ctx_15"
+          "context_id": "doc_hedayati2019_ctx_16"
         },
         {
           "statistic_id": "s35",
@@ -1694,22 +1631,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k54"
           ],
           "page": 3,
           "quote": "The total dynamic heads for water pumped from surface water and groundwater were assumed to be 8 m (Welke, 2011) and 35 m (NSW Water, 2009a; b), respectively.",
-          "context_id": "doc_hedayati2019_ctx_15"
+          "context_id": "doc_hedayati2019_ctx_16"
         },
         {
           "statistic_id": "s36",
@@ -1723,22 +1651,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k55"
           ],
           "page": 3,
           "quote": "We applied the relative contributions of cotton lint (42%), cottonseed (49%) and gin trash (9%) for a typical Australian ginning plant (RIRDC, 2014).",
-          "context_id": "doc_hedayati2019_ctx_16"
+          "context_id": "doc_hedayati2019_ctx_17"
         },
         {
           "statistic_id": "s37",
@@ -1752,22 +1671,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k55"
           ],
           "page": 3,
           "quote": "We applied the relative contributions of cotton lint (42%), cottonseed (49%) and gin trash (9%) for a typical Australian ginning plant (RIRDC, 2014).",
-          "context_id": "doc_hedayati2019_ctx_16"
+          "context_id": "doc_hedayati2019_ctx_17"
         },
         {
           "statistic_id": "s38",
@@ -1781,22 +1691,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k55"
           ],
           "page": 3,
           "quote": "We applied the relative contributions of cotton lint (42%), cottonseed (49%) and gin trash (9%) for a typical Australian ginning plant (RIRDC, 2014).",
-          "context_id": "doc_hedayati2019_ctx_16"
+          "context_id": "doc_hedayati2019_ctx_17"
         },
         {
           "statistic_id": "s39",
@@ -1810,15 +1711,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13"
           ],
@@ -1838,15 +1730,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13"
           ],
@@ -1867,15 +1750,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k16",
@@ -1883,7 +1757,7 @@
           ],
           "page": 3,
           "quote": "We applied a 52% reduction in each emissions factor during the on-farm phase, as per Tian et al. (2015).",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_18"
         },
         {
           "statistic_id": "s42",
@@ -1897,15 +1771,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k17"
@@ -1930,7 +1795,7 @@
           ],
           "page": 3,
           "quote": "with 180-240 kg N/ha still commonly applied",
-          "context_id": "doc_hedayati2019_ctx_13"
+          "context_id": "doc_hedayati2019_ctx_14"
         },
         {
           "statistic_id": "s44",
@@ -1944,22 +1809,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k57"
           ],
           "page": 5,
           "quote": "The global warming potentials (GWPs) applied for CO2, N2O, and CH4 were 1, 298, and 25, respectively (Australian Government, 2015a).",
-          "context_id": "doc_hedayati2019_ctx_17"
+          "context_id": "doc_hedayati2019_ctx_19"
         },
         {
           "statistic_id": "s45",
@@ -1973,22 +1829,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k57"
           ],
           "page": 5,
           "quote": "The global warming potentials (GWPs) applied for CO2, N2O, and CH4 were 1, 298, and 25, respectively (Australian Government, 2015a).",
-          "context_id": "doc_hedayati2019_ctx_17"
+          "context_id": "doc_hedayati2019_ctx_19"
         },
         {
           "statistic_id": "s46",
@@ -2002,22 +1849,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k57"
           ],
           "page": 5,
           "quote": "The global warming potentials (GWPs) applied for CO2, N2O, and CH4 were 1, 298, and 25, respectively (Australian Government, 2015a).",
-          "context_id": "doc_hedayati2019_ctx_17"
+          "context_id": "doc_hedayati2019_ctx_19"
         },
         {
           "statistic_id": "s47",
@@ -2031,15 +1869,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k25"
@@ -2064,15 +1893,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13"
           ],
@@ -2096,15 +1916,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13"
           ],
@@ -2119,7 +1930,7 @@
           "reported_text": "approximately 86%",
           "unit": "%",
           "statistic_type": "percentage",
-          "record_type": "model_assumption",
+          "record_type": "derived",
           "value_status": "approximate",
           "context_item_ids": [
             "k01",
@@ -2138,7 +1949,7 @@
           ],
           "page": 5,
           "quote": "allocating approximately 86% of the life cycle climate change impact to lint.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s51",
@@ -2154,7 +1965,7 @@
           ],
           "page": 6,
           "quote": "in Central Qld, 90% of total cottonseed produced is used as animal feed",
-          "context_id": "doc_hedayati2019_ctx_18"
+          "context_id": "doc_hedayati2019_ctx_20"
         },
         {
           "statistic_id": "s52",
@@ -2170,7 +1981,7 @@
           ],
           "page": 6,
           "quote": "Cargill Australia (Narrabri) crushes approximately 80% of the total cottonseed produced in the region.",
-          "context_id": "doc_hedayati2019_ctx_13"
+          "context_id": "doc_hedayati2019_ctx_14"
         },
         {
           "statistic_id": "s53",
@@ -2184,22 +1995,13 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k59"
           ],
           "page": 6,
           "quote": "So, we applied a fraction of 20% of cottonseed as animal feed",
-          "context_id": "doc_hedayati2019_ctx_19"
+          "context_id": "doc_hedayati2019_ctx_21"
         },
         {
           "statistic_id": "s54",
@@ -2227,7 +2029,7 @@
           ],
           "page": 6,
           "quote": "The GHG emissions from the pre-farm stage, on-farm stage and the post-farm stages were 406 kg CO2e, 776 kg CO2e and 419 kg CO2e, respectively",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s55",
@@ -2255,7 +2057,7 @@
           ],
           "page": 6,
           "quote": "The GHG emissions from the pre-farm stage, on-farm stage and the post-farm stages were 406 kg CO2e, 776 kg CO2e and 419 kg CO2e, respectively",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s56",
@@ -2283,7 +2085,7 @@
           ],
           "page": 6,
           "quote": "The GHG emissions from the pre-farm stage, on-farm stage and the post-farm stages were 406 kg CO2e, 776 kg CO2e and 419 kg CO2e, respectively",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s57",
@@ -2312,7 +2114,7 @@
           ],
           "page": 6,
           "quote": "changing lint/seed proportions led to a climate change impact of 14.6%.",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s58",
@@ -2341,7 +2143,7 @@
           ],
           "page": 6,
           "quote": "along with the impact of a change in cottonseed price (12.3%) and lint price (5.1%)",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s59",
@@ -2370,7 +2172,7 @@
           ],
           "page": 6,
           "quote": "along with the impact of a change in cottonseed price (12.3%) and lint price (5.1%)",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s60",
@@ -2398,7 +2200,7 @@
           ],
           "page": 6,
           "quote": "Most diesel-related emissions were due to combustion on-farm (83%), with the remainder occurring pre-farm.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s61",
@@ -2426,7 +2228,7 @@
           ],
           "page": 6,
           "quote": "The production and use of synthetic N fertilisers contributed 705 kg CO2e/t lint",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s62",
@@ -2454,7 +2256,7 @@
           ],
           "page": 6,
           "quote": "with fertiliser production contributing approximately 17% and fertiliser use contributing 28% of the total life cycle GHG emissions.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s63",
@@ -2482,7 +2284,7 @@
           ],
           "page": 6,
           "quote": "with fertiliser production contributing approximately 17% and fertiliser use contributing 28% of the total life cycle GHG emissions.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s64",
@@ -2510,7 +2312,7 @@
           ],
           "page": 6,
           "quote": "For the use stage, 80% of emissions were made up",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s65",
@@ -2538,7 +2340,7 @@
           ],
           "page": 6,
           "quote": "Approximately 20% of the use-stage emissions were CO2 emissions from the hydrolysis of urea in the field.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
         },
         {
           "statistic_id": "s66",
@@ -2555,7 +2357,7 @@
           ],
           "page": 6,
           "quote": "the cited studies had an average emissions intensity of approximately 1150 kg CO2e",
-          "context_id": "doc_hedayati2019_ctx_21"
+          "context_id": "doc_hedayati2019_ctx_23"
         },
         {
           "statistic_id": "s67",
@@ -2573,7 +2375,7 @@
           "page": 6,
           "quote": "with adjusted emissions of 1531 kg CO2e/t lint.",
           "note": "Table 4 gives 1532",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_24"
         },
         {
           "statistic_id": "s68",
@@ -2590,7 +2392,7 @@
           ],
           "page": 6,
           "quote": "Two further studies, once adjusted, gave emissions of approximately 1450 kg CO2e/t lint",
-          "context_id": "doc_hedayati2019_ctx_23"
+          "context_id": "doc_hedayati2019_ctx_25"
         },
         {
           "statistic_id": "s69",
@@ -2607,7 +2409,7 @@
           ],
           "page": 6,
           "quote": "The adjusted emissions for AusLCI (ALCAS, 2013) were 1760 kg CO2e/t lint.",
-          "context_id": "doc_hedayati2019_ctx_24"
+          "context_id": "doc_hedayati2019_ctx_26"
         },
         {
           "statistic_id": "s70",
@@ -2638,7 +2440,7 @@
           ],
           "page": 7,
           "quote": "the calculated emissions intensity varied by less than 10%",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s71",
@@ -2668,7 +2470,7 @@
           ],
           "page": 7,
           "quote": "calculated emissions intensity was 23% higher (Fig. 3) primarily due to lower yields.",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s72",
@@ -2684,15 +2486,6 @@
           "context_item_ids": [
             "k01",
             "k02",
-            "k03",
-            "k04",
-            "k05",
-            "k06",
-            "k07",
-            "k08",
-            "k09",
-            "k10",
-            "k11",
             "k12",
             "k13",
             "k26"
@@ -2729,7 +2522,7 @@
           ],
           "page": 7,
           "quote": "we found the calculated emissions decreased to a net sequestration of 2360 kg CO2e per tonne of lint.",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s74",
@@ -2759,7 +2552,7 @@
           ],
           "page": 8,
           "quote": "This change was due to 7910 kg CO2/ha absorbed from the air by the cotton crop",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s75",
@@ -2789,7 +2582,7 @@
           ],
           "page": 8,
           "quote": "3950 kg CO2/ha of calculated emissions from soil associated with the decomposition of cotton residue.",
-          "context_id": "doc_hedayati2019_ctx_20"
+          "context_id": "doc_hedayati2019_ctx_22"
         },
         {
           "statistic_id": "s76",
@@ -2808,7 +2601,7 @@
           ],
           "page": 9,
           "quote": "The economic analysis of cotton monoculture systems revealed a gross margin of AU$ 1744/ha (Nachimuthu et al., 2017) or AU$ 1.11/CO2e @ 240 kg N/ha.",
-          "context_id": "doc_hedayati2019_ctx_25"
+          "context_id": "doc_hedayati2019_ctx_27"
         },
         {
           "statistic_id": "s77",
@@ -2828,7 +2621,7 @@
           "page": 9,
           "quote": "The economic analysis of cotton monoculture systems revealed a gross margin of AU$ 1744/ha (Nachimuthu et al., 2017) or AU$ 1.11/CO2e @ 240 kg N/ha.",
           "note": "Table 5 gives 1.12, and labels the column CO2e/AU$",
-          "context_id": "doc_hedayati2019_ctx_25"
+          "context_id": "doc_hedayati2019_ctx_27"
         },
         {
           "statistic_id": "s78",
@@ -2847,7 +2640,7 @@
           ],
           "page": 9,
           "quote": "Reducing the fertiliser rate to 180 kg N/ha resulted in gross margin of AU$ 1795/ha or AU$ 1.29/CO2e",
-          "context_id": "doc_hedayati2019_ctx_25"
+          "context_id": "doc_hedayati2019_ctx_27"
         },
         {
           "statistic_id": "s79",
@@ -2866,7 +2659,7 @@
           ],
           "page": 9,
           "quote": "Reducing the fertiliser rate to 180 kg N/ha resulted in gross margin of AU$ 1795/ha or AU$ 1.29/CO2e",
-          "context_id": "doc_hedayati2019_ctx_25"
+          "context_id": "doc_hedayati2019_ctx_27"
         },
         {
           "statistic_id": "s80",
@@ -2897,7 +2690,7 @@
           "page": 10,
           "quote": "We calculated a 3.9% saving in GHG emissions by replacing diesel-powered farm machinery with biofuel-powered machinery.",
           "note": "conflicts with 3.4% for biofuel in the abstract and Table 5, where 3.9% is the legume rotation result",
-          "context_id": "doc_hedayati2019_ctx_04"
+          "context_id": "doc_hedayati2019_ctx_05"
         },
         {
           "statistic_id": "s81",
@@ -2915,7 +2708,7 @@
           ],
           "page": 10,
           "quote": "reducing N fertiliser use by 25-50% and reducing irrigation water use by 30-50% in Syrian cotton systems (Janat, 2008)",
-          "context_id": "doc_hedayati2019_ctx_26"
+          "context_id": "doc_hedayati2019_ctx_28"
         },
         {
           "statistic_id": "s82",
@@ -2933,7 +2726,7 @@
           ],
           "page": 10,
           "quote": "reducing N fertiliser use by 25-50% and reducing irrigation water use by 30-50% in Syrian cotton systems (Janat, 2008)",
-          "context_id": "doc_hedayati2019_ctx_26"
+          "context_id": "doc_hedayati2019_ctx_28"
         },
         {
           "statistic_id": "s83",
@@ -2953,7 +2746,7 @@
           ],
           "page": 10,
           "quote": "By 2014, more than 90% of cotton growers were using Bollgard II cotton varieties (Roth, 2014)",
-          "context_id": "doc_hedayati2019_ctx_07"
+          "context_id": "doc_hedayati2019_ctx_08"
         },
         {
           "statistic_id": "s84",
@@ -2998,7 +2791,7 @@
           ],
           "page": 11,
           "quote": "with dryland production found to have a calculated emissions intensity approximately 72% of that of irrigated production.",
-          "context_id": "doc_hedayati2019_ctx_27"
+          "context_id": "doc_hedayati2019_ctx_29"
         },
         {
           "statistic_id": "s86",
@@ -3018,7 +2811,7 @@
           ],
           "page": 11,
           "quote": "which was 14% of total production during the 2017-18 season in northwest NSW.",
-          "context_id": "doc_hedayati2019_ctx_13"
+          "context_id": "doc_hedayati2019_ctx_14"
         },
         {
           "statistic_id": "s87",
@@ -3061,7 +2854,30 @@
           ],
           "page": 10,
           "quote": "perspective (8.1% reduction) and the third largest saving overall.",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_03"
+        },
+        {
+          "statistic_id": "s89",
+          "variable": "power of the solar panels for solar-powered irrigation pumps",
+          "value": 3,
+          "reported_text": "3 kW",
+          "unit": "kW",
+          "statistic_type": "other",
+          "record_type": "model_assumption",
+          "value_status": "exact",
+          "context_item_ids": [
+            "k01",
+            "k02",
+            "k12",
+            "k13",
+            "k21"
+          ],
+          "page": 4,
+          "quote": "For solar-powered irrigation pumps, 3 kW solar panels were assumed as the power source.",
+          "context_id": "doc_hedayati2019_ctx_01",
+          "value_min": null,
+          "value_max": null,
+          "period": null
         }
       ]
     },
@@ -3308,8 +3124,6 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "v10",
             "q04"
@@ -3333,15 +3147,14 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "v10",
-            "q04"
+            "q04",
+            "v11"
           ],
           "page": 9,
           "quote": "an increase of 0.07 from the last survey",
-          "context_id": "doc_voconiq2025_ctx_05"
+          "context_id": "doc_voconiq2025_ctx_06"
         },
         {
           "statistic_id": "s13",
@@ -3362,8 +3175,6 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "v10",
             "q05"
@@ -3389,18 +3200,15 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "v10",
-            "q05"
+            "q05",
+            "v11"
           ],
           "page": 9,
           "quote": "acceptance has now returned to similar baseline levels of over 3.4 in both 2023 and 2025",
-          "context_id": "doc_voconiq2025_ctx_05"
+          "context_id": "doc_voconiq2025_ctx_07"
         },
         {
           "statistic_id": "s15",
@@ -3416,7 +3224,7 @@
           ],
           "page": 9,
           "quote": "commit to sourcing 100% sustainable cotton in recent years",
-          "context_id": "doc_voconiq2025_ctx_06"
+          "context_id": "doc_voconiq2025_ctx_08"
         },
         {
           "statistic_id": "s16",
@@ -3464,8 +3272,6 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
             "v07",
@@ -3475,7 +3281,7 @@
           ],
           "page": 11,
           "quote": "cotton industry uses water responsibly at 47% (Figure 4) compared to 42% in 2020.",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_09"
         },
         {
           "statistic_id": "s18",
@@ -3654,7 +3460,7 @@
           "page": 11,
           "quote": "with 28% who disagreed, 30% who agreed and 42% who were neutral (Figure 4).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_07"
+          "context_id": "doc_voconiq2025_ctx_10"
         },
         {
           "statistic_id": "s24",
@@ -3743,7 +3549,7 @@
           ],
           "page": 11,
           "quote": "High neutral scores for the appropriate allocation (43%)",
-          "context_id": "doc_voconiq2025_ctx_07"
+          "context_id": "doc_voconiq2025_ctx_10"
         },
         {
           "statistic_id": "s27",
@@ -3773,7 +3579,7 @@
           ],
           "page": 11,
           "quote": "the responsible use of water (44%; Figure 4)",
-          "context_id": "doc_voconiq2025_ctx_07"
+          "context_id": "doc_voconiq2025_ctx_10"
         },
         {
           "statistic_id": "s28",
@@ -4293,11 +4099,12 @@
             "v06",
             "v07",
             "v08",
-            "q19"
+            "q19",
+            "v11"
           ],
           "page": 13,
           "quote": "While agreement to this question has grown 0.9% since it was first asked in 2023",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_04"
         },
         {
           "statistic_id": "s46",
@@ -4316,17 +4123,16 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
             "v07",
             "v08",
-            "q19"
+            "q19",
+            "v11"
           ],
           "page": 13,
           "quote": "the portion of neutral responses has also increased from 49% in 2023 to 51% in 2025",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_09"
         },
         {
           "statistic_id": "s47",
@@ -4348,14 +4154,13 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "g02",
             "q19"
           ],
           "page": 13,
           "quote": "6-10 people in the cotton industry gave the highest average score of 3.94",
-          "context_id": "doc_voconiq2025_ctx_08"
+          "context_id": "doc_voconiq2025_ctx_11"
         },
         {
           "statistic_id": "s48",
@@ -4377,14 +4182,13 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "g03",
             "q19"
           ],
           "page": 13,
           "quote": "while those who knew more than 10 dropped to 3.72 (Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_09"
+          "context_id": "doc_voconiq2025_ctx_12"
         },
         {
           "statistic_id": "s49",
@@ -4406,7 +4210,6 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "g01",
             "q13"
@@ -4414,7 +4217,7 @@
           "page": 14,
           "quote": "gave the highest mean score for \"the cotton industry does enough to protect its biodiversity\" at 3.68",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_10"
+          "context_id": "doc_voconiq2025_ctx_13"
         },
         {
           "statistic_id": "s50",
@@ -4432,13 +4235,12 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "q13"
           ],
           "page": 14,
           "quote": "while the average rating decreased by 0.02 as the number of people known increased (Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_14"
         },
         {
           "statistic_id": "s51",
@@ -4460,7 +4262,6 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "g02",
             "q06"
@@ -4468,7 +4269,7 @@
           "page": 14,
           "quote": "the cotton industry in Australia uses water responsibly\" at 3.78",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_08"
+          "context_id": "doc_voconiq2025_ctx_11"
         },
         {
           "statistic_id": "s52",
@@ -4490,14 +4291,13 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "g01",
             "q06"
           ],
           "page": 14,
           "quote": "were largely in line with those who knew 3-5 and 10 or more people in comparison (3.77 and 3.76, respectively; Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_10"
+          "context_id": "doc_voconiq2025_ctx_13"
         },
         {
           "statistic_id": "s53",
@@ -4519,14 +4319,13 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "g03",
             "q06"
           ],
           "page": 14,
           "quote": "were largely in line with those who knew 3-5 and 10 or more people in comparison (3.77 and 3.76, respectively; Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_09"
+          "context_id": "doc_voconiq2025_ctx_12"
         },
         {
           "statistic_id": "s54",
@@ -4810,14 +4609,13 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "v11",
             "q20"
           ],
           "page": 15,
           "quote": "Ratings for preparedness to change have been stable over time, having increased by 0.09 between 2020 and 2025",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_15"
         },
         {
           "statistic_id": "s64",
@@ -4839,14 +4637,13 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "v11",
             "q21"
           ],
           "page": 15,
           "quote": "while listening and respecting community concerns increased 0.08 in the same period (Figure 9).",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_15"
         },
         {
           "statistic_id": "s65",
@@ -4864,18 +4661,15 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "v11",
             "q22"
           ],
           "page": 15,
           "quote": "The rating for acknowledging mistakes began with a 3.41 in 2020 before it decreased in 2023 to 3.35 and then increased this year to 3.40 (Figure 9).",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_16"
         },
         {
           "statistic_id": "s66",
@@ -4893,18 +4687,15 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "v11",
             "q22"
           ],
           "page": 15,
           "quote": "The rating for acknowledging mistakes began with a 3.41 in 2020 before it decreased in 2023 to 3.35 and then increased this year to 3.40 (Figure 9).",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_16"
         },
         {
           "statistic_id": "s67",
@@ -4926,13 +4717,12 @@
             "v04",
             "v05",
             "v06",
-            "v07",
             "v08",
             "q22"
           ],
           "page": 15,
           "quote": "The rating for acknowledging mistakes began with a 3.41 in 2020 before it decreased in 2023 to 3.35 and then increased this year to 3.40 (Figure 9).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_14"
         },
         {
           "statistic_id": "s68",
@@ -5894,17 +5684,16 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
             "v07",
             "v08",
-            "q36"
+            "q36",
+            "v11"
           ],
           "page": 20,
           "quote": "their supply chains are free from modern slavery\" at 79% (Figure 13), a stable level of agreement from 2023 when the question was first asked (80%).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_09"
         },
         {
           "statistic_id": "s101",
@@ -6010,8 +5799,6 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
             "v07",
@@ -6021,7 +5808,7 @@
           ],
           "page": 20,
           "quote": "initially 51% at baseline, 53% in 2023, to now 51% this year.",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_09"
         },
         {
           "statistic_id": "s105",
@@ -6040,8 +5827,6 @@
           "context_item_ids": [
             "v01",
             "v02",
-            "v03",
-            "v04",
             "v05",
             "v06",
             "v07",
@@ -6051,7 +5836,7 @@
           ],
           "page": 20,
           "quote": "initially 51% at baseline, 53% in 2023, to now 51% this year.",
-          "context_id": "doc_voconiq2025_ctx_04"
+          "context_id": "doc_voconiq2025_ctx_09"
         },
         {
           "statistic_id": "s106",
@@ -6227,7 +6012,7 @@
           ],
           "page": 20,
           "quote": "1. Internet (30%).",
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_17"
         },
         {
           "statistic_id": "s112",
@@ -6257,7 +6042,7 @@
           ],
           "page": 20,
           "quote": "2. Television - news (21%).",
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_17"
         },
         {
           "statistic_id": "s113",
@@ -6287,7 +6072,7 @@
           ],
           "page": 20,
           "quote": "3. Social networking, e.g. Facebook, X, Instagram, TikTok, etc. (16%).",
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_17"
         },
         {
           "statistic_id": "s114",
@@ -6317,7 +6102,7 @@
           ],
           "page": 20,
           "quote": "4. Television - current affairs programs (13%).",
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_17"
         },
         {
           "statistic_id": "s115",
@@ -6347,7 +6132,7 @@
           ],
           "page": 21,
           "quote": "5. Friends or family (12%).",
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_17"
         }
       ]
     }

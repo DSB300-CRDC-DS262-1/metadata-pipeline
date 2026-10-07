@@ -202,12 +202,12 @@ model never needs the whole document at once:
 ```
 
 Scored against `data/reference/statistics.json` and `contexts.json` (four
-documents, 238 statistics), the latest E4B run finds 99% of the reference
-statistics (236) at 87% precision. Field agreement on matched statistics:
-value reading 99%, type 92%, period 90%, record type 86% (repeat runs vary by
-a few points). Context links reach 78% of the facts the reference links, with
-48% precision. Key conditions are right for nearly all statistics: region 203
-of 206, time period 162 of 163, sample 107 of 117, data source 98 of 116. A
+documents, 239 statistics), the latest E4B run finds 99% of the reference
+statistics (237) at 88% precision. Field agreement on matched statistics:
+value reading 99%, type 92%, period 90%, record type 87% (repeat runs vary by
+a few points). Context links reach 85% of the facts the reference links, with
+46% precision. Key conditions are right for nearly all statistics: region 204
+of 207, time period 155 of 156, sample 99 of 117, data source 99 of 117. A
 run takes about 2 to 7 minutes per document.
 
 ## Pages the text layer cannot read
