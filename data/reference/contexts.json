@@ -1,0 +1,2211 @@
+{
+  "note": "Reference context items and contexts for the four documents, checked by hand against the PDF text. A context item's also_stated lists other sentences that state the same fact; scoring accepts any of them. Context links follow one rule: a statistic the study produced links every fact about how its own dataset was collected, cleaned and limited; figures reported from earlier reviews or other studies link only their source. Contexts group the statistics that share the same items.",
+  "documents": [
+    {
+      "document_id": "doc_aghealth2019",
+      "context_items": [
+        {
+          "item_id": "i01",
+          "item_type": "data_source",
+          "value": "National Coroners Information System (NCIS)",
+          "page": 3,
+          "quote": "The National Coroners Information System (NCIS) is the sentinel repository of all deaths in Australia.",
+          "also_stated": [
+            {
+              "page": 3,
+              "quote": "Information sources for this review, have been restricted to the national coronial and workers compensation datasets."
+            }
+          ]
+        },
+        {
+          "item_id": "i02",
+          "item_type": "data_source",
+          "value": "AgHealth Australia's data drawn from NCIS",
+          "page": 4,
+          "quote": "Data held by AgHealth Australia and drawn from NCIS were accessed with fatalities in the relevant post code areas being retained."
+        },
+        {
+          "item_id": "i03",
+          "item_type": "sample_population",
+          "value": "deaths in Australian postcodes where cotton was commercially grown",
+          "page": 4,
+          "quote": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2014-19 were identified."
+        },
+        {
+          "item_id": "i04",
+          "item_type": "collection_method",
+          "value": "case-by-case review of police reports or coroner findings",
+          "page": 4,
+          "quote": "These records were then assessed on a case-by-case basis by entering the NCIS and examining either the police report or case findings handed down by the coroner."
+        },
+        {
+          "item_id": "i05",
+          "item_type": "inclusion_criteria",
+          "value": "only cases recorded as occurring on a cotton property",
+          "page": 4,
+          "quote": "From these records the cases that stipulated that they occurred on a cotton property were identified."
+        },
+        {
+          "item_id": "i06",
+          "item_type": "inclusion_criteria",
+          "value": "separate group for cases where it was unclear if the property was a cotton property",
+          "page": 4,
+          "quote": "A further sub-classification was also made for those incidents where it was unclear if the location of the incident was a cotton property (i.e. it may or may not have been a cotton property)."
+        },
+        {
+          "item_id": "i07",
+          "item_type": "exclusion_criteria",
+          "value": "deaths clearly from other sectors (e.g. cattle, grain) removed",
+          "page": 4,
+          "quote": "Additionally, cases that were clearly not cotton related were removed from the data e.g. cattle or grain production deaths."
+        },
+        {
+          "item_id": "i08",
+          "item_type": "exclusion_criteria",
+          "value": "ginning-related deaths excluded; on-farm incidents only",
+          "page": 4,
+          "quote": "All of these cases were reviewed to ensure that only on-farm incidents were included in the data (i.e. these data exclude ginning related cases)."
+        },
+        {
+          "item_id": "i09",
+          "item_type": "limitation",
+          "value": "NCIS records can be incomplete or limited in detail",
+          "page": 3,
+          "quote": "While the NCIS is a genuinely valuable repository of factual information, this information is sometimes incomplete and/or may be limited in detail"
+        },
+        {
+          "item_id": "i10",
+          "item_type": "limitation",
+          "value": "industry coding is often incomplete, so cotton cases are hard to identify",
+          "page": 3,
+          "quote": "As such determining precisely those events that have occurred on a cotton property is frequently difficult to ascertain."
+        },
+        {
+          "item_id": "i11",
+          "item_type": "data_source",
+          "value": "initial review (Cotton Industry Injury and Safety Profile, 2014)",
+          "page": 3,
+          "quote": "This brief provides an update of an initial review (Cotton Industry Injury and Safety Profile),1 that was commissioned by the Cotton Research and Development Corporation in 2014."
+        },
+        {
+          "item_id": "i12",
+          "item_type": "study_design",
+          "value": "economic model: lost earnings and household contributions, insurance, investigations, funeral, coronial, ambulance and hospital costs",
+          "page": 4,
+          "quote": "In summary, the model includes loss of future earnings, loss of household contributions, insurance payouts, workcover investigations, police investigations, premature funeral costs, coronial costs, ambulance and hospital expenditure."
+        },
+        {
+          "item_id": "i13",
+          "item_type": "currency_basis",
+          "value": "2018 Australian dollars",
+          "page": 6,
+          "quote": "All figures have been updated to reflect costs in 2018 Australian dollars (previously expressed in 2012 dollars)."
+        },
+        {
+          "item_id": "i14",
+          "item_type": "limitation",
+          "value": "cost estimates are conservative, below the true costs",
+          "page": 4,
+          "quote": "hence it is reasonable to assume that these estimates are conservative and are at a lower rate than the true costs."
+        },
+        {
+          "item_id": "i15",
+          "item_type": "limitation",
+          "value": "social costs of deaths are not included",
+          "page": 4,
+          "quote": "Additionally, the model does not consider the significant social costs associated with such fatal events."
+        },
+        {
+          "item_id": "i16",
+          "item_type": "data_source",
+          "value": "Safe Work Australia workers compensation data, cotton growing (ANZSIC 0152)",
+          "page": 5,
+          "quote": "Workers compensation data were accessed through Safe Work Australia for the five-year period 2012-13 to 2016-17 (Australian and New Zealand Standard Industrial Classification - ANZSIC 0152).",
+          "also_stated": [
+            {
+              "page": 3,
+              "quote": "Information sources for this review, have been restricted to the national coronial and workers compensation datasets."
+            }
+          ]
+        },
+        {
+          "item_id": "i17",
+          "item_type": "preprocessing",
+          "value": "2008-09 to 2011-12 data re-collated so periods can be compared",
+          "page": 5,
+          "quote": "Given some minor data collection changes and further data cleansing, the information for the 2008-09 to 2011-12 period within the initial report, were also re-collated."
+        },
+        {
+          "item_id": "i18",
+          "item_type": "limitation",
+          "value": "2016-17 data are provisional",
+          "page": 5,
+          "quote": "As with the previous study, the available data for the most recent year where data are available (2016-17), is provisional in nature."
+        },
+        {
+          "item_id": "i19",
+          "item_type": "limitation",
+          "value": "limited detail per claim allows only broad observations",
+          "page": 5,
+          "quote": "In respect to the workers compensation data there are known limitations in terms of the limited detail for each specific incident which allows only broad observations to be made."
+        },
+        {
+          "item_id": "i20",
+          "item_type": "limitation",
+          "value": "no injury rates, as the number of workers is not reliably known",
+          "page": 5,
+          "quote": "Additionally, no calculation of injury rates has been undertaken due to the lack of robust denominator data regarding the number of individuals working in the sector."
+        },
+        {
+          "item_id": "i21",
+          "item_type": "limitation",
+          "value": "owner-operator injuries are likely missing, under-representing the true burden",
+          "page": 5,
+          "quote": "Furthermore, the data are unlikely to include information on injuries to owner-operators and hence significantly under-represent the true burden of injury in the agricultural sector generally."
+        },
+        {
+          "item_id": "i22",
+          "item_type": "limitation",
+          "value": "drought reduced worker exposure in the last two years of the study",
+          "page": 10,
+          "quote": "Without question, this reduces the overall exposure of workers to potential risks and may be partly reflected in the lower number of weeks lost in the last two years of this study period."
+        },
+        {
+          "item_id": "i23",
+          "item_type": "geographic_region",
+          "value": "Australia (national datasets)",
+          "whole_document": true,
+          "page": 3,
+          "quote": "Information sources for this review, have been restricted to the national coronial and workers compensation datasets.",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2014-19 were identified."
+            }
+          ]
+        },
+        {
+          "item_id": "i24",
+          "item_type": "study_design",
+          "value": "claims grouped by time lost: 0-4 days or 5+ days (serious)",
+          "page": 5,
+          "quote": "Available information is categorised into two distinct groupings based on time lost as a result of the injury i.e. 0-4 days or 5+ days."
+        },
+        {
+          "item_id": "i25",
+          "item_type": "preprocessing",
+          "value": "workers compensation data collated into five-year reporting intervals",
+          "page": 7,
+          "quote": "To align with the cotton sustainability reporting targets that use five-year reporting intervals, data have been collated to best reflect that timeframe to the extent possible."
+        },
+        {
+          "item_id": "i26",
+          "item_type": "preprocessing",
+          "value": "sensitivity analysis of the fatality cost estimates",
+          "page": 4,
+          "quote": "Findings were also subject to a sensitivity analysis."
+        }
+      ],
+      "contexts": [
+        {
+          "context_id": "doc_aghealth2019_ctx_01",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i11"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_02",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i01",
+            "i09",
+            "i10",
+            "i11"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_03",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_04",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i06",
+            "i07",
+            "i08",
+            "i09",
+            "i10"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_05",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i01",
+            "i09",
+            "i10",
+            "i11",
+            "i12"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_06",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i01",
+            "i09",
+            "i10",
+            "i12",
+            "i13",
+            "i14",
+            "i15",
+            "i26"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_07",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i16",
+            "i17",
+            "i19",
+            "i20",
+            "i21",
+            "i25"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_08",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i16",
+            "i18",
+            "i19",
+            "i20",
+            "i21",
+            "i22",
+            "i25"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_09",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i16",
+            "i18",
+            "i19",
+            "i20",
+            "i21",
+            "i24",
+            "i25"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2019_ctx_10",
+          "document_id": "doc_aghealth2019",
+          "item_ids": [
+            "i23",
+            "i01"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "doc_aghealth2024",
+      "context_items": [
+        {
+          "item_id": "i01",
+          "item_type": "data_source",
+          "value": "National Coroners Information System (NCIS)",
+          "page": 3,
+          "quote": "The National Coroners Information System (NCIS) is the sentinel repository of all deaths in Australia.",
+          "also_stated": [
+            {
+              "page": 3,
+              "quote": "Information sources for this review, have been restricted to the national coronial and workers compensation datasets."
+            }
+          ]
+        },
+        {
+          "item_id": "i02",
+          "item_type": "data_source",
+          "value": "AgHealth Australia's data drawn from NCIS",
+          "page": 4,
+          "quote": "Data held by AgHealth Australia and drawn from NCIS were accessed, with fatalities in the relevant post code areas being retained."
+        },
+        {
+          "item_id": "i03",
+          "item_type": "sample_population",
+          "value": "deaths in Australian postcodes where cotton was commercially grown",
+          "page": 4,
+          "quote": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2001-23 were identified."
+        },
+        {
+          "item_id": "i04",
+          "item_type": "collection_method",
+          "value": "case-by-case review of police reports or coroner findings",
+          "page": 4,
+          "quote": "These records were then assessed on a case-by-case basis by entering the NCIS and examining either the police report or case findings handed down by the coroner."
+        },
+        {
+          "item_id": "i05",
+          "item_type": "inclusion_criteria",
+          "value": "only cases recorded as occurring on a cotton property",
+          "page": 4,
+          "quote": "From these records the cases that stipulated that they occurred on a cotton property were identified."
+        },
+        {
+          "item_id": "i06",
+          "item_type": "inclusion_criteria",
+          "value": "separate group for cases where it was unclear if the property was a cotton property",
+          "page": 4,
+          "quote": "A further sub-classification was also made for those incidents where it was unclear if the location of the incident was a cotton property (i.e. it may or may not have been a cotton property)."
+        },
+        {
+          "item_id": "i07",
+          "item_type": "exclusion_criteria",
+          "value": "deaths clearly from other sectors (e.g. cattle, grain) removed",
+          "page": 4,
+          "quote": "Additionally, cases that were clearly not cotton related were removed from the data e.g. cattle or grain production deaths."
+        },
+        {
+          "item_id": "i08",
+          "item_type": "exclusion_criteria",
+          "value": "ginning-related deaths excluded; on-farm incidents only",
+          "page": 4,
+          "quote": "All of these cases were reviewed to ensure that only on-farm incidents were included in the data (i.e. these data exclude ginning related cases)."
+        },
+        {
+          "item_id": "i09",
+          "item_type": "limitation",
+          "value": "NCIS records can be incomplete or limited in detail",
+          "page": 3,
+          "quote": "While the NCIS is a genuinely valuable repository of factual information, this information is sometimes incomplete and/or may be limited in detail"
+        },
+        {
+          "item_id": "i10",
+          "item_type": "limitation",
+          "value": "industry coding is often incomplete, so cotton cases are hard to identify",
+          "page": 3,
+          "quote": "As such, determining precisely those events that have occurred on a cotton property is frequently difficult to ascertain."
+        },
+        {
+          "item_id": "i11",
+          "item_type": "limitation",
+          "value": "counts below five are not reported exactly, under the coronial data ethics agreement",
+          "page": 3,
+          "quote": "In compliance with the ethics agreement for usage of the coronial data, if case numbers are below five, we are required not to provide the precise number."
+        },
+        {
+          "item_id": "i12",
+          "item_type": "data_source",
+          "value": "previous review (Sentinel Health and Safety Data for Australian Cotton Farms, 2019)",
+          "page": 3,
+          "quote": "This brief provides an update to the previous review (Sentinel Health and Safety Data for Australian Cotton Farms),1 that was commissioned by the Cotton Research and Development Corporation in 2019."
+        },
+        {
+          "item_id": "i13",
+          "item_type": "study_design",
+          "value": "economic model: lost earnings and household contributions, insurance, investigations, funeral, coronial, ambulance and hospital costs",
+          "page": 4,
+          "quote": "In summary, the model includes loss of future earnings, loss of household contributions, insurance payouts, workcover investigations, police investigations, premature funeral costs, coronial costs, ambulance and hospital expenditure."
+        },
+        {
+          "item_id": "i14",
+          "item_type": "preprocessing",
+          "value": "sensitivity analysis, using ABS Consumer Price Index data",
+          "page": 4,
+          "quote": "Findings were also subject to a sensitivity analysis, with estimates drawing on official Australian Bureau of Statistics Consumer Price Index data."
+        },
+        {
+          "item_id": "i15",
+          "item_type": "currency_basis",
+          "value": "2023 Australian dollars",
+          "page": 6,
+          "quote": "All figures have been updated to reflect costs in 2023 Australian dollars.",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "Earlier data cost estimates (expressed in 2012 and 2018 dollars) were updated to reflect 2023 Australian dollars."
+            }
+          ]
+        },
+        {
+          "item_id": "i16",
+          "item_type": "limitation",
+          "value": "cost estimates are conservative, below the true costs",
+          "page": 4,
+          "quote": "hence it is reasonable to assume that these estimates are conservative and are at a lower level than the true costs."
+        },
+        {
+          "item_id": "i17",
+          "item_type": "limitation",
+          "value": "social costs of deaths are not included",
+          "page": 4,
+          "quote": "Additionally, the model does not consider the significant social costs associated with such fatal events."
+        },
+        {
+          "item_id": "i18",
+          "item_type": "data_source",
+          "value": "Safe Work Australia workers compensation data, cotton growing (ANZSIC 0152)",
+          "page": 5,
+          "quote": "Workers compensation data (nature and mechanism of injury), were accessed through Safe Work Australia for the five-year period 2017-18 to 2021-22 (Australian and New Zealand Standard Industrial Classification - ANZSIC 0152).",
+          "also_stated": [
+            {
+              "page": 3,
+              "quote": "Information sources for this review, have been restricted to the national coronial and workers compensation datasets."
+            }
+          ]
+        },
+        {
+          "item_id": "i19",
+          "item_type": "limitation",
+          "value": "workers compensation cost data only available up to 2020-21",
+          "page": 5,
+          "quote": "However, for the workers compensation economic costs data, information was only available up to 2020-21."
+        },
+        {
+          "item_id": "i20",
+          "item_type": "preprocessing",
+          "value": "2013-17 data revised with Safe Work Australia's updated data",
+          "page": 5,
+          "quote": "Data for the earlier years (2013-17) reported in this document, have also been revised based on the data provided by Safe Work Australia."
+        },
+        {
+          "item_id": "i21",
+          "item_type": "limitation",
+          "value": "2021-22 injury data and 2020-21 cost data are provisional",
+          "page": 5,
+          "quote": "As with the previous study, the available data for the most recent years where nature and mechanism of injury data are available (2021-22) and for the economic costs (2020-21), are provisional in nature."
+        },
+        {
+          "item_id": "i22",
+          "item_type": "preprocessing",
+          "value": "current period data rounded to the nearest multiple of five for privacy",
+          "page": 5,
+          "quote": "Data for the current period, have also been rounded to the nearest multiple of five to further enhance privacy and confidentiality."
+        },
+        {
+          "item_id": "i23",
+          "item_type": "limitation",
+          "value": "limited detail per claim allows only broad observations",
+          "page": 5,
+          "quote": "In respect to the workers compensation data there are known limitations in terms of the limited detail for each specific incident, which allows only broad observations to be made."
+        },
+        {
+          "item_id": "i24",
+          "item_type": "limitation",
+          "value": "no injury rates, as the number of workers is not reliably known",
+          "page": 5,
+          "quote": "Additionally, no calculation of injury rates has been undertaken due to the lack of robust denominator data regarding the number of individuals working in the sector.",
+          "also_stated": [
+            {
+              "page": 9,
+              "quote": "Firstly, accurate denominator data to ascertain rates of injury and death are not available and have not been presented in this report."
+            }
+          ]
+        },
+        {
+          "item_id": "i25",
+          "item_type": "limitation",
+          "value": "owner-operator injuries are likely missing, under-representing the true burden",
+          "page": 5,
+          "quote": "Furthermore, the data are unlikely to include information on injuries to owner-operators and hence under-represent the true burden of injury in the agricultural sector generally."
+        },
+        {
+          "item_id": "i26",
+          "item_type": "preprocessing",
+          "value": "data grouped into five-year intervals; the first interval (2008-09 to 2011-12) is only three years",
+          "page": 6,
+          "quote": "As such, it should be noted that the first interval (2008-09 to 2011-12), is only three years in duration, compared to the data for subsequent years that is in five-year intervals.",
+          "also_stated": [
+            {
+              "page": 6,
+              "quote": "To align with the cotton sustainability reporting targets that use five-year reporting intervals, data have been collated to best reflect that timeframe to the extent possible."
+            }
+          ]
+        },
+        {
+          "item_id": "i27",
+          "item_type": "limitation",
+          "value": "drought likely reduced worker exposure and claims over 2018-20",
+          "page": 8,
+          "quote": "The impact of drought conditions in key growing regions is likely reflected by this drop in claims over the 2018-20 period, when worker exposure likely reduced because of the prevailing climatic conditions."
+        },
+        {
+          "item_id": "i28",
+          "item_type": "limitation",
+          "value": "more deaths and claims may yet be identified for the most recent years",
+          "page": 9,
+          "quote": "Secondly, for both the fatality and workers compensation data, additional cases may yet be identified in the most recent years."
+        },
+        {
+          "item_id": "i29",
+          "item_type": "limitation",
+          "value": "average cost of a fatality varies with the age of the person",
+          "page": 6,
+          "quote": "While the estimated average costs of a fatality will vary dependent on the age of the deceased"
+        },
+        {
+          "item_id": "i30",
+          "item_type": "geographic_region",
+          "value": "Australia (national datasets)",
+          "whole_document": true,
+          "page": 3,
+          "quote": "Information sources for this review, have been restricted to the national coronial and workers compensation datasets.",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2001-23 were identified."
+            }
+          ]
+        },
+        {
+          "item_id": "i31",
+          "item_type": "study_design",
+          "value": "claims grouped by time lost: 0-4 days (minor) or 5+ days (serious)",
+          "page": 5,
+          "quote": "Available information is categorised into two distinct groupings based on time lost as a result of the injury i.e. 0-4 days (minor) or 5+ days (serious)."
+        },
+        {
+          "item_id": "i32",
+          "item_type": "limitation",
+          "value": "fall in soft tissue injuries may be an artefact of changed work practices or injury coding",
+          "page": 7,
+          "quote": "Whether this is an artefact of changes in work practices or in coding mechanisms used for data tabulation is unknown and may be worth further investigation."
+        }
+      ],
+      "contexts": [
+        {
+          "context_id": "doc_aghealth2024_ctx_01",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i12"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_02",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_03",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10",
+            "i12"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_04",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10",
+            "i11",
+            "i28"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_05",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i06",
+            "i07",
+            "i08",
+            "i09",
+            "i10"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_06",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10",
+            "i13"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_07",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10",
+            "i13",
+            "i14",
+            "i15",
+            "i16",
+            "i17",
+            "i28"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_08",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01",
+            "i02",
+            "i03",
+            "i04",
+            "i05",
+            "i07",
+            "i08",
+            "i09",
+            "i10",
+            "i13",
+            "i14",
+            "i15",
+            "i16",
+            "i17",
+            "i29"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_09",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i21",
+            "i22",
+            "i23",
+            "i24",
+            "i25",
+            "i26",
+            "i28",
+            "i31"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_10",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i22",
+            "i23",
+            "i24",
+            "i25",
+            "i31"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_11",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i19",
+            "i20",
+            "i21",
+            "i23",
+            "i24",
+            "i25"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_12",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i19",
+            "i23",
+            "i24",
+            "i25"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_13",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i20",
+            "i21",
+            "i23",
+            "i24",
+            "i25",
+            "i26",
+            "i27"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_14",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i21",
+            "i23",
+            "i24",
+            "i25",
+            "i31"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_15",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i19",
+            "i21",
+            "i23",
+            "i24",
+            "i25",
+            "i31"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_16",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i18",
+            "i19",
+            "i21",
+            "i23",
+            "i24",
+            "i25"
+          ]
+        },
+        {
+          "context_id": "doc_aghealth2024_ctx_17",
+          "document_id": "doc_aghealth2024",
+          "item_ids": [
+            "i30",
+            "i01"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "doc_hedayati2019",
+      "context_items": [
+        {
+          "item_id": "k01",
+          "item_type": "geographic_region",
+          "value": "Namoi and Gwydir regions, northwest New South Wales",
+          "page": 2,
+          "quote": "We chose to focus on the Namoi and Gwydir regions in northwest NSW, as production in this area is strongly representative of Australian cotton production (Hedayati, 2015).",
+          "also_stated": [
+            {
+              "page": 3,
+              "quote": "The geographical scope of the LCA was the cotton growing region of northwest NSW Australia, in the Namoi-Gwydir regions including the towns of Narrabri, Moree and Walgett."
+            }
+          ]
+        },
+        {
+          "item_id": "k02",
+          "item_type": "time_period",
+          "value": "three production seasons, 2011-2012 to 2013-2014",
+          "period": {
+            "start": "2011",
+            "end": "2014"
+          },
+          "page": 3,
+          "quote": "The temporal scope of the LCA was the three cotton production seasons of 2011-2012, 2012-2013, and 2013-2014."
+        },
+        {
+          "item_id": "k03",
+          "item_type": "functional_unit",
+          "value": "one tonne of cotton lint from continuous cotton, delivered for export at port",
+          "page": 3,
+          "quote": "The functional unit of the LCA study was one metric tonne cotton fibre (lint) produced in a continuous cotton production system and delivered for export at port.",
+          "also_stated": [
+            {
+              "page": 1,
+              "quote": "with a functional unit of one tonne of cotton lint at port"
+            }
+          ]
+        },
+        {
+          "item_id": "k04",
+          "item_type": "study_design",
+          "value": "life cycle assessment of climate change impact only",
+          "page": 3,
+          "quote": "The scope of the environmental assessment was limited to climate change impact.",
+          "also_stated": [
+            {
+              "page": 2,
+              "quote": "Whilst LCA can be applied across a broad array of impact categories, we limited this study to the climate change impact of cotton production on GHG emissions."
+            },
+            {
+              "page": 3,
+              "quote": "We applied the LCA method to calculate the GHG emissions profile of cotton production and associated GHG mitigation strategies."
+            }
+          ]
+        },
+        {
+          "item_id": "k05",
+          "item_type": "study_design",
+          "value": "system boundary: pre-farm, on-farm and post-farm stages (cradle to port)",
+          "page": 3,
+          "quote": "The system boundary of the LCA study (Fig. 1) included the pre-farm stage (i.e. production and transport of raw materials), the on-farm stage (i.e. cotton farming practices) and the post-farm stage (i.e. cotton ginning and the transport of cotton lint to an export port)."
+        },
+        {
+          "item_id": "k06",
+          "item_type": "preprocessing",
+          "value": "emissions formulae and factors from the Australian National Inventory Report",
+          "page": 1,
+          "quote": "we applied emissions formulae and factors from the Australian National Inventory Report, except where more specific published data were available."
+        },
+        {
+          "item_id": "k07",
+          "item_type": "study_design",
+          "value": "economic allocation of emissions between lint and cottonseed",
+          "page": 5,
+          "quote": "we considered economic allocation as the most appropriate means of partitioning, despite the dynamic nature of commodity prices.",
+          "also_stated": [
+            {
+              "page": 5,
+              "quote": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint."
+            }
+          ]
+        },
+        {
+          "item_id": "k08",
+          "item_type": "exclusion_criteria",
+          "value": "biogenic CO2 (absorbed by the crop, released from residues) excluded",
+          "page": 5,
+          "quote": "we excluded CO2 absorbed by the cotton crop during its growth and the CO2 released from the decomposition of cotton residues in the field (i.e. biogenic CO2) from the primary LCA.",
+          "also_stated": [
+            {
+              "page": 5,
+              "quote": "Whilst biogenic carbon was excluded from the primary LCA on the basis of consistency with the IPCC (IPCC, 2006) and NIR, we also questioned the sensitivity of the emissions profile to this assumption."
+            }
+          ]
+        },
+        {
+          "item_id": "k09",
+          "item_type": "exclusion_criteria",
+          "value": "process flows under 1% of mass or energy excluded",
+          "page": 3,
+          "quote": "All process flows with a cumulative mass or energy of less than 1% were excluded, e.g. packaging glues used at the cotton gin."
+        },
+        {
+          "item_id": "k10",
+          "item_type": "exclusion_criteria",
+          "value": "soil carbon sequestration not included",
+          "page": 2,
+          "quote": "Opportunities to sequester carbon may also be available but were not included in the primary assessment of this paper due to uncertainties."
+        },
+        {
+          "item_id": "k11",
+          "item_type": "assumption",
+          "value": "soil organic N at a steady state",
+          "page": 5,
+          "quote": "We also assumed that background levels of soil organic N had reached a steady state."
+        },
+        {
+          "item_id": "k12",
+          "item_type": "data_source",
+          "value": "foreground data from journal papers, grower questionnaires, gross margins, industry surveys, case studies and ABS",
+          "page": 4,
+          "quote": "Foreground data (Table 1) associated with system inputs, practices and yields were obtained from journal papers, questionnaires sent to cotton farmers, gross margins, industry surveys, case-study research and the Australian Bureau of Statistics (ABS, 2014).",
+          "also_stated": [
+            {
+              "page": 1,
+              "quote": "We also drew upon published data, survey data, scientific literature and Australian and international databases."
+            }
+          ]
+        },
+        {
+          "item_id": "k13",
+          "item_type": "data_source",
+          "value": "background data from AusLCI and international databases, modified for Australian conditions",
+          "page": 4,
+          "quote": "obtained from the Australian Life Cycle Inventory (AusLCI) database (ALCAS, 2013; RIRDC, 2014) and international databases (e.g. Ecoinvent), modified for Australian conditions.",
+          "also_stated": [
+            {
+              "page": 1,
+              "quote": "We also drew upon published data, survey data, scientific literature and Australian and international databases."
+            }
+          ]
+        },
+        {
+          "item_id": "k14",
+          "item_type": "scenario",
+          "value": "N fertiliser rate cut from 255 to 240 kg N/ha (yield-maximising rate)",
+          "page": 3,
+          "quote": "the N fertiliser application rate was modified from a commercial rate of 255 kg N/ha to 240 kg N/ha, the rate at which lint yield is reported to be maximised"
+        },
+        {
+          "item_id": "k15",
+          "item_type": "scenario",
+          "value": "N fertiliser rate cut to 180 kg N/ha (economic optimum)",
+          "page": 3,
+          "quote": "and also to 180 kg N/ha, the economically optimum rate according to Visser et al. (2015)."
+        },
+        {
+          "item_id": "k16",
+          "item_type": "scenario",
+          "value": "controlled-release (polymer-coated urea) and stabilised fertilisers",
+          "page": 3,
+          "quote": "The controlled-release (polymer-coated urea) and stabilised fertilisers (urea treated with a nitrification inhibitor) were included in the analysis."
+        },
+        {
+          "item_id": "k17",
+          "item_type": "scenario",
+          "value": "fertigation: pre-plant fertiliser operation removed and N2O from applied N cut by 80%",
+          "page": 3,
+          "quote": "The use of fertigation as a mitigation strategy was assessed by removing the pre-plant fertiliser operation and reducing the N2O produced from applied N by 80% (Antille, 2018)."
+        },
+        {
+          "item_id": "k18",
+          "item_type": "scenario",
+          "value": "rotation of one chickpea crop followed by three cotton crops",
+          "page": 3,
+          "quote": "The alternative rotation was one annual chickpea crop followed by three annual cotton crops."
+        },
+        {
+          "item_id": "k19",
+          "item_type": "limitation",
+          "value": "N fixed by the chickpea crop not credited; a yield increase applied instead",
+          "page": 3,
+          "quote": "we did not credit the cotton with the N fixed during growth of the chickpea crop, instead applying a yield increase to account for break-crop effects."
+        },
+        {
+          "item_id": "k20",
+          "item_type": "limitation",
+          "value": "foregone carbon sequestration during legume production not debited",
+          "page": 3,
+          "quote": "we did not debit the system with the foregone carbon sequestration that occurs during legume production due to the lower biomass of legume crops"
+        },
+        {
+          "item_id": "k21",
+          "item_type": "scenario",
+          "value": "solar-powered irrigation pumps with 3 kW solar panels",
+          "page": 4,
+          "quote": "For solar-powered irrigation pumps, 3 kW solar panels were assumed as the power source."
+        },
+        {
+          "item_id": "k22",
+          "item_type": "scenario",
+          "value": "biofuel-powered machinery using rapeseed methyl ester; its combustion CO2 treated as biogenic",
+          "page": 4,
+          "quote": "For biofuel-powered farm machinery, biodiesel was assumed to be produced as methyl ester from rapeseed, with the CO2 emissions from the combustion of biodiesel considered biogenic and thus not included in the impact assessment."
+        },
+        {
+          "item_id": "k23",
+          "item_type": "limitation",
+          "value": "alternative biomass uses and land use change not counted, so the biofuel saving is an upper estimate",
+          "page": 10,
+          "quote": "As we did not account for alternative uses of the biomass or potential land use change, this calculation provides an upper estimate of the potential emissions savings.",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "Also, we discussed rather than analysed the full life cycle consequences, including alternative uses of the biomass and displacement of other land uses, providing an upper estimate of total life cycle emissions savings."
+            }
+          ]
+        },
+        {
+          "item_id": "k24",
+          "item_type": "study_design",
+          "value": "sensitivity analysis of key inputs and assumptions",
+          "page": 5,
+          "quote": "The robustness of the calculated emissions was challenged through sensitivity analysis for key input data and model assumptions."
+        },
+        {
+          "item_id": "k25",
+          "item_type": "scenario",
+          "value": "dryland production modelled separately and used for 4% of the result",
+          "page": 5,
+          "quote": "with emissions from dryland production calculated separately and used to replace 4% of the primary LCA."
+        },
+        {
+          "item_id": "k26",
+          "item_type": "scenario",
+          "value": "inventory data replaced with data for other cotton regions",
+          "page": 7,
+          "quote": "When the key inventory data for the northwest NSW cotton production system were replaced with the corresponding inventory data for systems in other regions"
+        },
+        {
+          "item_id": "k27",
+          "item_type": "scenario",
+          "value": "biogenic CO2 included (sensitivity test)",
+          "page": 7,
+          "quote": "When we tested the sensitivity of the primary LCA to the inclusion of biogenic CO2"
+        },
+        {
+          "item_id": "k28",
+          "item_type": "data_source",
+          "value": "economic analysis based on Powell and Scott (2011)",
+          "page": 4,
+          "quote": "The economic analysis data was based on Powell and Scott (2011)."
+        },
+        {
+          "item_id": "k29",
+          "item_type": "limitation",
+          "value": "N rate after legumes not reduced, and soil carbon assumed at a steady state",
+          "page": 9,
+          "quote": "However, we assumed that the N application rate for the subsequent cotton crop was not reduced, for consistency with common practice and assumed that soil carbon sequestration had reached a steady state, for consistency with the NIR."
+        },
+        {
+          "item_id": "k30",
+          "item_type": "limitation",
+          "value": "emissions factors not adjusted for lower soil moisture in dryland systems",
+          "page": 11,
+          "quote": "we did not adjust emissions factors for lower soil moisture, given the small contribution of dryland cotton (4%) to overall production volumes."
+        },
+        {
+          "item_id": "k31",
+          "item_type": "assumption",
+          "value": "northwest NSW attributes assumed to apply to a typical Australian cotton system",
+          "page": 3,
+          "quote": "We assumed the following attributes for cotton production in northwest New South Wales, which also apply to a typical Australian cotton production system."
+        },
+        {
+          "item_id": "k32",
+          "item_type": "preprocessing",
+          "value": "previous studies adjusted to a common system boundary and allocation method",
+          "page": 5,
+          "quote": "we adjusted the results of several previous studies (e.g. Visser et al., 2015; Maraseni et al., 2010; Tan et al., 2013; ALCAS, 2013) to a common system boundary and allocation method"
+        },
+        {
+          "item_id": "k40",
+          "item_type": "data_source",
+          "value": "Lal (2004)",
+          "page": 2,
+          "quote": "estimated at 3.3 Pg C/year (Lal, 2004)"
+        },
+        {
+          "item_id": "k41",
+          "item_type": "data_source",
+          "value": "Roth (2014)",
+          "page": 2,
+          "quote": "with an annual gross value of $2 billion (AU$) (Roth, 2014)"
+        },
+        {
+          "item_id": "k42",
+          "item_type": "data_source",
+          "value": "Cotton Inc. (2018)",
+          "page": 2,
+          "quote": "during the 2013-14 production season (Cotton Inc., 2018)"
+        },
+        {
+          "item_id": "k43",
+          "item_type": "data_source",
+          "value": "Cotton Year Book (2015)",
+          "page": 2,
+          "quote": "(irrigated) in 2014-15 (Cotton Year Book, 2015)"
+        },
+        {
+          "item_id": "k44",
+          "item_type": "data_source",
+          "value": "Cotton Australia (2016)",
+          "page": 2,
+          "quote": "participate voluntarily in the myBMP program (Cotton Australia, 2016)"
+        },
+        {
+          "item_id": "k45",
+          "item_type": "data_source",
+          "value": "Roth Rural (2013)",
+          "page": 3,
+          "quote": "at least two continuous cotton crop over two years (Roth Rural, 2013)"
+        },
+        {
+          "item_id": "k46",
+          "item_type": "data_source",
+          "value": "QLD DAFF (2013)",
+          "page": 6,
+          "quote": "the remainder crushed to extract cottonseed oil (QLD DAFF, 2013)"
+        },
+        {
+          "item_id": "k47",
+          "item_type": "data_source",
+          "value": "Janat (2008)",
+          "page": 10,
+          "quote": "in Syrian cotton systems (Janat, 2008)"
+        },
+        {
+          "item_id": "k48",
+          "item_type": "data_source",
+          "value": "RIRDC (2014), Khabbaz (2010) and Tan et al. (2013), adjusted",
+          "page": 6,
+          "quote": "(RIRDC, 2014; Khabbaz, 2010; Tan et al., 2013)"
+        },
+        {
+          "item_id": "k49",
+          "item_type": "data_source",
+          "value": "Tan et al. (2013) regionally-applicable dataset, adjusted",
+          "page": 6,
+          "quote": "the study by Tan et al. (2013) includes a regionally-applicable dataset"
+        },
+        {
+          "item_id": "k50",
+          "item_type": "data_source",
+          "value": "Visser et al. (2015) and Cotton Inc. and PE International (2012), adjusted",
+          "page": 6,
+          "quote": "(Visser et al., 2015; Cotton Inc. and PE International AG, 2012)"
+        },
+        {
+          "item_id": "k51",
+          "item_type": "data_source",
+          "value": "AusLCI (ALCAS, 2013), adjusted",
+          "page": 6,
+          "quote": "The adjusted emissions for AusLCI (ALCAS, 2013)"
+        },
+        {
+          "item_id": "k52",
+          "item_type": "data_source",
+          "value": "ABS (2014), extractive agricultural water use in NSW, 2012-2013",
+          "page": 3,
+          "quote": "based on the percentage reported for extractive agricultural use in NSW in 2012-2013 (ABS, 2014)"
+        },
+        {
+          "item_id": "k53",
+          "item_type": "data_source",
+          "value": "Foley et al. (2015)",
+          "page": 3,
+          "quote": "15% by electric pumps (Foley et al., 2015)"
+        },
+        {
+          "item_id": "k54",
+          "item_type": "data_source",
+          "value": "Welke (2011) and NSW Water (2009)",
+          "page": 3,
+          "quote": "assumed to be 8 m (Welke, 2011) and 35 m (NSW Water, 2009a; b)"
+        },
+        {
+          "item_id": "k55",
+          "item_type": "data_source",
+          "value": "RIRDC (2014), typical Australian ginning plant",
+          "page": 3,
+          "quote": "for a typical Australian ginning plant (RIRDC, 2014)"
+        },
+        {
+          "item_id": "k56",
+          "item_type": "data_source",
+          "value": "Tian et al. (2015)",
+          "page": 3,
+          "quote": "We applied a 52% reduction in each emissions factor during the on-farm phase, as per Tian et al. (2015)."
+        },
+        {
+          "item_id": "k57",
+          "item_type": "data_source",
+          "value": "Australian Government (2015a), National Inventory Report",
+          "page": 5,
+          "quote": "The global warming potentials (GWPs) applied for CO2, N2O, and CH4 were 1, 298, and 25, respectively (Australian Government, 2015a)."
+        },
+        {
+          "item_id": "k58",
+          "item_type": "data_source",
+          "value": "Nachimuthu et al. (2017)",
+          "page": 9,
+          "quote": "gross margin of AU$ 1744/ha (Nachimuthu et al., 2017)"
+        },
+        {
+          "item_id": "k59",
+          "item_type": "assumption",
+          "value": "uncertainty about the proportion of cottonseed used as animal feed in northwest NSW",
+          "page": 6,
+          "quote": "The exact proportion of the total produced cottonseed in northwest NSW used as animal feed was unknown."
+        }
+      ],
+      "contexts": [
+        {
+          "context_id": "doc_hedayati2019_ctx_01",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_02",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k53"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_03",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k56"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_04",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k23"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_05",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k19",
+            "k20",
+            "k29"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_06",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k40"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_07",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k41"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_08",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k42"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_09",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k43"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_10",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k44"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_11",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k31"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_12",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k45"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_13",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_14",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k52"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_15",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k54"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_16",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k55"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_17",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k57"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_18",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k46"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_19",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k59"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_20",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k24"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_21",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k32",
+            "k48"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_22",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k32",
+            "k49"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_23",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k32",
+            "k50"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_24",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k32",
+            "k51"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_25",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k28",
+            "k58"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_26",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k47"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_27",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k30"
+          ]
+        }
+      ]
+    },
+    {
+      "document_id": "doc_voconiq2025",
+      "context_items": [
+        {
+          "item_id": "v01",
+          "item_type": "collection_method",
+          "value": "online survey of Australians aged over 18",
+          "page": 5,
+          "quote": "an online survey methodology was used to access the views of Australians over the age of 18 years."
+        },
+        {
+          "item_id": "v02",
+          "item_type": "sample_population",
+          "value": "online research panel, representative of Australians by age and gender (ABS data)",
+          "page": 5,
+          "quote": "An online research panel was used to ensure a representative sample of Australians by age and gender in line with Australian Bureau of Statistics data."
+        },
+        {
+          "item_id": "v03",
+          "item_type": "time_period",
+          "value": "recruited 30 October to 17 November 2025",
+          "period": {
+            "start": "2025-10-30",
+            "end": "2025-11-17"
+          },
+          "page": 5,
+          "quote": "Participants were recruited across the country between 30 October and 17 November 2025."
+        },
+        {
+          "item_id": "v04",
+          "item_type": "sample_population",
+          "value": "3,063 surveys analysed after data cleaning",
+          "page": 5,
+          "quote": "3,063 surveys were included for analysis after data cleaning"
+        },
+        {
+          "item_id": "v05",
+          "item_type": "preprocessing",
+          "value": "surveys answered too quickly, inattentively or with uniform answers removed",
+          "page": 5,
+          "quote": "This involves screening and potential removal of surveys where, for example, participants answered the survey very quickly (i.e. less than 5 minutes)"
+        },
+        {
+          "item_id": "v06",
+          "item_type": "study_design",
+          "value": "5-point Likert agreement scales",
+          "page": 5,
+          "quote": "Most topics were measured using 5-point Likert type agreement scales, where 1 = Strongly disagree, 2 = Disagree, 3 = Neutral, 4 = Agree, 5 = Strongly agree."
+        },
+        {
+          "item_id": "v07",
+          "item_type": "preprocessing",
+          "value": "agreement combines Agree and Strongly agree; disagreement combines Disagree and Strongly disagree",
+          "page": 5,
+          "quote": "(combining results of Agree and Strongly agree) and"
+        },
+        {
+          "item_id": "v08",
+          "item_type": "geographic_region",
+          "value": "Australia (national sample)",
+          "page": 5,
+          "quote": "Participants were recruited across the country",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "Since the program first began in 2020, this research has engaged with diverse groups across Australia"
+            }
+          ]
+        },
+        {
+          "item_id": "v09",
+          "item_type": "other",
+          "value": "survey funded by Cotton Australia and the Cotton Research and Development Corporation",
+          "page": 5,
+          "quote": "funding source (Cotton Australia and Cotton Research and Development Corporation)"
+        },
+        {
+          "item_id": "v10",
+          "item_type": "study_design",
+          "value": "trust and acceptance rated from 1 (Not at all) to 5 (Extremely)",
+          "page": 9,
+          "quote": "Measured on a scale from 1 (Not at all) to 5 (Extremely)",
+          "also_stated": [
+            {
+              "page": 9,
+              "quote": "Understanding the industry-community relationship is measured through two core trust and acceptance items."
+            }
+          ]
+        },
+        {
+          "item_id": "v11",
+          "item_type": "study_design",
+          "value": "longitudinal program running since 2020",
+          "page": 4,
+          "quote": "Since the program first began in 2020, this research has engaged with diverse groups across Australia",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "By leveraging longitudinal data and introducing new questions to address contemporary concerns, the report offers a comprehensive view of the cotton industry in the context of changing societal expectations."
+            },
+            {
+              "page": 15,
+              "quote": "Average ratings for these measures have increased over time since the first anchor survey in 2020."
+            }
+          ]
+        },
+        {
+          "item_id": "v12",
+          "item_type": "data_source",
+          "value": "Better Cotton Q&A with Kmart Australia (footnote 3)",
+          "page": 9,
+          "quote": "commit to sourcing 100% sustainable cotton in recent years3."
+        },
+        {
+          "item_id": "g01",
+          "item_type": "sample_population",
+          "value": "participants who know 3-5 people in the cotton industry",
+          "page": 14,
+          "quote": "Those who knew 3-5 people in the industry"
+        },
+        {
+          "item_id": "g02",
+          "item_type": "sample_population",
+          "value": "participants who know 6-10 people in the cotton industry",
+          "page": 13,
+          "quote": "those who knew 6-10 people in the cotton industry"
+        },
+        {
+          "item_id": "g03",
+          "item_type": "sample_population",
+          "value": "participants who know more than 10 people in the cotton industry",
+          "page": 13,
+          "quote": "those who knew more than 10"
+        },
+        {
+          "item_id": "g04",
+          "item_type": "sample_population",
+          "value": "participants who could recall when they last heard about the industry",
+          "page": 20,
+          "quote": "Participants who could recall the last time they heard about the industry were asked a follow up question asking what their source of information was (multiple choice)."
+        },
+        {
+          "item_id": "q01",
+          "item_type": "survey_question",
+          "value": "the cotton industry is important to our way of life in Australia",
+          "page": 8,
+          "quote": "the cotton industry is important to our way of life in Australia"
+        },
+        {
+          "item_id": "q02",
+          "item_type": "survey_question",
+          "value": "plays an important role in regional communities where it operates",
+          "page": 8,
+          "quote": "plays an important role in regional communities where it operates"
+        },
+        {
+          "item_id": "q03",
+          "item_type": "survey_question",
+          "value": "creates an important export product for Australia",
+          "page": 8,
+          "quote": "creates an important export product for Australia"
+        },
+        {
+          "item_id": "q04",
+          "item_type": "survey_question",
+          "value": "the average level of trust in Australia’s cotton industry",
+          "page": 9,
+          "quote": "the average level of trust in Australia’s cotton industry"
+        },
+        {
+          "item_id": "q05",
+          "item_type": "survey_question",
+          "value": "acceptance of the cotton industry scored an average",
+          "page": 9,
+          "quote": "acceptance of the cotton industry scored an average"
+        },
+        {
+          "item_id": "q06",
+          "item_type": "survey_question",
+          "value": "the cotton industry uses water responsibly",
+          "page": 11,
+          "quote": "the cotton industry uses water responsibly"
+        },
+        {
+          "item_id": "q07",
+          "item_type": "survey_question",
+          "value": "the way water is allocated in Australia for different uses is appropriate",
+          "page": 11,
+          "quote": "the way water is allocated in Australia for different uses is appropriate"
+        },
+        {
+          "item_id": "q08",
+          "item_type": "survey_question",
+          "value": "water should only be used in industries like cotton after making sure the community",
+          "page": 11,
+          "quote": "water should only be used in industries like cotton after making sure the community"
+        },
+        {
+          "item_id": "q09",
+          "item_type": "survey_question",
+          "value": "and the environment (56%; Figure 4) has enough first",
+          "page": 11,
+          "quote": "and the environment (56%; Figure 4) has enough first"
+        },
+        {
+          "item_id": "q10",
+          "item_type": "survey_question",
+          "value": "we should not be using water to grow cotton when it could be used to grow food",
+          "page": 11,
+          "quote": "we should not be using water to grow cotton when it could be used to grow food"
+        },
+        {
+          "item_id": "q11",
+          "item_type": "survey_question",
+          "value": "community concern for foreign ownership of land and water rights",
+          "page": 11,
+          "quote": "community concern for foreign ownership of land and water rights"
+        },
+        {
+          "item_id": "q12",
+          "item_type": "survey_question",
+          "value": "innovation and technological developments can help overcome water scarcity in Australia",
+          "page": 11,
+          "quote": "innovation and technological developments can help overcome water scarcity in Australia"
+        },
+        {
+          "item_id": "q13",
+          "item_type": "survey_question",
+          "value": "the cotton industry does enough to protect its biodiversity",
+          "page": 12,
+          "quote": "the cotton industry does enough to protect its biodiversity"
+        },
+        {
+          "item_id": "q14",
+          "item_type": "survey_question",
+          "value": "trust the cotton industry to use pesticides responsibly",
+          "page": 12,
+          "quote": "trust the cotton industry to use pesticides responsibly"
+        },
+        {
+          "item_id": "q15",
+          "item_type": "survey_question",
+          "value": "see the use of pesticides by farmers as necessary",
+          "page": 12,
+          "quote": "see the use of pesticides by farmers as necessary"
+        },
+        {
+          "item_id": "q16",
+          "item_type": "survey_question",
+          "value": "the use of pesticides really bothers me",
+          "page": 12,
+          "quote": "the use of pesticides really bothers me"
+        },
+        {
+          "item_id": "q17",
+          "item_type": "survey_question",
+          "value": "I feel more comfortable with the use of genetic modification of plants that produce fibre (e.g. cotton) than I do for plants that produce food (e.g. corn)",
+          "page": 12,
+          "quote": "I feel more comfortable with the use of genetic modification of plants that produce fibre (e.g. cotton) than I do for plants that produce food (e.g. corn)"
+        },
+        {
+          "item_id": "q18",
+          "item_type": "survey_question",
+          "value": "I feel better about the use of genetic modification of cotton plants if it means the industry uses less insecticides",
+          "page": 12,
+          "quote": "I feel better about the use of genetic modification of cotton plants if it means the industry uses less insecticides"
+        },
+        {
+          "item_id": "q19",
+          "item_type": "survey_question",
+          "value": "committed to reducing greenhouse gas emissions",
+          "page": 13,
+          "quote": "committed to reducing greenhouse gas emissions"
+        },
+        {
+          "item_id": "q20",
+          "item_type": "survey_question",
+          "value": "prepared to change its practices in response to community concerns",
+          "page": 15,
+          "quote": "prepared to change its practices in response to community concerns"
+        },
+        {
+          "item_id": "q21",
+          "item_type": "survey_question",
+          "value": "the industry’s ability to listen and respect community opinions",
+          "page": 15,
+          "quote": "the industry’s ability to listen and respect community opinions"
+        },
+        {
+          "item_id": "q22",
+          "item_type": "survey_question",
+          "value": "acknowledge their mistakes after public outcry, I can forgive the mistake",
+          "page": 15,
+          "quote": "acknowledge their mistakes after public outcry, I can forgive the mistake"
+        },
+        {
+          "item_id": "q23",
+          "item_type": "survey_question",
+          "value": "it is important for the cotton industry to develop local manufacturing",
+          "page": 17,
+          "quote": "it is important for the cotton industry to develop local manufacturing"
+        },
+        {
+          "item_id": "q24",
+          "item_type": "survey_question",
+          "value": "the industry generates significant local jobs in regional areas",
+          "page": 17,
+          "quote": "the industry generates significant local jobs in regional areas"
+        },
+        {
+          "item_id": "q25",
+          "item_type": "survey_question",
+          "value": "protecting the environment is more important than protecting people’s jobs",
+          "page": 17,
+          "quote": "protecting the environment is more important than protecting people’s jobs"
+        },
+        {
+          "item_id": "q26",
+          "item_type": "survey_question",
+          "value": "the economic benefits of growing cotton in Northern Australia is more important than the impact on the environment",
+          "page": 17,
+          "quote": "the economic benefits of growing cotton in Northern Australia is more important than the impact on the environment"
+        },
+        {
+          "item_id": "q27",
+          "item_type": "survey_question",
+          "value": "Australia receives a fair share of the benefits from the cotton industry",
+          "page": 17,
+          "quote": "Australia receives a fair share of the benefits from the cotton industry"
+        },
+        {
+          "item_id": "q28",
+          "item_type": "survey_question",
+          "value": "regional communities receive a fair share",
+          "page": 17,
+          "quote": "regional communities receive a fair share"
+        },
+        {
+          "item_id": "q29",
+          "item_type": "survey_question",
+          "value": "most of the benefits that come from growing cotton go to cotton farmers",
+          "page": 17,
+          "quote": "most of the benefits that come from growing cotton go to cotton farmers"
+        },
+        {
+          "item_id": "q30",
+          "item_type": "survey_question",
+          "value": "I don’t think that regulation of the Australian cotton industry is effective",
+          "page": 19,
+          "quote": "I don’t think that regulation of the Australian cotton industry is effective"
+        },
+        {
+          "item_id": "q31",
+          "item_type": "survey_question",
+          "value": "the Australian cotton industry does enough to enforce their own best practices on individual farmers",
+          "page": 19,
+          "quote": "the Australian cotton industry does enough to enforce their own best practices on individual farmers"
+        },
+        {
+          "item_id": "q32",
+          "item_type": "survey_question",
+          "value": "penalties for misusing natural resources like water in the Australian cotton industry are not strong enough",
+          "page": 19,
+          "quote": "penalties for misusing natural resources like water in the Australian cotton industry are not strong enough"
+        },
+        {
+          "item_id": "q33",
+          "item_type": "survey_question",
+          "value": "cotton farming organisations have a responsibility to hold individual cotton farmers accountable",
+          "page": 19,
+          "quote": "cotton farming organisations have a responsibility to hold individual cotton farmers accountable"
+        },
+        {
+          "item_id": "q34",
+          "item_type": "survey_question",
+          "value": "cotton farmers can’t all be held responsible when a handful of people in the industry break the rules",
+          "page": 19,
+          "quote": "cotton farmers can’t all be held responsible when a handful of people in the industry break the rules"
+        },
+        {
+          "item_id": "q35",
+          "item_type": "survey_question",
+          "value": "growing cotton in northern Australia is acceptable if clear environmental regulations are followed",
+          "page": 19,
+          "quote": "growing cotton in northern Australia is acceptable if clear environmental regulations are followed"
+        },
+        {
+          "item_id": "q36",
+          "item_type": "survey_question",
+          "value": "has a responsibility to ensure their supply chains are free from modern slavery",
+          "page": 20,
+          "quote": "has a responsibility to ensure their supply chains are free from modern slavery"
+        },
+        {
+          "item_id": "q37",
+          "item_type": "survey_question",
+          "value": "exploitation of workers is a serious problem in the Australian cotton industry",
+          "page": 20,
+          "quote": "exploitation of workers is a serious problem in the Australian cotton industry"
+        },
+        {
+          "item_id": "q38",
+          "item_type": "survey_question",
+          "value": "how informed they were about the cotton industry",
+          "page": 20,
+          "quote": "how informed they were about the cotton industry"
+        },
+        {
+          "item_id": "q39",
+          "item_type": "survey_question",
+          "value": "what their source of information was (multiple choice)",
+          "page": 20,
+          "quote": "what their source of information was (multiple choice)"
+        },
+        {
+          "item_id": "v13",
+          "item_type": "limitation",
+          "value": "high neutral shares on water may show the community is unsure how water is used",
+          "page": 11,
+          "quote": "High neutral scores for the appropriate allocation (43%), using water to grow cotton rather than food (42%), and the responsible use of water (44%; Figure 4) may indicate that the community are unsure about how water is being used in both the cotton industry and Australia more broadly."
+        }
+      ],
+      "contexts": [
+        {
+          "context_id": "doc_voconiq2025_ctx_01",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v11"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_02",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v01",
+            "v02",
+            "v03",
+            "v05",
+            "v08"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_03",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_04",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08",
+            "v11"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_05",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08",
+            "v10"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_06",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v12"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_07",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08",
+            "v13"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_08",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "g02",
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_09",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "g03",
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_10",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "g01",
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_11",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
+            "g04",
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v06",
+            "v07",
+            "v08"
+          ]
+        }
+      ]
+    }
+  ]
+}

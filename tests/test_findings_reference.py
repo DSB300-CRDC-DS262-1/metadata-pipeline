@@ -1,4 +1,4 @@
-"""Checks the hand-built findings reference against the schema and, when the PDFs are present, the source text."""
+"""Checks the hand-built statistics and contexts references against the schema and, when the PDFs are present, the source text."""
 
 import json
 import re
@@ -6,16 +6,17 @@ from pathlib import Path
 
 import pytest
 
-from crdc_pipeline.extraction.findings import ContextItem, Statistic, group_contexts
+from crdc_pipeline.extraction.contexts.schema import ContextItem, group_contexts
+from crdc_pipeline.extraction.statistics.schema import Statistic
+from crdc_pipeline.reference import findings_reference
 
 ROOT = Path(__file__).resolve().parent.parent
-REFERENCE = json.loads((ROOT / "data" / "findings_reference.json").read_text(encoding="utf-8"))
 MANIFEST = json.loads((ROOT / "data" / "document_manifest.json").read_text(encoding="utf-8"))
 DATE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
 
 
 def documents():
-    return [pytest.param(d, id=d["document_id"]) for d in REFERENCE["documents"]]
+    return [pytest.param(d, id=d["document_id"]) for d in findings_reference()]
 
 
 QUOTE_MARKS = str.maketrans({"“": '"', "”": '"', "‘": "'", "’": "'"})

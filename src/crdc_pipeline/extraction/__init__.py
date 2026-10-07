@@ -1,5 +1,5 @@
 from .backends import Backend, GeminiBackend, OllamaBackend, make_backend
-from .metadata import DocumentMetadata, MetadataExtractionResult, extract_metadata
+from .metadata.extract import DocumentMetadata, MetadataExtractionResult, extract_metadata
 from .vision import make_page_transcriber, make_vision_backend, make_word_reader
 
 __all__ = [

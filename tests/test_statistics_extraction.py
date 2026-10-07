@@ -1,18 +1,17 @@
 """Two-pass statistics extraction with a fake backend (no model needed)."""
 
 from crdc_pipeline.extraction.backends import GenerationResult
-from crdc_pipeline.extraction.findings import ContextItem, Statistic
-from crdc_pipeline.extraction.statistics import extract_findings
-from crdc_pipeline.extraction.statistics_prompts import (
+from crdc_pipeline.extraction.contexts.schema import ContextItem
+from crdc_pipeline.extraction.statistics.schema import Statistic
+from crdc_pipeline.extraction.statistics.extract import extract_findings
+from crdc_pipeline.extraction.contexts.prompts import (
     CONTEXT_PROMPT,
-    STATISTICS_PROMPT,
     PageContextItems,
     PageLinks,
-    PageStatistics,
-    SamePairs,
     StatisticLinks,
     StudyItems,
 )
+from crdc_pipeline.extraction.statistics.prompts import STATISTICS_PROMPT, PageStatistics, SamePairs
 
 
 class FakeBackend:
@@ -79,7 +78,7 @@ def stat(reported, value=None, status="exact", **extra):
 
 
 def test_wording_sets_the_reading_and_fills_bounds() -> None:
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     over = tidy_statistic(stat("just over $3.4 million", 3.4, "upper_bound"))
     assert (over.value_status, over.value, over.value_min) == ("lower_bound", None, 3.4)
@@ -91,7 +90,7 @@ def test_wording_sets_the_reading_and_fills_bounds() -> None:
 
 
 def test_years_and_periods_are_not_statistics() -> None:
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     for reported in ("2001", "2014-19", "2008-09 to 2011-12", "2018 Australian dollars", "(2001-12)"):
         assert tidy_statistic(stat(reported, 2001)) is None, reported
@@ -99,7 +98,7 @@ def test_years_and_periods_are_not_statistics() -> None:
 
 
 def test_table_rows_are_dropped_but_number_heavy_prose_is_kept() -> None:
-    from crdc_pipeline.extraction.statistics_filters import without_tables
+    from crdc_pipeline.extraction.statistics.filters import without_tables
 
     text = "2009-10 721 1.2 1,170.0 1.1\n(55% agreed, 34% neutral, 10% disagreed; Figure 5)\n2. Television - news (21%)."
     assert without_tables(text).splitlines() == text.splitlines()[1:]
@@ -118,7 +117,7 @@ def test_a_failed_page_is_recorded_and_the_rest_continue() -> None:
 
 
 def test_survey_answers_are_labelled_from_the_quote() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_survey_answer
+    from crdc_pipeline.extraction.statistics.values import label_survey_answer
 
     quote = "(73% agreed, 24% neutral, 3% disagreed; Figure 12)"
     for reported, category in (("73%", "agree"), ("24%", "neutral"), ("3%", "disagree")):
@@ -170,7 +169,7 @@ def test_context_steps_can_use_another_model() -> None:
 
 
 def test_whole_document_mode_uses_one_context_call_and_one_link_call() -> None:
-    from crdc_pipeline.extraction.statistics_prompts import (
+    from crdc_pipeline.extraction.contexts.prompts import (
         DocumentContextItems,
         DocumentLinks,
         DocumentStatisticLinks,
@@ -198,8 +197,8 @@ def test_whole_document_mode_uses_one_context_call_and_one_link_call() -> None:
 
 
 def test_relink_replaces_links_with_one_document_call() -> None:
-    from crdc_pipeline.extraction.statistics import relink
-    from crdc_pipeline.extraction.statistics_prompts import DocumentLinks, DocumentStatisticLinks
+    from crdc_pipeline.extraction.contexts.links import relink
+    from crdc_pipeline.extraction.contexts.prompts import DocumentLinks, DocumentStatisticLinks
 
     class Linker:
         def generate(self, prompt, schema, images=None):
@@ -229,14 +228,14 @@ def test_figure_and_table_captions_are_not_context() -> None:
 
 
 def test_percentages_written_as_fractions_take_the_printed_number() -> None:
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     assert tidy_statistic(stat("80%", 0.8)).value == 80
     assert tidy_statistic(stat("0.5%", 0.5)).value == 0.5
 
 
 def test_measurements_with_a_citation_are_cited() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_cited
+    from crdc_pipeline.extraction.statistics.values import label_cited
 
     cited = stat("3.9 million bales", 3.9, quote="production was 3.9 million bales (Cotton Australia, 2016).",
                  record_type="measurement")
@@ -246,7 +245,7 @@ def test_measurements_with_a_citation_are_cited() -> None:
 
 
 def test_period_is_read_from_the_sentence_nearest_the_value() -> None:
-    from crdc_pipeline.extraction.statistics_periods import period_from_quote
+    from crdc_pipeline.extraction.statistics.periods import period_from_quote
 
     def span(quote, value):
         found = period_from_quote(quote, value)
@@ -262,7 +261,7 @@ def test_period_is_read_from_the_sentence_nearest_the_value() -> None:
 
 
 def test_survey_answers_take_the_fieldwork_year() -> None:
-    from crdc_pipeline.extraction.statistics_periods import date_survey_answers, survey_year, with_item_period
+    from crdc_pipeline.extraction.statistics.periods import date_survey_answers, survey_year, with_item_period
 
     items = [with_item_period(ContextItem(item_id=i, item_type="time_period", value=v, page=1, quote=v))
              for i, v in [("a", "2025-10-30 to 2025-11-17"), ("b", "Program began in 2020"), ("c", "2014-19")]]
@@ -273,7 +272,8 @@ def test_survey_answers_take_the_fieldwork_year() -> None:
 
 
 def test_reference_lists_and_chart_labels_are_left_out() -> None:
-    from crdc_pipeline.extraction.statistics_filters import before_references, is_label
+    from crdc_pipeline.extraction.contexts.scope import is_label
+    from crdc_pipeline.extraction.statistics.filters import before_references
 
     pages = ["Results 5%", "Discussion\nReferences\nLal, 2004. Soil carbon.", "More references"]
     assert before_references(pages) == ["Results 5%", "Discussion", ""]
@@ -285,7 +285,7 @@ def test_reference_lists_and_chart_labels_are_left_out() -> None:
 
 
 def test_statistic_type_follows_the_unit() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_type
+    from crdc_pipeline.extraction.statistics.values import label_type
 
     assert label_type(stat("~99%", 99, unit="%")).statistic_type == "percentage"
     assert label_type(stat("approached $18 million", 18, unit="AUD million")).statistic_type == "monetary_value"
@@ -296,7 +296,7 @@ def test_statistic_type_follows_the_unit() -> None:
 
 
 def test_values_whose_only_numbers_are_years_are_dropped() -> None:
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     assert tidy_statistic(stat("five-year period 2012-13 to 2016-17")) is None
     assert tidy_statistic(stat("$2070/t", 2070)) is not None
@@ -304,7 +304,7 @@ def test_values_whose_only_numbers_are_years_are_dropped() -> None:
 
 
 def test_time_period_items_cover_every_period_they_print() -> None:
-    from crdc_pipeline.extraction.statistics_periods import with_item_period
+    from crdc_pipeline.extraction.statistics.periods import with_item_period
 
     def period(value):
         found = with_item_period(ContextItem(item_id="a", item_type="time_period", value=value, page=1, quote=value)).period
@@ -317,8 +317,8 @@ def test_time_period_items_cover_every_period_they_print() -> None:
 
 
 def test_a_span_of_years_gives_way_to_the_fieldwork_dates() -> None:
-    from crdc_pipeline.extraction.statistics_document import sharpen_scope
-    from crdc_pipeline.extraction.statistics_periods import with_item_period
+    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
+    from crdc_pipeline.extraction.statistics.periods import with_item_period
 
     def item(item_id, value):
         return with_item_period(ContextItem(item_id=item_id, item_type="time_period", value=value, page=1, quote=value))
@@ -330,7 +330,7 @@ def test_a_span_of_years_gives_way_to_the_fieldwork_dates() -> None:
 
 
 def test_a_sample_without_a_size_gives_way_to_the_sized_sample_in_the_method() -> None:
-    from crdc_pipeline.extraction.statistics_document import sharpen_scope
+    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
 
     items = [
         ContextItem(item_id="m", item_type="collection_method", value="online survey", page=5,
@@ -346,7 +346,7 @@ def test_a_sample_without_a_size_gives_way_to_the_sized_sample_in_the_method() -
 
 
 def test_items_quoting_only_a_phrase_are_dropped() -> None:
-    from crdc_pipeline.extraction.statistics_filters import is_label
+    from crdc_pipeline.extraction.contexts.scope import is_label
 
     phrase = ContextItem(item_id="a", item_type="geographic_region", value="Australia", page=9,
                          quote="Australia's cotton industry")
@@ -356,7 +356,7 @@ def test_items_quoting_only_a_phrase_are_dropped() -> None:
 
 
 def test_a_second_scope_call_adds_whole_study_method_facts() -> None:
-    from crdc_pipeline.extraction.statistics_prompts import METHOD_SCOPE_PROMPT
+    from crdc_pipeline.extraction.contexts.prompts import METHOD_SCOPE_PROMPT
 
     class Methods(FakeBackend):
         def generate(self, prompt, schema, images=None):
@@ -376,8 +376,8 @@ def test_a_second_scope_call_adds_whole_study_method_facts() -> None:
 
 
 def test_the_sample_is_found_on_the_page_of_the_sharpened_period() -> None:
-    from crdc_pipeline.extraction.statistics_document import sharpen_scope
-    from crdc_pipeline.extraction.statistics_periods import with_item_period
+    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
+    from crdc_pipeline.extraction.statistics.periods import with_item_period
 
     def period(item_id, value, page):
         return with_item_period(ContextItem(item_id=item_id, item_type="time_period", value=value, page=page, quote=value))
@@ -391,7 +391,7 @@ def test_the_sample_is_found_on_the_page_of_the_sharpened_period() -> None:
 
 
 def test_a_measurement_linked_to_a_survey_question_is_a_survey_answer() -> None:
-    from crdc_pipeline.extraction.statistics_document import answers_to_questions
+    from crdc_pipeline.extraction.statistics.records import answers_to_questions
 
     question = ContextItem(item_id="q", item_type="survey_question", value="trust", page=9,
                            quote="the average level of trust in Australia's cotton industry")
@@ -402,8 +402,8 @@ def test_a_measurement_linked_to_a_survey_question_is_a_survey_answer() -> None:
 
 
 def test_periods_are_dates_and_a_sentence_opening_period_covers_the_sentence() -> None:
-    from crdc_pipeline.extraction.findings import Period
-    from crdc_pipeline.extraction.statistics_periods import period_from_quote, with_period
+    from crdc_pipeline.extraction.contexts.schema import Period
+    from crdc_pipeline.extraction.statistics.periods import period_from_quote, with_period
 
     words = stat("10%", 10, quote="10% said they had heard about the industry in the last week",
                  period=Period(start="last week", end="last week"))
@@ -415,7 +415,7 @@ def test_periods_are_dates_and_a_sentence_opening_period_covers_the_sentence() -
 
 
 def test_time_units_are_durations_and_averages_are_averages_unless_they_change() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_type
+    from crdc_pipeline.extraction.statistics.values import label_type
 
     assert label_type(stat("usually within seven days", 7, unit="days")).statistic_type == "duration"
     assert label_type(stat("3.68", 3.68, unit="score", variable="average rating, knows 3-5 people")).statistic_type == "average"
@@ -424,7 +424,7 @@ def test_time_units_are_durations_and_averages_are_averages_unless_they_change()
 
 
 def test_numbers_written_in_words_are_listed_as_a_reminder() -> None:
-    from crdc_pipeline.extraction.statistics_filters import word_number_note
+    from crdc_pipeline.extraction.statistics.filters import word_number_note
 
     note = word_number_note("half of the systems were back-to-back cotton\nwhich may offset up to a third of the increase\n"
                             "with more than 99 per cent of production exported\n12 15 18 21 two")
@@ -434,7 +434,7 @@ def test_numbers_written_in_words_are_listed_as_a_reminder() -> None:
 
 
 def test_the_answer_word_is_found_in_the_full_sentence_on_the_page() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_survey_answer
+    from crdc_pipeline.extraction.statistics.values import label_survey_answer
 
     page = ('More than three-quarters agreed that the cotton industry "creates an important export product for '
             'Australia" (78%; Figure 3). Fewer were neutral.')
@@ -444,7 +444,7 @@ def test_the_answer_word_is_found_in_the_full_sentence_on_the_page() -> None:
 
 
 def test_a_year_followed_by_a_percentage_is_not_a_span() -> None:
-    from crdc_pipeline.extraction.statistics_periods import period_from_quote
+    from crdc_pipeline.extraction.statistics.periods import period_from_quote
 
     quote = "neutral responses increased from 49% in 2023 to 51% in 2025, reinforcing uncertainty"
     first, second = period_from_quote(quote, "49%"), period_from_quote(quote, "51%")
@@ -455,7 +455,7 @@ def test_a_year_followed_by_a_percentage_is_not_a_span() -> None:
 
 
 def test_a_rating_is_a_survey_answer_even_without_a_question_link() -> None:
-    from crdc_pipeline.extraction.statistics_document import answers_to_questions
+    from crdc_pipeline.extraction.statistics.records import answers_to_questions
 
     rating = stat("3.19", 3.19, unit="mean rating (1-5)")
     change = stat("an increase of 0.07", 0.07, unit="rating points", record_type="derived")
@@ -463,7 +463,7 @@ def test_a_rating_is_a_survey_answer_even_without_a_question_link() -> None:
 
 
 def test_duplicate_candidates_need_the_same_numbers_and_compatible_units() -> None:
-    from crdc_pipeline.extraction.statistics_document import duplicate_candidates
+    from crdc_pipeline.extraction.statistics.duplicates import duplicate_candidates
 
     abstract = stat("46%", 46, statistic_id="a", unit="%", page=1)
     results = stat("46%", 46, statistic_id="b", unit="%", page=6)
@@ -474,7 +474,7 @@ def test_duplicate_candidates_need_the_same_numbers_and_compatible_units() -> No
 
 
 def test_a_duplicate_judged_the_same_is_dropped_and_its_links_kept() -> None:
-    from crdc_pipeline.extraction.statistics_document import (
+    from crdc_pipeline.extraction.statistics.duplicates import (
         drop_duplicates,
         duplicate_candidates,
         pair_numbers,
@@ -502,7 +502,7 @@ def test_the_pipeline_asks_about_same_value_pairs_and_drops_the_later_one() -> N
 
 
 def test_numbers_that_set_up_the_survey_or_report_are_not_findings() -> None:
-    from crdc_pipeline.extraction.statistics_filters import is_structural
+    from crdc_pipeline.extraction.statistics.filters import is_structural
 
     subgroup = stat("6-10", None, "range", value_min=6, value_max=10,
                     quote="Those who knew 6-10 gave the highest average rating")
@@ -518,7 +518,7 @@ def test_numbers_that_set_up_the_survey_or_report_are_not_findings() -> None:
 
 
 def test_shares_in_words_and_per_cent_are_percentages_as_printed() -> None:
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     half = tidy_statistic(stat("half", 0.5))
     third = tidy_statistic(stat("up to a third", None))
@@ -531,7 +531,7 @@ def test_shares_in_words_and_per_cent_are_percentages_as_printed() -> None:
 
 
 def test_a_bracketed_conversion_into_another_unit_is_the_same_number() -> None:
-    from crdc_pipeline.extraction.statistics_document import drop_conversions
+    from crdc_pipeline.extraction.statistics.duplicates import drop_conversions
 
     quote = "Average lint yield in Australia is the highest in the world at 12 bales/ha (2.7 t/ha)"
     bales = stat("12 bales/ha", 12, statistic_id="a", unit="bales/ha", quote=quote)
@@ -543,8 +543,8 @@ def test_a_bracketed_conversion_into_another_unit_is_the_same_number() -> None:
 
 
 def test_computed_values_in_a_modelling_study_are_model_results() -> None:
-    from crdc_pipeline.extraction.statistics_document import modelled_results
-    from crdc_pipeline.extraction.statistics_values import label_cited
+    from crdc_pipeline.extraction.statistics.records import modelled_results
+    from crdc_pipeline.extraction.statistics.values import label_cited
 
     scenarios = [ContextItem(item_id=f"s{k}", item_type="scenario", value="option", page=3,
                              quote=f"Option {k} reduces the fertiliser rate.") for k in (1, 2)]
@@ -555,7 +555,7 @@ def test_computed_values_in_a_modelling_study_are_model_results() -> None:
 
 
 def test_ranks_are_positions_and_medians_are_medians() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_type
+    from crdc_pipeline.extraction.statistics.values import label_type
 
     assert label_type(stat("sixth", 6, unit="rank", statistic_type="count")).statistic_type == "other"
     median = stat("10.28 bales per ha", 10.28, unit="bales/ha", variable="median farm yield", statistic_type="average")
@@ -563,7 +563,7 @@ def test_ranks_are_positions_and_medians_are_medians() -> None:
 
 
 def test_linked_items_that_repeat_a_kind_the_study_covers_are_dropped() -> None:
-    from crdc_pipeline.extraction.statistics_document import trim_links
+    from crdc_pipeline.extraction.contexts.links import trim_links
 
     def item(item_id, kind, page):
         return ContextItem(item_id=item_id, item_type=kind, value="v", page=page, quote="A fact stated in a sentence.")
@@ -576,7 +576,7 @@ def test_linked_items_that_repeat_a_kind_the_study_covers_are_dropped() -> None:
 
 
 def test_two_ends_of_a_printed_range_are_one_statistic() -> None:
-    from crdc_pipeline.extraction.statistics_document import merge_ranges
+    from crdc_pipeline.extraction.statistics.duplicates import merge_ranges
 
     quote = "N2O emissions factors, ranging from 0.0033 for the Darling Downs to 0.0105 for Southern Queensland"
     low = stat("0.0033", 0.0033, statistic_id="a", quote=quote)
@@ -588,7 +588,7 @@ def test_two_ends_of_a_printed_range_are_one_statistic() -> None:
 
 
 def test_chart_values_and_word_shares_restating_an_exact_figure_are_dropped() -> None:
-    from crdc_pipeline.extraction.statistics_filters import is_structural
+    from crdc_pipeline.extraction.statistics.filters import is_structural
 
     chart = stat("3.71", 3.71, quote="Figure 15: Average scores for responsiveness by people known. 2 3.71")
     restated = stat("Close to half", 50, quote="Close to half of the community agreed that Australia receives a fair share at 47%")
@@ -599,9 +599,8 @@ def test_chart_values_and_word_shares_restating_an_exact_figure_are_dropped() ->
 
 
 def test_shares_of_people_answering_are_survey_answers_in_a_survey_report() -> None:
-    from crdc_pipeline.extraction.findings import Period
-    from crdc_pipeline.extraction.statistics_document import answers_to_questions
-    from crdc_pipeline.extraction.statistics_periods import period_from_quote
+    from crdc_pipeline.extraction.statistics.records import answers_to_questions
+    from crdc_pipeline.extraction.statistics.periods import period_from_quote
 
     question = ContextItem(item_id="q", item_type="survey_question", value="importance", page=8,
                            quote="the cotton industry is important to our way of life")
@@ -612,7 +611,7 @@ def test_shares_of_people_answering_are_survey_answers_in_a_survey_report() -> N
 
 
 def test_answer_options_agreement_and_changes() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_survey_answer
+    from crdc_pipeline.extraction.statistics.values import label_survey_answer
 
     option = label_survey_answer(stat("21%", 21, quote="2. Television - news (21%)."))
     agreement = label_survey_answer(stat("62%", 62, quote="The community were largely in agreement that water should be used carefully (62%)"))
@@ -624,7 +623,7 @@ def test_answer_options_agreement_and_changes() -> None:
 
 
 def test_bound_wording_just_before_the_value_and_unconfirmed_wording() -> None:
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     over = tidy_statistic(stat("$48 million", 48, quote="the total direct impact since 2001 surpasses $48 million"))
     plain = tidy_statistic(stat("46%", 46, quote="over the period, 46% of claims were serious"))
@@ -635,7 +634,7 @@ def test_bound_wording_just_before_the_value_and_unconfirmed_wording() -> None:
 
 
 def test_an_average_score_on_the_scale_is_a_survey_answer() -> None:
-    from crdc_pipeline.extraction.statistics_document import answers_to_questions
+    from crdc_pipeline.extraction.statistics.records import answers_to_questions
 
     question = ContextItem(item_id="q", item_type="survey_question", value="trust", page=9, quote="the level of trust in the industry")
     score = stat("3.46", 3.46, quote="acceptance of the cotton industry scored an average of 3.46 in 2025")
@@ -645,7 +644,7 @@ def test_an_average_score_on_the_scale_is_a_survey_answer() -> None:
 
 
 def test_between_two_years_is_a_period() -> None:
-    from crdc_pipeline.extraction.statistics_periods import period_from_quote
+    from crdc_pipeline.extraction.statistics.periods import period_from_quote
 
     found = period_from_quote("Ratings increased by 0.09 between 2020 and 2025.", "0.09")
     assert (found.start, found.end) == ("2020", "2025")
@@ -653,8 +652,8 @@ def test_between_two_years_is_a_period() -> None:
 
 
 def test_scaled_money_ranges_with_currency_and_between_ranges() -> None:
-    from crdc_pipeline.extraction.statistics_document import merge_ranges
-    from crdc_pipeline.extraction.statistics_values import tidy_statistic
+    from crdc_pipeline.extraction.statistics.duplicates import merge_ranges
+    from crdc_pipeline.extraction.statistics.values import tidy_statistic
 
     lost = tidy_statistic(stat("$32 million dollars", 32000000, unit="dollars", quote="resulting in more than $32 million dollars in lost revenue"))
     cost = tidy_statistic(stat("$3.88 to $7.76/ac", 3.88, unit="USD/ac", quote="is $3.88 to $7.76/ac"))
@@ -666,7 +665,7 @@ def test_scaled_money_ranges_with_currency_and_between_ranges() -> None:
 
 
 def test_definitions_design_counts_and_equipment_specs_are_setup() -> None:
-    from crdc_pipeline.extraction.statistics_filters import is_structural
+    from crdc_pipeline.extraction.statistics.filters import is_structural
 
     assert is_structural(stat("5", 5, quote="weeks following cutout (NAWF =5) and first cracked boll"))
     assert is_structural(stat("four", 4, quote="a randomized complete block design with four replications."))
@@ -676,7 +675,7 @@ def test_definitions_design_counts_and_equipment_specs_are_setup() -> None:
 
 
 def test_treatment_timings_and_count_adjectives_are_setup() -> None:
-    from crdc_pipeline.extraction.statistics_filters import is_structural
+    from crdc_pipeline.extraction.statistics.filters import is_structural
 
     assert is_structural(stat("one week", 1, quote="terminated at two weeks prior to first cracked boll, one week prior to first cracked boll"))
     assert is_structural(stat("25-boll", 25, quote="by harvesting a 25-boll sample by hand"))
@@ -685,8 +684,8 @@ def test_treatment_timings_and_count_adjectives_are_setup() -> None:
 
 
 def test_a_region_from_the_abstract_gives_way_to_the_sites_in_the_method() -> None:
-    from crdc_pipeline.extraction.statistics_document import sharpen_scope
-    from crdc_pipeline.extraction.statistics_periods import with_item_period
+    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
+    from crdc_pipeline.extraction.statistics.periods import with_item_period
 
     def item(item_id, kind, value, page):
         made = ContextItem(item_id=item_id, item_type=kind, value=value, page=page, quote=f"The study reports {value}.")
@@ -698,8 +697,8 @@ def test_a_region_from_the_abstract_gives_way_to_the_sites_in_the_method() -> No
 
 
 def test_a_collection_method_under_one_chart_gives_way_to_the_one_in_the_method() -> None:
-    from crdc_pipeline.extraction.statistics_document import sharpen_scope
-    from crdc_pipeline.extraction.statistics_periods import with_item_period
+    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
+    from crdc_pipeline.extraction.statistics.periods import with_item_period
 
     def item(item_id, kind, value, page):
         made = ContextItem(item_id=item_id, item_type=kind, value=value, page=page, quote=f"The study reports {value}.")
@@ -712,7 +711,7 @@ def test_a_collection_method_under_one_chart_gives_way_to_the_one_in_the_method(
 
 
 def test_p_values_bounds_symbols_and_physical_quantities() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_type, tidy_statistic
+    from crdc_pipeline.extraction.statistics.values import label_type, tidy_statistic
 
     p = tidy_statistic(stat("p ≥ 0.6107", 0.6107, quote="had an effect (p ≥ 0.6107)", statistic_type="percentage"))
     assert (p.value_status, p.value_min) == ("lower_bound", 0.6107)
@@ -726,7 +725,7 @@ def test_p_values_bounds_symbols_and_physical_quantities() -> None:
 
 
 def test_shared_units_and_the_amount_of_a_change() -> None:
-    from crdc_pipeline.extraction.statistics_values import label_change, shared_unit
+    from crdc_pipeline.extraction.statistics.values import label_change, shared_unit
 
     first = shared_unit(stat("24", 24, quote="rainfall ranged from 24 and 67% below the 10-year average"))
     assert first.unit == "%"

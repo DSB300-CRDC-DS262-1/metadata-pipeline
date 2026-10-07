@@ -4,15 +4,25 @@ from __future__ import annotations
 
 import re
 
-from .findings import ContextItem, Period, Statistic
+from ..contexts.schema import ContextItem, Period
+from .schema import Statistic
+
 
 MONTHS = {m[:3].lower(): f"{i:02d}" for i, m in enumerate(
     ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
      "November", "December"], start=1)}
+
+
 _MONTH = r"(?:(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+)?"
+
+
 _YEAR = r"((?:19|20)\d\d)"
+
+
 # Longest forms first: "2012-13 to 2016-17", "Oct 2019 - Dec 2023", "2001-13", "since 2001", "by 2014", "in 2020".
 _DAY_MONTH = r"(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?"
+
+
 PERIODS = [
     # "30 October to 17 November 2025", "between 30 October and 17 November 2025"
     ("days", re.compile(_DAY_MONTH + r"(?:\s+" + _YEAR + r")?\s*(?:-|to|and)\s*" + _DAY_MONTH + r"\s+" + _YEAR)),
@@ -90,6 +100,8 @@ def with_period(statistic: Statistic) -> Statistic:
 
 
 ISO = r"((?:19|20)\d\d(?:-(?:0[1-9]|1[0-2])(?!\d)(?:-(?:0[1-9]|[12]\d|3[01])(?!\d))?)?)"
+
+
 ISO_PERIOD = re.compile(r"^\s*" + ISO + r"(?:\s*(?:to|-|/)\s*" + ISO + r")?\s*$")
 
 
@@ -147,6 +159,8 @@ def date_survey_answers(statistics: list[Statistic], year: Period | None) -> lis
 
 
 NUMBER = re.compile(r"\d")
+
+
 FIGURE_REF = re.compile(r"\b(?:Figure|Fig\.|Table)\s*\d+[a-z]?", re.I)
 
 

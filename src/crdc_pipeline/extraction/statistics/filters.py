@@ -5,11 +5,13 @@ from __future__ import annotations
 
 import re
 
-from .findings import STATISTIC_LEVEL, ContextItem, Statistic
-from .statistics_values import YEARS, printed_share
+from .schema import Statistic
+from .values import YEARS, printed_share
+
 
 # Lines that are mostly numbers: table rows and chart labels.
 TABLE_TOKEN = re.compile(r"[\d,.()%$#p*-]+")
+
 
 def without_tables(text: str) -> str:
     """Drops lines that are mostly numbers (table rows, chart labels), keeping running text."""
@@ -36,39 +38,39 @@ def before_references(pages: list[str]) -> list[str]:
     return kept
 
 
-LABEL_MAX_WORDS = 8
-MIN_QUOTE_WORDS = 4
-
-
-def is_label(item: ContextItem, page_text: str) -> bool:
-    """A quote that is a short line of its own with no sentence ending: a chart legend or heading."""
-    quote = " ".join(item.quote.split())
-    if item.item_type in STATISTIC_LEVEL:
-        return False
-    if len(quote.split()) < MIN_QUOTE_WORDS:
-        return True  # "Australia's cotton industry": a phrase, not a statement of the fact
-    if len(quote.split()) >= LABEL_MAX_WORDS or quote.endswith((".", "?")):
-        return False
-    return any(" ".join(line.split()) == quote for line in page_text.splitlines())
-
-
 # Numbers that define a subgroup ("those who knew 6-10 people"), not results about it.
 SUBGROUP = re.compile(r"\b(?:who|that)\s+(?:knew|know|had|have|were|are|aged)\s+(?:about\s+)?$", re.I)
+
+
 # The ends of a rating scale ("from 1 (Not at all) to 5 (Extremely)").
 SCALE = re.compile(r"\bscale\s+(?:of|from)\s+(\d+)\b[^.;]{0,40}?\bto\s+(\d+)\b", re.I)
+
+
 # A count of the report's own parts ("three main themes", "two core items").
 OWN_PARTS = re.compile(
     r"\b(?:themes?|items?|measures?|groupings?|groups?|variables?|areas?|categories|intervals?|questions?|"
     r"topics?|sections?|chapters?|tests?|parts?|steps?|phases?|options?|strategies|scenarios?|"
     r"replications?|replicates?|rows?|plots?|blocks?)\b", re.I)
+
+
 # A number defined by an equals sign ("NAWF = 5", "1 = Strongly disagree").
 DEFINED = re.compile(r"=\s*$")
+
+
 # A hyphenated dimension of equipment or plots ("38-in rows", "9-mil tubing").
 SPEC = re.compile(r"^\d+(?:\.\d+)?-(?:in|inch|mil|ft|cm|mm)$", re.I)
+
+
 # A count used as an adjective ("25-boll", "10-saw"); time spans such as "6-month" are durations.
 COUNT_ADJECTIVE = re.compile(r"^\d+-(?!(?:month|year|week|day|hour|minute)s?$)[a-z]+$", re.I)
+
+
 TIMING = re.compile(r"^(?:\d+|one|two|three|four|five|six|seven|eight)\s+(?:weeks?|days?|months?)$", re.I)
+
+
 SHARE_RESTATED_WITHIN = 10  # percentage points between "close to half" and the exact figure after it
+
+
 SMALL_WORD_NUMBER = re.compile(r"^(?:one|two|three|four|five|six|seven|eight|nine|ten)$", re.I)
 
 

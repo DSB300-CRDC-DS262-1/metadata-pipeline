@@ -1,4 +1,5 @@
-from crdc_pipeline.extraction.findings import ContextItem, Statistic, constraints_for, group_contexts
+from crdc_pipeline.extraction.contexts.schema import ContextItem, group_contexts
+from crdc_pipeline.extraction.statistics.schema import Statistic, constraints_for
 
 
 def item(item_id: str, whole_document: bool = False) -> ContextItem:

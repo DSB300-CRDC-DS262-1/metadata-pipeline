@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import re
 
-from .findings import Statistic
-from .statistics_periods import CITATION
+from .periods import CITATION
+from .schema import Statistic
+
 
 # Wording that fixes how a value should be read, checked against the model's value_status.
 STATUS_WORDS = [
@@ -13,14 +14,21 @@ STATUS_WORDS = [
     ("upper_bound", re.compile(r"\b(fewer than|less than|under|within|approaching|approached|up to|at most)\b|[≤<]", re.I)),
     ("approximate", re.compile(r"~|\b(about|around|approximately|roughly|close to|nearly|some)\b", re.I)),
 ]
+
+
 RANGE = re.compile(r"(\d[\d,.]*)\s*(?:-|to)\s*\$?(\d[\d,.]*)")  # "$3.88 to $7.76/ac" too
+
+
 # A year, a span of years or a currency year: a date, not a statistic.
 DATE_ONLY = re.compile(
     r"^\(?(?:(?:19|20)\d\d(?:[-/](?:19|20)?\d\d)?(?:\s*(?:-|to)\s*(?:19|20)\d\d(?:[-/](?:19|20)?\d\d)?)?)"
     r"(?:\s+(?:australian\s+)?dollars)?\)?$",
     re.I,
 )
+
+
 YEARS = re.compile(r"(?<![$\d.,])\b(?:19\d\d|20[0-4]\d)(?:[-/]\d\d(?!\d))?\b")
+
 
 def _number(text: str) -> float:
     return float(text.replace(",", "").rstrip("."))
@@ -34,10 +42,14 @@ SHARE_WORDS = [
     (re.compile(r"\b(?:a|one)[- ]quarter\b", re.I), 25.0),
     (re.compile(r"\bhalf\b", re.I), 50.0),
 ]
+
+
 PER_CENT = re.compile(r"(\d[\d,]*(?:\.\d+)?)\s*per\s*cent\b", re.I)
 
 
 SCALES = {"thousand": 1e3, "million": 1e6, "billion": 1e9}
+
+
 SCALED = re.compile(r"(\d[\d,]*(?:\.\d+)?)\s*(thousand|million|billion)\b", re.I)
 
 
@@ -71,6 +83,8 @@ def printed_share(reported: str) -> float | None:
 
 
 BOUND_REACH = 25  # characters before the value to look for "surpasses", "approaching", "within"
+
+
 UNCONFIRMED = re.compile(r"\b(?:possibly|possible|could have|may have|unconfirmed|suspected)\b", re.I)
 
 
@@ -122,9 +136,12 @@ def tidy_statistic(statistic: Statistic) -> Statistic | None:
     return statistic.model_copy(update=update)
 
 
-
 ANSWER = re.compile(r"\b(disagree|agree|neutral)(?:d|ly|ment)?\b", re.I)  # "in agreement" counts as agree
+
+
 ANSWER_REACH = 40
+
+
 CHANGE = re.compile(r"\b(?:grown|grew|increased?|increase of|decreased?|decrease of|rose|risen|fell|fallen|dropped|change of)\b", re.I)
 
 
@@ -149,7 +166,10 @@ def answer_category(statistic: Statistic) -> str | None:
         return named.pop() if len(named) == 1 else None
     return found.group(1).lower()
 
+
 TIME_UNIT = re.compile(r"(?:days?|weeks?|months?|years?|hours?|minutes?)")
+
+
 MONEY = re.compile(r"\$|\bAUD\b|\bdollars?\b", re.I)
 
 
@@ -210,10 +230,11 @@ def label_type(statistic: Statistic) -> Statistic:
 
 
 P_VALUE = re.compile(r"^\s*p\s*[<>≥≤=]", re.I)
+
+
 PHYSICAL_UNIT = re.compile(
     r"(?:million |thousand )?(?:acres?|ac|ha|hectares?|ac-in|in|inch(?:es)?|ft|m|km|mm|cm|kg|g|t|tonnes?|kpa|"
     r"gdds?|dd60|l|ml|gl|kwh|mj)", re.I)
-
 
 
 def label_cited(statistic: Statistic) -> Statistic:

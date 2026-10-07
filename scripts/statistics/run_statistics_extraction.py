@@ -14,15 +14,18 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from crdc_pipeline.extraction import make_backend  # noqa: E402
-from crdc_pipeline.extraction.findings_scoring import FIELDS, score_document  # noqa: E402
-from crdc_pipeline.extraction.findings import ContextItem, Statistic  # noqa: E402
-from crdc_pipeline.extraction.statistics import extract_findings, relink  # noqa: E402
+from crdc_pipeline.extraction.statistics.scoring import FIELDS, score_document  # noqa: E402
+from crdc_pipeline.extraction.contexts.schema import ContextItem  # noqa: E402
+from crdc_pipeline.extraction.statistics.schema import Statistic  # noqa: E402
+from crdc_pipeline.extraction.contexts.links import relink  # noqa: E402
+from crdc_pipeline.extraction.statistics.extract import extract_findings  # noqa: E402
 from crdc_pipeline.extraction.vision import make_page_transcriber, make_vision_backend  # noqa: E402
 from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
+from crdc_pipeline.reference import findings_reference  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "statistics"
@@ -118,8 +121,7 @@ def relink_run(args: argparse.Namespace, reference: dict[str, dict]) -> None:
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     args = parse_args()
-    reference = {d["document_id"]: d for d in
-                 json.loads((DATA_DIR / "findings_reference.json").read_text(encoding="utf-8"))["documents"]}
+    reference = {d["document_id"]: d for d in findings_reference()}
 
     if args.score_only:
         scores = {}
@@ -154,8 +156,7 @@ def main() -> None:
 
     manifest = json.loads((DATA_DIR / "document_manifest.json").read_text(encoding="utf-8"))["documents"]
     scores = {}
-    wanted = args.documents or [d["document_id"] for d in json.loads(
-        (DATA_DIR / "findings_reference.json").read_text(encoding="utf-8"))["documents"]]
+    wanted = args.documents or list(reference)
     transcribe = make_page_transcriber(make_vision_backend("ollama")) if args.vision else None
     for entry in manifest:
         document_id = entry["document_id"]

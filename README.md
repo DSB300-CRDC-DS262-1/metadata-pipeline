@@ -47,7 +47,7 @@ CI (`.github/workflows/tests.yml`, on every PR into `main`) stays free.
 
 ## Metadata schema
 
-`DocumentMetadata` in `extraction/metadata.py` describes the document only:
+`DocumentMetadata` in `extraction/metadata/extract.py` describes the document only:
 
 | Field | Meaning |
 |---|---|
@@ -67,8 +67,8 @@ population, data source, collection method, currency basis, limitations) is
 recorded in `contexts`, not here. A document has one or more contexts, each
 shared by the statistics measured under the same conditions.
 
-In the reference file a field can list several acceptable answers as
-`{"accept": [...]}` where the PDF supports more than one reading.
+In the metadata reference (`data/reference/metadata.json`) a field can list
+several acceptable answers as `{"accept": [...]}` where the PDF supports more than one reading.
 
 ## How metadata is extracted
 
@@ -79,9 +79,9 @@ In the reference file a field can list several acceptable answers as
    metadata). Pages are marked `=== page N ===` for the evidence list.
 3. **Model**: returns JSON matching the schema; list lengths are capped so a
    model cannot loop past its context, and a cut-off answer is retried once.
-4. **Plain-code rules** (`tidy()` in `metadata.py`), applied after the model:
+4. **Plain-code rules** (`tidy()` in `metadata/extract.py`), applied after the model:
    - Details printed in a fixed layout override the model
-     (`extraction/printed.py`): article history dates, the DOI on the first
+     (`extraction/metadata/printed.py`): article history dates, the DOI on the first
      two pages, and the journal header with an ISSN check-digit test.
    - Dates become ISO 8601; words like "null" or "n/a" become empty.
    - Organisation names are standardised with `data/organisation_names.json`
@@ -110,10 +110,10 @@ them before any text reaches a model.
 ## Running metadata extraction
 
 ```bash
-.venv/Scripts/python.exe scripts/run_metadata_extraction.py                              # Gemma 4 E4B, local
-.venv/Scripts/python.exe scripts/run_metadata_extraction.py --model gemma4:12b --think off
-.venv/Scripts/python.exe scripts/run_metadata_extraction.py --backend gemini             # needs a key
-.venv/Scripts/python.exe scripts/run_metadata_extraction.py --vision                     # read scanned pages from the image
+.venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py                              # Gemma 4 E4B, local
+.venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --model gemma4:12b --think off
+.venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --backend gemini             # needs a key
+.venv/Scripts/python.exe scripts/metadata/run_metadata_extraction.py --vision                     # read scanned pages from the image
 ```
 
 Results go to `output/metadata/<backend>_<model>/<document_id>.json` with
@@ -161,7 +161,7 @@ kept under `output/metadata_v*`.
 
 ## Statistics and contexts
 
-`extraction/statistics.py` reads a document page by page, so a small local
+`extraction/statistics/extract.py` reads a document page by page, so a small local
 model never needs the whole document at once:
 
 1. **Context items** per page: data source, collection method, population,
@@ -190,12 +190,12 @@ model never needs the whole document at once:
    apart. `--no-dedupe` turns this off.
 
 ```bash
-.venv/Scripts/python.exe scripts/run_statistics_extraction.py --vision   # reference documents, local E4B
-.venv/Scripts/python.exe scripts/run_statistics_extraction.py --score-only output/statistics/<run>
+.venv/Scripts/python.exe scripts/statistics/run_statistics_extraction.py --vision   # reference documents, local E4B
+.venv/Scripts/python.exe scripts/statistics/run_statistics_extraction.py --score-only output/statistics/<run>
 ```
 
-Scored against `data/findings_reference.json` (four documents, 238
-statistics), the latest E4B run with `--vision` finds 98% of the reference
+Scored against `data/reference/statistics.json` and `contexts.json` (four
+documents, 238 statistics), the latest E4B run with `--vision` finds 98% of the reference
 statistics (233) at 88% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 91%, record type 85% (repeat runs vary by
 a few points). Context links reach 79% of the facts the reference links, with
@@ -219,7 +219,7 @@ Joined letters (ﬁ, ﬂ) are split back into plain letters.
 Flagged or empty pages can be re-read from the page image:
 
 ```bash
-.venv/Scripts/python.exe scripts/transcribe_unreadable_pages.py
+.venv/Scripts/python.exe scripts/ingestion/transcribe_unreadable_pages.py
 ```
 
 Only running text is transcribed; charts and tables become `[figure]`
@@ -229,7 +229,7 @@ about 3 seconds (12B takes 7) with the same accuracy; output goes to `output/vis
 ## Checking the reference
 
 ```bash
-.venv/Scripts/python.exe scripts/verify_ground_truth.py   # reference statistics against the PDFs
+.venv/Scripts/python.exe scripts/statistics/verify_ground_truth.py   # reference statistics against the PDFs
 ```
 
 ## Layout
@@ -237,47 +237,60 @@ about 3 seconds (12B takes 7) with the same accuracy; output goes to `output/vis
 ```
 src/crdc_pipeline/
   ingestion/
-    layout.py    column detection (pure function, no PDF library dependency)
-    loader.py    PDF -> Document/Page; text, symbol repair and image fallback
-    symbols.py   finds wrongly labelled and hidden characters, learns font rules
+    layout.py        column detection (pure function, no PDF library dependency)
+    loader.py        PDF -> Document/Page; text, symbol repair and image fallback
+    symbols.py       finds wrongly labelled and hidden characters, learns font rules
   extraction/
-    backends.py  Gemini and Ollama backends, one interface
-    metadata.py  metadata schema, prompt, extraction and tidy rules
-    printed.py   fixed-layout details (article history, DOI, journal header, citation, emails)
-    names.py     standard organisation names
-    scoring.py   field matching against the reference
-    findings.py  statistics, context items and contexts schema
-    statistics.py            statistics and context extraction, step by step
-    statistics_prompts.py    prompts and response schemas for each step
-    statistics_filters.py    what to leave out: reference lists, table rows, set-up numbers
-    statistics_values.py     each value's reading, bounds, type and record type
-    statistics_periods.py    periods at the precision printed
-    statistics_document.py   study scope, duplicates, links and record types across a document
-    findings_scoring.py   statistics and context links against the reference
-    vision.py    page and word reading from images
+    backends.py      Gemini and Ollama backends, one interface (shared)
+    vision.py        page and word reading from images (shared)
+    metadata/
+      extract.py     metadata schema, prompt, extraction and tidy rules
+      printed.py     fixed-layout details (article history, DOI, journal header, citation, emails)
+      names.py       standard organisation names
+      scoring.py     field matching against the reference
+    contexts/
+      schema.py      context items and contexts, and grouping statistics into contexts
+      prompts.py     prompts for context items, the study's scope and linking
+      scope.py       the study's own conditions: labels dropped, vague items swapped for the method's
+      links.py       trimming repeated links, and the whole-document linking pass
+      scoring.py     context items and links against the reference
+    statistics/
+      extract.py     the pipeline: context items, scope, statistics, links, then the rules
+      schema.py      statistics
+      prompts.py     prompts for statistics and duplicates
+      filters.py     what to leave out: reference lists, table rows, set-up numbers
+      values.py      each value's reading, bounds, type and labels
+      periods.py     periods at the precision printed
+      duplicates.py  restatements, conversions in brackets and ranges
+      records.py     record types decided across the document
+      scoring.py     statistics against the reference
+  reference.py       loads the references in data/reference/
 scripts/
-  run_metadata_extraction.py      runs metadata extraction across the manifest
-  run_statistics_extraction.py    runs statistics and context extraction and scores it
-  transcribe_unreadable_pages.py  re-reads flagged pages with a vision model
-  verify_ground_truth.py          checks reference statistics against the PDFs
+  ingestion/transcribe_unreadable_pages.py   re-reads flagged pages with a vision model
+  metadata/run_metadata_extraction.py        runs metadata extraction and scores it
+  statistics/run_statistics_extraction.py    runs statistics and context extraction and scores both
+  statistics/verify_ground_truth.py          checks the older ground-truth statistics against the PDFs
 tests/
   test_layout.py, test_loader.py   column detection and loading (synthetic PDFs)
   test_symbols.py                  wrongly labelled symbol detection and rule learning
   test_metadata_extraction.py      schema, prompt and tidy rules
   test_printed.py                  article history, DOI, journal header, ISSN
   test_backends.py                 backends with mocked HTTP (no server needed)
-  test_scoring.py                  field matching
+  test_scoring.py                  metadata field matching
   test_findings.py                 statistics and context schema, grouping into contexts
   test_statistics_extraction.py    statistics pipeline with a fake model, and its rules
   test_findings_scoring.py         statistics and context link scoring
-  test_findings_reference.py       reference statistics fit the schema and are quoted from their page
+  test_findings_reference.py       reference statistics and contexts fit the schema and are quoted from their page
   test_sample_documents.py         checks against the real sample PDFs
 data/
   raw_pdfs/                        the four source PDFs (gitignored)
   document_manifest.json           document_id, filename and download link
-  schema_worked_examples.json      metadata reference for every document
-  findings_reference.json          reference statistics, context items and contexts (four documents)
-  ground_truth_all_documents.json  48-statistic reference set for recall
+  reference/
+    metadata.json                  reference metadata, 19 fields per document
+    statistics.json                reference statistics, with the context items each one needs
+    contexts.json                  reference context items and contexts
+  schema_worked_examples.json      worked examples of the documents, contexts and statistics tables
+  ground_truth_all_documents.json  older 48-statistic reference set
   organisation_names.json          standard name and known variants per organisation
   symbol_rules.json                learned corrections for wrongly labelled symbols
 docs/

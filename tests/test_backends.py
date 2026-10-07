@@ -143,7 +143,7 @@ def test_schema_caps_list_lengths() -> None:
 
 def test_gemini_schema_drops_list_limits_only() -> None:
     from crdc_pipeline.extraction.backends import gemini_schema
-    from crdc_pipeline.extraction.statistics_prompts import PageStatistics
+    from crdc_pipeline.extraction.statistics.prompts import PageStatistics
 
     schema = gemini_schema(PageStatistics)
     assert "maxItems" not in json.dumps(schema)

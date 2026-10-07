@@ -1,10 +1,7 @@
-import json
-from pathlib import Path
+from crdc_pipeline.extraction.statistics.scoring import match_statistics, score_document, values_match
+from crdc_pipeline.reference import findings_reference
 
-from crdc_pipeline.extraction.findings_scoring import match_statistics, score_document, values_match
-
-REFERENCE = json.loads((Path(__file__).resolve().parent.parent / "data" / "findings_reference.json")
-                       .read_text(encoding="utf-8"))
+REFERENCE = {"documents": findings_reference()}
 
 
 def test_reference_scores_perfectly_against_itself() -> None:
@@ -37,7 +34,7 @@ def test_values_on_another_page_do_not_match() -> None:
 
 
 def test_context_items_match_by_overlapping_quotes() -> None:
-    from crdc_pipeline.extraction.findings_scoring import same_fact
+    from crdc_pipeline.extraction.contexts.scoring import same_fact
 
     reference = {"page": 5, "quote": "As with the previous study, the available data for the most recent year (2016-17), is provisional in nature."}
     assert same_fact(reference, {"page": 5, "quote": "the available data for the most recent year (2016-17), is provisional"})
@@ -46,7 +43,7 @@ def test_context_items_match_by_overlapping_quotes() -> None:
 
 
 def test_key_conditions_separate_wrong_from_missing() -> None:
-    from crdc_pipeline.extraction.findings_scoring import key_conditions
+    from crdc_pipeline.extraction.contexts.scoring import key_conditions
 
     reference = {"context_items": [
         {"item_id": "ncis", "item_type": "data_source", "page": 3, "quote": "Deaths come from the National Coroners Information System."},

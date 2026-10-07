@@ -1,4 +1,4 @@
-from crdc_pipeline.extraction.scoring import field_value, matches, same
+from crdc_pipeline.extraction.metadata.scoring import field_value, matches, same
 
 
 def test_same_ignores_case_spacing_and_order() -> None:

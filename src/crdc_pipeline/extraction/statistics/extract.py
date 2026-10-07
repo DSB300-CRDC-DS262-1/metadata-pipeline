@@ -1,62 +1,47 @@
-"""Statistics and context extraction, page by page, in two passes.
+"""Statistics and context extraction, page by page.
 
-Pass 1 lists each page's context items (how numbers were produced and should be read). Pass 2
-lists each page's statistics, and pass 3 links them to those items by ID. Pages are processed one at a
-time so a small local model never needs the whole document in its context window. IDs, page
-numbers and contexts are set in code.
-
-The prompts are in statistics_prompts.py, and the plain-code rules applied to the model's answers in
-statistics_filters.py (what to leave out), statistics_values.py (each value's reading and labels),
-statistics_periods.py (periods) and statistics_document.py (scope, duplicates and links).
-"""
+Pass 1 lists each page's context items (how numbers were produced and should be read). Pass 2 lists each
+page's statistics, and pass 3 links them to those items by ID. Pages are processed one at a time so a
+small local model never needs the whole document in its context window. IDs, page numbers and contexts
+are set in code. The context steps' prompts and rules are in extraction/contexts/."""
 
 from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
-from .backends import Backend
-from .findings import STATISTIC_LEVEL, Context, ContextItem, Statistic, group_contexts
-from .statistics_document import (
-    answers_to_questions,
-    drop_conversions,
-    drop_duplicates,
-    duplicate_candidates,
-    duplicate_prompt,
-    merge_ranges,
-    modelled_results,
-    pair_numbers,
-    sharpen_scope,
-    trim_links,
-)
-from .statistics_filters import (
-    CAPTION,
-    before_references,
-    is_label,
-    is_structural,
-    is_table_row,
-    without_tables,
-    word_number_note,
-)
-from .statistics_periods import date_survey_answers, survey_year, with_item_period, with_period
-from .statistics_prompts import (
+from ..backends import Backend
+from ..contexts.links import document_link_prompt, item_list, trim_links
+from ..contexts.prompts import (
     CONTEXT_PROMPT,
     DOCUMENT_CONTEXT_PROMPT,
-    DOCUMENT_LINK_PROMPT,
     LINK_PROMPT,
     MAX_METHOD_ITEMS,
     METHOD_KINDS,
     METHOD_SCOPE_PROMPT,
     SCOPE_PROMPT,
-    STATISTICS_PROMPT,
     DocumentContextItems,
     DocumentLinks,
     PageContextItems,
     PageLinks,
-    PageStatistics,
-    SamePairs,
     StudyItems,
 )
-from .statistics_values import label_change, label_cited, label_survey_answer, label_type, shared_unit, tidy_statistic
+from ..contexts.schema import STATISTIC_LEVEL, Context, ContextItem, group_contexts
+from ..contexts.scope import is_label, sharpen_scope
+from .duplicates import (
+    drop_conversions,
+    drop_duplicates,
+    duplicate_candidates,
+    duplicate_prompt,
+    merge_ranges,
+    pair_numbers,
+)
+from .filters import CAPTION, before_references, is_structural, is_table_row, without_tables, word_number_note
+from .periods import date_survey_answers, survey_year, with_item_period, with_period
+from .prompts import STATISTICS_PROMPT, PageStatistics, SamePairs
+from .records import answers_to_questions, modelled_results
+from .schema import Statistic
+from .values import label_change, label_cited, label_survey_answer, label_type, shared_unit, tidy_statistic
+
 
 class FindingsExtractionResult(BaseModel):
     context_items: list[ContextItem]
@@ -69,28 +54,6 @@ class FindingsExtractionResult(BaseModel):
     output_tokens: int = 0
     failed_steps: list[str] = Field(default_factory=list)
     study_item_ids: list[str] = Field(default_factory=list)
-
-def document_link_prompt(items: list[ContextItem], statistics: list[Statistic]) -> str:
-    listed = "\n".join(f"{s.statistic_id} | {s.page} | {s.variable} | {s.reported_text} | {s.quote}" for s in statistics)
-    return DOCUMENT_LINK_PROMPT.format(items=item_list(items), statistics=listed)
-
-
-def relink(
-    items: list[ContextItem], statistics: list[Statistic], backend: Backend, document_id: str
-) -> tuple[list[Statistic], list[Context], dict[str, str | None], list[str]]:
-    """Replaces every statistic's links with one whole-document linking call; returns failures too."""
-    known = {i.item_id for i in items}
-    try:
-        links = backend.generate(document_link_prompt(items, statistics), DocumentLinks).parsed.links
-    except RuntimeError as exc:
-        return statistics, *group_contexts(document_id, items, statistics), [f"document links: {exc}"]
-    chosen = {entry.statistic_id: [i for i in dict.fromkeys(entry.item_ids) if i in known] for entry in links}
-    linked = [s.model_copy(update={"context_item_ids": chosen.get(s.statistic_id, [])}) for s in statistics]
-    return linked, *group_contexts(document_id, items, linked), []
-
-
-def item_list(items: list[ContextItem]) -> str:
-    return "\n".join(f"{i.item_id} | {i.item_type} | {i.value}" for i in items) or "(none)"
 
 
 def extract_findings(
