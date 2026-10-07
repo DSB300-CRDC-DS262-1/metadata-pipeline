@@ -12,8 +12,8 @@ def test_reference_scores_perfectly_against_itself() -> None:
         score = score_document(document, document)
         assert score["matched"] == score["reference"], document["document_id"]
         assert all(a == n for a, n in score["agreement"].values())
-        correct, wanted, given = score["context_links"]
-        assert correct == wanted == given
+        found, wanted, given, right = score["context_links"]
+        assert found == wanted == given == right
         assert all(wrong == missing == 0 for _, wrong, missing in score["key_conditions"].values())
 
 
@@ -34,3 +34,17 @@ def test_matching_prefers_the_same_answer_category() -> None:
 
 def test_values_on_another_page_do_not_match() -> None:
     assert match_statistics([{"variable": "a", "value": 6, "page": 1}], [{"variable": "a", "value": 6, "page": 2}]) == []
+
+
+def test_acceptable_links_count_for_precision_but_not_recall() -> None:
+    """Precision by link (needed or acceptable facts); recall by needed fact."""
+    from crdc_pipeline.extraction.contexts.scoring import context_links
+
+    reference = {"context_items": [
+        {"item_id": "region", "item_type": "geographic_region", "page": 3, "quote": "The study covers northwest New South Wales."},
+        {"item_id": "assumed", "item_type": "assumption", "page": 3, "quote": "We assumed that 96% of production was irrigated."}]}
+    extracted = {"context_items": [
+        {"item_id": "e1", "item_type": "geographic_region", "page": 3, "quote": "The study covers northwest New South Wales."},
+        {"item_id": "e2", "item_type": "assumption", "page": 3, "quote": "We assumed that 96% of production was irrigated."}]}
+    pairs = [({"context_item_ids": ["region"], "acceptable_item_ids": ["assumed"]}, {"context_item_ids": ["e1", "e2"]})]
+    assert context_links(pairs, reference, extracted) == (1, 1, 2, 2)

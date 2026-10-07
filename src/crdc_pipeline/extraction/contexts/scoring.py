@@ -36,20 +36,28 @@ def item_map(reference_items: list[dict], extracted_items: list[dict]) -> dict[s
     }
 
 
-def context_links(pairs: list[tuple[dict, dict]], reference: dict, extracted: dict) -> tuple[int, int, int]:
-    """(correct links, reference links, extracted links) over matched statistics, by specific fact."""
+def context_links(pairs: list[tuple[dict, dict]], reference: dict, extracted: dict) -> tuple[int, int, int, int]:
+    """(needed facts found, needed facts, links given, right links) over matched statistics.
+
+    Recall is counted by fact: needed facts found / needed facts. Precision is counted by link: a link is
+    right when the fact it states is needed for the statistic or acceptable for it (a reference
+    statistic's `acceptable_item_ids`, e.g. a model assumption behind a result, are fair to link but not
+    needed); a second link to the same right fact is redundant, not wrong.
+    """
     mapping = item_map(reference["context_items"], extracted["context_items"])
     whole_ref = [i["item_id"] for i in reference["context_items"] if i.get("whole_document")]
     whole_ext = [i["item_id"] for i in extracted["context_items"] if i.get("whole_document")]
-    correct = wanted = given = 0
+    found = wanted = given = right = 0
     for ref, ext in pairs:
         expected = set(ref.get("context_item_ids", [])) | set(whole_ref)
+        fair = expected | set(ref.get("acceptable_item_ids", []))
         linked = set(ext.get("context_item_ids", [])) | set(whole_ext)
         covered = set().union(*(mapping.get(i, set()) for i in linked)) if linked else set()
         wanted += len(expected)
         given += len(linked)
-        correct += len(expected & covered)
-    return correct, wanted, given
+        found += len(expected & covered)
+        right += sum(bool(mapping.get(i, set()) & fair) for i in linked)
+    return found, wanted, given, right
 
 
 KEY_CONDITIONS = ("data_source", "sample_population", "geographic_region", "time_period", "currency_basis")

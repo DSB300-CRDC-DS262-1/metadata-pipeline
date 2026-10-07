@@ -57,21 +57,21 @@ def parse_args() -> argparse.Namespace:
 
 
 def link_scores(links) -> str:
-    correct, wanted, given = links
-    return f"recall {correct / max(wanted, 1):.0%} precision {correct / max(given, 1):.0%}"
+    found, wanted, given, right = links
+    return f"recall {found / max(wanted, 1):.0%} precision {right / max(given, 1):.0%}"
 
 
 def report(scores: dict[str, dict]) -> None:
     total = {"reference": 0, "extracted": 0, "matched": 0}
     agreement = {f: [0, 0] for f in FIELDS}
-    context = [0, 0, 0]
+    context = [0, 0, 0, 0]
     for document_id, s in scores.items():
         for k in total:
             total[k] += s[k]
         for f in FIELDS:
             agreement[f][0] += s["agreement"][f][0]
             agreement[f][1] += s["agreement"][f][1]
-        for k in range(3):
+        for k in range(4):
             context[k] += s["context_links"][k]
         print(f"{document_id:18} found {s['matched']:3}/{s['reference']:<3} reference statistics, "
               f"{s['extracted'] - s['matched']:3} extra, context links {link_scores(s['context_links'])}")

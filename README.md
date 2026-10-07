@@ -205,10 +205,20 @@ Scored against `data/reference/statistics.json` and `contexts.json` (four
 documents, 239 statistics), the latest E4B run finds 99% of the reference
 statistics (237) at 88% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 90%, record type 87% (repeat runs vary by
-a few points). Context links reach 85% of the facts the reference links, with
-46% precision. Key conditions are right for nearly all statistics: region 204
-of 207, time period 155 of 156, sample 99 of 117, data source 99 of 117. A
+a few points). Context links reach 85% of the facts the reference links, and
+57% of the links given are right. Key conditions are right for nearly all
+statistics: region 204 of 207, time period 156 of 157, sample 102 of 109, data
+source 100 of 118. A
 run takes about 2 to 7 minutes per document.
+
+Context links are scored two ways: recall by needed fact (each fact the
+reference links to a statistic), precision by link (a link is right when its
+fact is needed or acceptable for the statistic; a second link to the same right
+fact is redundant, not wrong). A reference statistic's `acceptable_item_ids`
+are facts that are fair to link but not needed, such as a model assumption
+behind an LCA result. The reference was checked link by link against a reading
+of the PDFs (`output/verification/context_audit.md`); the two now agree on all
+but a few dozen links where quotes happen to overlap.
 
 ## Pages the text layer cannot read
 

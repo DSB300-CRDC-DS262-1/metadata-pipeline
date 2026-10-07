@@ -27,6 +27,10 @@ def test_statistics_fit_the_schema_and_rules(document) -> None:
             assert statistic.value_min is not None, statistic.statistic_id
         if statistic.value_status in ("upper_bound", "range"):
             assert statistic.value_max is not None, statistic.statistic_id
+    for record in document["statistics"]:
+        acceptable = set(record.get("acceptable_item_ids", []))
+        assert acceptable <= item_ids, record["statistic_id"]
+        assert not acceptable & set(record["context_item_ids"]), record["statistic_id"]
     for period in [s.period for s in statistics]:
         for date in [period.start, period.end] if period else []:
             assert date is None or DATE.match(date), date

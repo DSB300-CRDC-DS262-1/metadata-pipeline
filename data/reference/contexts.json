@@ -57,7 +57,13 @@
           "item_type": "exclusion_criteria",
           "value": "deaths clearly from other sectors (e.g. cattle, grain) removed",
           "page": 4,
-          "quote": "Additionally, cases that were clearly not cotton related were removed from the data e.g. cattle or grain production deaths."
+          "quote": "Additionally, cases that were clearly not cotton related were removed from the data e.g. cattle or grain production deaths.",
+          "also_stated": [
+            {
+              "page": 6,
+              "quote": "sector (e.g. cattle or grains) were deleted from the analysis"
+            }
+          ]
         },
         {
           "item_id": "i08",
@@ -189,7 +195,13 @@
           "item_type": "study_design",
           "value": "claims grouped by time lost: 0-4 days or 5+ days (serious)",
           "page": 5,
-          "quote": "Available information is categorised into two distinct groupings based on time lost as a result of the injury i.e. 0-4 days or 5+ days."
+          "quote": "Available information is categorised into two distinct groupings based on time lost as a result of the injury i.e. 0-4 days or 5+ days.",
+          "also_stated": [
+            {
+              "page": 9,
+              "quote": "Serious injury claims (5+ days)"
+            }
+          ]
         },
         {
           "item_id": "i25",
@@ -591,7 +603,13 @@
           "item_type": "study_design",
           "value": "claims grouped by time lost: 0-4 days (minor) or 5+ days (serious)",
           "page": 5,
-          "quote": "Available information is categorised into two distinct groupings based on time lost as a result of the injury i.e. 0-4 days (minor) or 5+ days (serious)."
+          "quote": "Available information is categorised into two distinct groupings based on time lost as a result of the injury i.e. 0-4 days (minor) or 5+ days (serious).",
+          "also_stated": [
+            {
+              "page": 7,
+              "quote": "In terms of the serious claims (5+ days)"
+            }
+          ]
         },
         {
           "item_id": "i32",
@@ -599,6 +617,13 @@
           "value": "fall in soft tissue injuries may be an artefact of changed work practices or injury coding",
           "page": 7,
           "quote": "Whether this is an artefact of changes in work practices or in coding mechanisms used for data tabulation is unknown and may be worth further investigation."
+        },
+        {
+          "item_id": "i33",
+          "item_type": "sample_population",
+          "page": 6,
+          "value": "the 21 confirmed cotton-related deaths since 2001 placed in the economic model",
+          "quote": "All 21 cases that were definitively determined as being cotton related since 2001, were placed into the economic model (2001-23)."
         }
       ],
       "contexts": [
@@ -623,7 +648,8 @@
             "i07",
             "i08",
             "i09",
-            "i10"
+            "i10",
+            "i24"
           ]
         },
         {
@@ -640,7 +666,8 @@
             "i08",
             "i09",
             "i10",
-            "i12"
+            "i12",
+            "i24"
           ]
         },
         {
@@ -658,6 +685,7 @@
             "i09",
             "i10",
             "i11",
+            "i24",
             "i28"
           ]
         },
@@ -674,7 +702,8 @@
             "i07",
             "i08",
             "i09",
-            "i10"
+            "i10",
+            "i24"
           ]
         },
         {
@@ -691,7 +720,9 @@
             "i08",
             "i09",
             "i10",
-            "i13"
+            "i13",
+            "i24",
+            "i33"
           ]
         },
         {
@@ -713,7 +744,8 @@
             "i15",
             "i16",
             "i17",
-            "i28"
+            "i28",
+            "i33"
           ]
         },
         {
@@ -735,7 +767,8 @@
             "i15",
             "i16",
             "i17",
-            "i29"
+            "i29",
+            "i33"
           ]
         },
         {
@@ -764,6 +797,7 @@
             "i23",
             "i24",
             "i25",
+            "i28",
             "i31"
           ]
         },
@@ -778,7 +812,9 @@
             "i21",
             "i23",
             "i24",
-            "i25"
+            "i25",
+            "i26",
+            "i28"
           ]
         },
         {
@@ -805,7 +841,8 @@
             "i24",
             "i25",
             "i26",
-            "i27"
+            "i27",
+            "i28"
           ]
         },
         {
@@ -818,6 +855,7 @@
             "i23",
             "i24",
             "i25",
+            "i28",
             "i31"
           ]
         },
@@ -832,6 +870,7 @@
             "i23",
             "i24",
             "i25",
+            "i28",
             "i31"
           ]
         },
@@ -895,6 +934,10 @@
             {
               "page": 1,
               "quote": "with a functional unit of one tonne of cotton lint at port"
+            },
+            {
+              "page": 6,
+              "quote": "Based on the economic allocation approach, the calculated life cycle GHG emissions for 1 t mixed irrigated and dryland cotton at port was 1601 kg CO2e."
             }
           ]
         },
@@ -912,6 +955,10 @@
             {
               "page": 3,
               "quote": "We applied the LCA method to calculate the GHG emissions profile of cotton production and associated GHG mitigation strategies."
+            },
+            {
+              "page": 1,
+              "quote": "using Life Cycle Assessment (LCA), compare the relative contributions of"
             }
           ]
         },
@@ -939,6 +986,10 @@
             {
               "page": 5,
               "quote": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint."
+            },
+            {
+              "page": 6,
+              "quote": "Based on the economic allocation approach, the calculated life cycle GHG emissions for 1 t mixed irrigated and dryland cotton at port was 1601 kg CO2e."
             }
           ]
         },
@@ -1280,6 +1331,53 @@
           "value": "uncertainty about the proportion of cottonseed used as animal feed in northwest NSW",
           "page": 6,
           "quote": "The exact proportion of the total produced cottonseed in northwest NSW used as animal feed was unknown."
+        },
+        {
+          "item_id": "k60",
+          "item_type": "study_design",
+          "page": 7,
+          "value": "regional modelling parameters, including N2O emissions factors, applied for each region",
+          "quote": "Different modelling parameters, including N2O emissions factors, ranging from 0.0033 for the Darling Downs to 0.0105 for Southern Queensland, were applied for each region"
+        },
+        {
+          "item_id": "k61",
+          "item_type": "study_design",
+          "page": 3,
+          "value": "chickpea modelled as a surrogate for a typical legume rotation crop",
+          "quote": "Chickpea was modelled as a surrogate representing a typical legume crop grown in rotation with cotton"
+        },
+        {
+          "item_id": "k63",
+          "item_type": "assumption",
+          "page": 1,
+          "value": "96% of production assumed to be irrigated",
+          "quote": "We assumed that 96% of production was from irrigated systems"
+        },
+        {
+          "item_id": "k64",
+          "item_type": "assumption",
+          "page": 3,
+          "value": "85% of irrigation water assumed pumped by diesel pumps, 15% by electric pumps",
+          "quote": "We assumed that 85% of the irrigation water was pumped by diesel-powered irrigation pumps and 15% by electric pumps (Foley et al., 2015).",
+          "also_stated": [
+            {
+              "page": 1,
+              "quote": "with 85% of irrigation water pumped by diesel-powered irrigation pumps"
+            }
+          ]
+        },
+        {
+          "item_id": "k65",
+          "item_type": "assumption",
+          "page": 3,
+          "value": "bale weight of 227 kg and median farm yield of 10.28 bales per ha",
+          "quote": "Clean cotton fibre bale weight was 227 kg and median farm yield was 10.28 bales per ha.",
+          "also_stated": [
+            {
+              "page": 1,
+              "quote": "and a median irrigated yield of 10.3 bales per ha"
+            }
+          ]
         }
       ],
       "contexts": [
@@ -1320,7 +1418,8 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ]
         },
         {
@@ -1340,7 +1439,8 @@
             "k11",
             "k12",
             "k13",
-            "k56"
+            "k56",
+            "k57"
           ]
         },
         {
@@ -1360,7 +1460,8 @@
             "k11",
             "k12",
             "k13",
-            "k23"
+            "k23",
+            "k57"
           ]
         },
         {
@@ -1382,7 +1483,9 @@
             "k13",
             "k19",
             "k20",
-            "k29"
+            "k29",
+            "k57",
+            "k61"
           ]
         },
         {
@@ -1425,6 +1528,9 @@
           "document_id": "doc_hedayati2019",
           "item_ids": [
             "k01",
+            "k02",
+            "k12",
+            "k13",
             "k31"
           ]
         },
@@ -1532,7 +1638,8 @@
             "k11",
             "k12",
             "k13",
-            "k24"
+            "k24",
+            "k57"
           ]
         },
         {
@@ -1572,19 +1679,52 @@
           "document_id": "doc_hedayati2019",
           "item_ids": [
             "k01",
-            "k28",
-            "k58"
+            "k02",
+            "k03",
+            "k04",
+            "k05",
+            "k06",
+            "k07",
+            "k08",
+            "k09",
+            "k10",
+            "k11",
+            "k12",
+            "k13",
+            "k24",
+            "k57",
+            "k60"
           ]
         },
         {
           "context_id": "doc_hedayati2019_ctx_28",
           "document_id": "doc_hedayati2019",
           "item_ids": [
-            "k47"
+            "k01",
+            "k02",
+            "k12",
+            "k13",
+            "k60"
           ]
         },
         {
           "context_id": "doc_hedayati2019_ctx_29",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k01",
+            "k28",
+            "k58"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_30",
+          "document_id": "doc_hedayati2019",
+          "item_ids": [
+            "k47"
+          ]
+        },
+        {
+          "context_id": "doc_hedayati2019_ctx_31",
           "document_id": "doc_hedayati2019",
           "item_ids": [
             "k01",
@@ -1600,7 +1740,8 @@
             "k11",
             "k12",
             "k13",
-            "k30"
+            "k30",
+            "k57"
           ]
         }
       ]
@@ -2107,8 +2248,6 @@
           "document_id": "doc_voconiq2025",
           "item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v08",
             "v10",
             "v11"
@@ -2126,8 +2265,6 @@
           "document_id": "doc_voconiq2025",
           "item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v07",
             "v08",
@@ -2223,8 +2360,6 @@
           "document_id": "doc_voconiq2025",
           "item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v08",
             "v11"
@@ -2234,14 +2369,24 @@
           "context_id": "doc_voconiq2025_ctx_17",
           "document_id": "doc_voconiq2025",
           "item_ids": [
+            "v01",
+            "v02",
+            "v03",
+            "v04",
+            "v05",
+            "v08"
+          ]
+        },
+        {
+          "context_id": "doc_voconiq2025_ctx_18",
+          "document_id": "doc_voconiq2025",
+          "item_ids": [
             "g04",
             "v01",
             "v02",
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08"
           ]
         }

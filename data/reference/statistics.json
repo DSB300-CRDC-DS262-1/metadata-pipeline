@@ -405,7 +405,8 @@
             "i07",
             "i08",
             "i09",
-            "i10"
+            "i10",
+            "i24"
           ],
           "page": 5,
           "quote": "Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight.",
@@ -434,7 +435,8 @@
             "i08",
             "i09",
             "i10",
-            "i12"
+            "i12",
+            "i24"
           ],
           "page": 5,
           "quote": "Since the previous review, two additional cases were identified to have occurred during this period, taking the total for the 2014-2019 period to eight.",
@@ -465,7 +467,8 @@
             "i09",
             "i10",
             "i11",
-            "i28"
+            "i28",
+            "i24"
           ],
           "page": 5,
           "quote": "In the more recent period (Oct 2019 - Dec 2023), there have been fewer than five cases on a cotton property.",
@@ -490,7 +493,8 @@
             "i07",
             "i08",
             "i09",
-            "i10"
+            "i10",
+            "i24"
           ],
           "page": 6,
           "quote": "a further two cases could have possibly occurred in cotton production.",
@@ -519,7 +523,9 @@
             "i08",
             "i13",
             "i09",
-            "i10"
+            "i10",
+            "i33",
+            "i24"
           ],
           "page": 6,
           "quote": "All 21 cases that were definitively determined as being cotton related since 2001, were placed into the economic model (2001-23).",
@@ -554,7 +560,8 @@
             "i07",
             "i08",
             "i09",
-            "i10"
+            "i10",
+            "i33"
           ],
           "page": 6,
           "quote": "As indicated in Table 1, the total direct impact of fatal incidents since 2001 surpasses $73 million.",
@@ -589,7 +596,8 @@
             "i07",
             "i08",
             "i09",
-            "i10"
+            "i10",
+            "i33"
           ],
           "page": 6,
           "quote": "the overall average cost of a fatality in 2023 Australian dollars is approaching $3.5 million.",
@@ -639,7 +647,8 @@
             "i23",
             "i25",
             "i31",
-            "i24"
+            "i24",
+            "i28"
           ],
           "page": 7,
           "quote": "In terms of the serious claims (5+ days), falls on the same level (16%) and muscular stress while handling objects other than lifting, carrying or putting down (11%), constituted over a quarter of all serious claims.",
@@ -660,7 +669,8 @@
             "i23",
             "i25",
             "i31",
-            "i24"
+            "i24",
+            "i28"
           ],
           "page": 7,
           "quote": "In terms of the serious claims (5+ days), falls on the same level (16%) and muscular stress while handling objects other than lifting, carrying or putting down (11%), constituted over a quarter of all serious claims.",
@@ -682,7 +692,8 @@
             "i23",
             "i25",
             "i31",
-            "i24"
+            "i24",
+            "i28"
           ],
           "page": 7,
           "quote": "constituted over a quarter of all serious claims.",
@@ -708,7 +719,9 @@
             "i21",
             "i23",
             "i25",
-            "i24"
+            "i24",
+            "i28",
+            "i26"
           ],
           "page": 8,
           "quote": "In the period since 2013, the total value of workers compensation claims approached $18 million, with the data for the past two intervals being similar.",
@@ -756,7 +769,8 @@
             "i24",
             "i26",
             "i20",
-            "i21"
+            "i21",
+            "i28"
           ],
           "page": 8,
           "quote": "As can be seen, there was a sizeable reduction in the number of weeks lost in the two periods (~900 weeks).",
@@ -777,7 +791,8 @@
             "i25",
             "i31",
             "i24",
-            "i21"
+            "i21",
+            "i28"
           ],
           "page": 8,
           "quote": "Serious injury claims (5+ days), comprised virtually all of the time lost (~99%) and compensation costs (~90%) in the period.",
@@ -799,7 +814,8 @@
             "i25",
             "i31",
             "i24",
-            "i21"
+            "i21",
+            "i28"
           ],
           "page": 8,
           "quote": "Serious injury claims (5+ days), comprised virtually all of the time lost (~99%) and compensation costs (~90%) in the period.",
@@ -927,11 +943,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 1,
           "quote": "The climate change impact of cotton lint on a cradle-to-port basis was 1601 kg CO2e per tonne of cotton lint.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s04",
@@ -955,11 +982,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 1,
           "quote": "the production and use of synthetic nitrogen (N) fertilisers (46% of emissions)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s05",
@@ -983,11 +1021,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 1,
           "quote": "the production and use of electricity and diesel used for irrigation (10%)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s06",
@@ -1011,11 +1060,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 1,
           "quote": "the production and use of diesel for farm machinery (9%)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s07",
@@ -1059,11 +1119,22 @@
             "k11",
             "k12",
             "k13",
-            "k14"
+            "k14",
+            "k57"
           ],
           "page": 1,
           "quote": "reducing N fertiliser rate from a commercial rate of 255 kg N/ha to 240 kg N/ha or 180 kg N/ha (2.6% and 13.2% emissions reduction)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s09",
@@ -1088,11 +1159,22 @@
             "k11",
             "k12",
             "k13",
-            "k15"
+            "k15",
+            "k57"
           ],
           "page": 1,
           "quote": "reducing N fertiliser rate from a commercial rate of 255 kg N/ha to 240 kg N/ha or 180 kg N/ha (2.6% and 13.2% emissions reduction)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s10",
@@ -1118,11 +1200,22 @@
             "k12",
             "k13",
             "k16",
-            "k56"
+            "k56",
+            "k57"
           ],
           "page": 1,
           "quote": "use of controlled-release and stabilised N fertilisers (5.9% reduction)",
-          "context_id": "doc_hedayati2019_ctx_04"
+          "context_id": "doc_hedayati2019_ctx_04",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s11",
@@ -1147,11 +1240,22 @@
             "k11",
             "k12",
             "k13",
-            "k21"
+            "k21",
+            "k57"
           ],
           "page": 1,
           "quote": "changing from diesel to solar-powered irrigation pumps (8.1% reduction)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s12",
@@ -1177,11 +1281,22 @@
             "k12",
             "k13",
             "k22",
-            "k23"
+            "k23",
+            "k57"
           ],
           "page": 1,
           "quote": "changing from diesel to biofuel-powered farm machinery (3.4% reduction)",
-          "context_id": "doc_hedayati2019_ctx_05"
+          "context_id": "doc_hedayati2019_ctx_05",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s13",
@@ -1209,11 +1324,23 @@
             "k18",
             "k19",
             "k20",
-            "k29"
+            "k29",
+            "k61",
+            "k57"
           ],
           "page": 1,
           "quote": "changing from continuous cotton to a cotton-legume crop rotation (3.9% reduction)",
-          "context_id": "doc_hedayati2019_ctx_06"
+          "context_id": "doc_hedayati2019_ctx_06",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s14",
@@ -1238,11 +1365,22 @@
             "k11",
             "k12",
             "k13",
-            "k17"
+            "k17",
+            "k57"
           ],
           "page": 1,
           "quote": "use of N fertigation (2.1% reduction)",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s15",
@@ -1496,7 +1634,10 @@
           "value_status": "exact",
           "context_item_ids": [
             "k01",
-            "k31"
+            "k31",
+            "k02",
+            "k12",
+            "k13"
           ],
           "page": 3,
           "quote": "Cotton is an annual summer crop, with a 6-month production season.",
@@ -1945,11 +2086,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 5,
           "quote": "allocating approximately 86% of the life cycle climate change impact to lint.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s51",
@@ -2025,11 +2177,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "The GHG emissions from the pre-farm stage, on-farm stage and the post-farm stages were 406 kg CO2e, 776 kg CO2e and 419 kg CO2e, respectively",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s55",
@@ -2053,11 +2216,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "The GHG emissions from the pre-farm stage, on-farm stage and the post-farm stages were 406 kg CO2e, 776 kg CO2e and 419 kg CO2e, respectively",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s56",
@@ -2081,11 +2255,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "The GHG emissions from the pre-farm stage, on-farm stage and the post-farm stages were 406 kg CO2e, 776 kg CO2e and 419 kg CO2e, respectively",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s57",
@@ -2110,11 +2295,22 @@
             "k11",
             "k12",
             "k13",
-            "k24"
+            "k24",
+            "k57"
           ],
           "page": 6,
           "quote": "changing lint/seed proportions led to a climate change impact of 14.6%.",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_22",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s58",
@@ -2139,11 +2335,22 @@
             "k11",
             "k12",
             "k13",
-            "k24"
+            "k24",
+            "k57"
           ],
           "page": 6,
           "quote": "along with the impact of a change in cottonseed price (12.3%) and lint price (5.1%)",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_22",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s59",
@@ -2168,11 +2375,22 @@
             "k11",
             "k12",
             "k13",
-            "k24"
+            "k24",
+            "k57"
           ],
           "page": 6,
           "quote": "along with the impact of a change in cottonseed price (12.3%) and lint price (5.1%)",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_22",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s60",
@@ -2196,11 +2414,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "Most diesel-related emissions were due to combustion on-farm (83%), with the remainder occurring pre-farm.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s61",
@@ -2224,11 +2453,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "The production and use of synthetic N fertilisers contributed 705 kg CO2e/t lint",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s62",
@@ -2252,11 +2492,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "with fertiliser production contributing approximately 17% and fertiliser use contributing 28% of the total life cycle GHG emissions.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s63",
@@ -2280,11 +2531,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "with fertiliser production contributing approximately 17% and fertiliser use contributing 28% of the total life cycle GHG emissions.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s64",
@@ -2308,11 +2570,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "For the use stage, 80% of emissions were made up",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s65",
@@ -2336,11 +2609,22 @@
             "k10",
             "k11",
             "k12",
-            "k13"
+            "k13",
+            "k57"
           ],
           "page": 6,
           "quote": "Approximately 20% of the use-stage emissions were CO2 emissions from the hydrolysis of urea in the field.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s66",
@@ -2436,11 +2720,23 @@
             "k12",
             "k13",
             "k24",
-            "k26"
+            "k26",
+            "k60",
+            "k57"
           ],
           "page": 7,
           "quote": "the calculated emissions intensity varied by less than 10%",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_27",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s71",
@@ -2466,11 +2762,23 @@
             "k12",
             "k13",
             "k24",
-            "k26"
+            "k26",
+            "k60",
+            "k57"
           ],
           "page": 7,
           "quote": "calculated emissions intensity was 23% higher (Fig. 3) primarily due to lower yields.",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_27",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s72",
@@ -2488,11 +2796,12 @@
             "k02",
             "k12",
             "k13",
-            "k26"
+            "k26",
+            "k60"
           ],
           "page": 7,
           "quote": "ranging from 0.0033 for the Darling Downs to 0.0105 for Southern Queensland",
-          "context_id": "doc_hedayati2019_ctx_01"
+          "context_id": "doc_hedayati2019_ctx_28"
         },
         {
           "statistic_id": "s73",
@@ -2518,11 +2827,22 @@
             "k12",
             "k13",
             "k24",
-            "k27"
+            "k27",
+            "k57"
           ],
           "page": 7,
           "quote": "we found the calculated emissions decreased to a net sequestration of 2360 kg CO2e per tonne of lint.",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_22",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s74",
@@ -2548,11 +2868,22 @@
             "k12",
             "k13",
             "k24",
-            "k27"
+            "k27",
+            "k57"
           ],
           "page": 8,
           "quote": "This change was due to 7910 kg CO2/ha absorbed from the air by the cotton crop",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_22",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s75",
@@ -2578,11 +2909,22 @@
             "k12",
             "k13",
             "k24",
-            "k27"
+            "k27",
+            "k57"
           ],
           "page": 8,
           "quote": "3950 kg CO2/ha of calculated emissions from soil associated with the decomposition of cotton residue.",
-          "context_id": "doc_hedayati2019_ctx_22"
+          "context_id": "doc_hedayati2019_ctx_22",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s76",
@@ -2601,7 +2943,7 @@
           ],
           "page": 9,
           "quote": "The economic analysis of cotton monoculture systems revealed a gross margin of AU$ 1744/ha (Nachimuthu et al., 2017) or AU$ 1.11/CO2e @ 240 kg N/ha.",
-          "context_id": "doc_hedayati2019_ctx_27"
+          "context_id": "doc_hedayati2019_ctx_29"
         },
         {
           "statistic_id": "s77",
@@ -2621,7 +2963,7 @@
           "page": 9,
           "quote": "The economic analysis of cotton monoculture systems revealed a gross margin of AU$ 1744/ha (Nachimuthu et al., 2017) or AU$ 1.11/CO2e @ 240 kg N/ha.",
           "note": "Table 5 gives 1.12, and labels the column CO2e/AU$",
-          "context_id": "doc_hedayati2019_ctx_27"
+          "context_id": "doc_hedayati2019_ctx_29"
         },
         {
           "statistic_id": "s78",
@@ -2640,7 +2982,7 @@
           ],
           "page": 9,
           "quote": "Reducing the fertiliser rate to 180 kg N/ha resulted in gross margin of AU$ 1795/ha or AU$ 1.29/CO2e",
-          "context_id": "doc_hedayati2019_ctx_27"
+          "context_id": "doc_hedayati2019_ctx_29"
         },
         {
           "statistic_id": "s79",
@@ -2659,7 +3001,7 @@
           ],
           "page": 9,
           "quote": "Reducing the fertiliser rate to 180 kg N/ha resulted in gross margin of AU$ 1795/ha or AU$ 1.29/CO2e",
-          "context_id": "doc_hedayati2019_ctx_27"
+          "context_id": "doc_hedayati2019_ctx_29"
         },
         {
           "statistic_id": "s80",
@@ -2685,12 +3027,23 @@
             "k12",
             "k13",
             "k22",
-            "k23"
+            "k23",
+            "k57"
           ],
           "page": 10,
           "quote": "We calculated a 3.9% saving in GHG emissions by replacing diesel-powered farm machinery with biofuel-powered machinery.",
           "note": "conflicts with 3.4% for biofuel in the abstract and Table 5, where 3.9% is the legume rotation result",
-          "context_id": "doc_hedayati2019_ctx_05"
+          "context_id": "doc_hedayati2019_ctx_05",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s81",
@@ -2708,7 +3061,7 @@
           ],
           "page": 10,
           "quote": "reducing N fertiliser use by 25-50% and reducing irrigation water use by 30-50% in Syrian cotton systems (Janat, 2008)",
-          "context_id": "doc_hedayati2019_ctx_28"
+          "context_id": "doc_hedayati2019_ctx_30"
         },
         {
           "statistic_id": "s82",
@@ -2726,7 +3079,7 @@
           ],
           "page": 10,
           "quote": "reducing N fertiliser use by 25-50% and reducing irrigation water use by 30-50% in Syrian cotton systems (Janat, 2008)",
-          "context_id": "doc_hedayati2019_ctx_28"
+          "context_id": "doc_hedayati2019_ctx_30"
         },
         {
           "statistic_id": "s83",
@@ -2787,11 +3140,22 @@
             "k12",
             "k13",
             "k25",
-            "k30"
+            "k30",
+            "k57"
           ],
           "page": 11,
           "quote": "with dryland production found to have a calculated emissions intensity approximately 72% of that of irrigated production.",
-          "context_id": "doc_hedayati2019_ctx_29"
+          "context_id": "doc_hedayati2019_ctx_31",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s86",
@@ -2850,11 +3214,22 @@
             "k11",
             "k12",
             "k13",
-            "k21"
+            "k21",
+            "k57"
           ],
           "page": 10,
           "quote": "perspective (8.1% reduction) and the third largest saving overall.",
-          "context_id": "doc_hedayati2019_ctx_03"
+          "context_id": "doc_hedayati2019_ctx_03",
+          "acceptable_item_ids": [
+            "k31",
+            "k52",
+            "k53",
+            "k54",
+            "k55",
+            "k63",
+            "k64",
+            "k65"
+          ]
         },
         {
           "statistic_id": "s89",
@@ -3014,7 +3389,10 @@
           "page": 8,
           "quote": "73% of survey participants agreed, an increase of 6% since the first survey",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s08",
@@ -3074,7 +3452,10 @@
           "page": 8,
           "quote": "plays an important role in regional communities where it operates\" (80%)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s10",
@@ -3103,7 +3484,10 @@
           ],
           "page": 8,
           "quote": "creates an important export product for Australia\" (78%;",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s11",
@@ -3130,7 +3514,10 @@
           ],
           "page": 9,
           "quote": "the average level of trust in Australia’s cotton industry was 3.19 in 2025",
-          "context_id": "doc_voconiq2025_ctx_05"
+          "context_id": "doc_voconiq2025_ctx_05",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s12",
@@ -3181,7 +3568,10 @@
           ],
           "page": 9,
           "quote": "acceptance of the cotton industry scored an average of 3.46 in 2025",
-          "context_id": "doc_voconiq2025_ctx_05"
+          "context_id": "doc_voconiq2025_ctx_05",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s14",
@@ -3199,8 +3589,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v08",
             "v10",
             "q05",
@@ -3253,7 +3641,10 @@
           ],
           "page": 11,
           "quote": "cotton industry uses water responsibly at 47% (Figure 4) compared to 42% in 2020.",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s17",
@@ -3271,8 +3662,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v07",
             "v08",
@@ -3311,7 +3700,10 @@
           "page": 11,
           "quote": "the way water is allocated in Australia for different uses is appropriate\" at 41% (Figure 4).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s19",
@@ -3340,7 +3732,10 @@
           ],
           "page": 11,
           "quote": "after making sure the community (62%)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s20",
@@ -3369,7 +3764,10 @@
           ],
           "page": 11,
           "quote": "the environment (56%; Figure 4) has enough first.",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s21",
@@ -3399,7 +3797,10 @@
           "page": 11,
           "quote": "with 28% who disagreed, 30% who agreed and 42% who were neutral (Figure 4).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s22",
@@ -3429,7 +3830,10 @@
           "page": 11,
           "quote": "with 28% who disagreed, 30% who agreed and 42% who were neutral (Figure 4).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s23",
@@ -3460,7 +3864,10 @@
           "page": 11,
           "quote": "with 28% who disagreed, 30% who agreed and 42% who were neutral (Figure 4).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_10"
+          "context_id": "doc_voconiq2025_ctx_10",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s24",
@@ -3489,7 +3896,10 @@
           ],
           "page": 11,
           "quote": "community concern for foreign ownership of land and water rights at a combined 71% (Figure 4).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s25",
@@ -3519,7 +3929,10 @@
           ],
           "page": 11,
           "quote": "More than 60% of community members agreed that innovation and technological developments can help overcome water scarcity in Australia.",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s26",
@@ -3549,7 +3962,10 @@
           ],
           "page": 11,
           "quote": "High neutral scores for the appropriate allocation (43%)",
-          "context_id": "doc_voconiq2025_ctx_10"
+          "context_id": "doc_voconiq2025_ctx_10",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s27",
@@ -3579,7 +3995,10 @@
           ],
           "page": 11,
           "quote": "the responsible use of water (44%; Figure 4)",
-          "context_id": "doc_voconiq2025_ctx_10"
+          "context_id": "doc_voconiq2025_ctx_10",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s28",
@@ -3609,7 +4028,10 @@
           "page": 12,
           "quote": "the cotton industry does enough to protect its biodiversity\" at 51%, while 38% agreed and 12% disagreed (Figure 5).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s29",
@@ -3639,7 +4061,10 @@
           "page": 12,
           "quote": "the cotton industry does enough to protect its biodiversity\" at 51%, while 38% agreed and 12% disagreed (Figure 5).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s30",
@@ -3669,7 +4094,10 @@
           "page": 12,
           "quote": "the cotton industry does enough to protect its biodiversity\" at 51%, while 38% agreed and 12% disagreed (Figure 5).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s31",
@@ -3698,7 +4126,10 @@
           ],
           "page": 12,
           "quote": "trust the cotton industry to use pesticides responsibly (62% agreed)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s32",
@@ -3727,7 +4158,10 @@
           ],
           "page": 12,
           "quote": "and 47% see the use of pesticides by farmers as necessary (Figure 5).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s33",
@@ -3756,7 +4190,10 @@
           ],
           "page": 12,
           "quote": "with 42% who agreed, 36% who were neutral and 21% who disagreed (Figure 5).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s34",
@@ -3785,7 +4222,10 @@
           ],
           "page": 12,
           "quote": "with 42% who agreed, 36% who were neutral and 21% who disagreed (Figure 5).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s35",
@@ -3814,7 +4254,10 @@
           ],
           "page": 12,
           "quote": "with 42% who agreed, 36% who were neutral and 21% who disagreed (Figure 5).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s36",
@@ -3843,7 +4286,10 @@
           ],
           "page": 12,
           "quote": "(46% agreed, 37% neutral, 17% disagreed)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s37",
@@ -3872,7 +4318,10 @@
           ],
           "page": 12,
           "quote": "(46% agreed, 37% neutral, 17% disagreed)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s38",
@@ -3901,7 +4350,10 @@
           ],
           "page": 12,
           "quote": "(46% agreed, 37% neutral, 17% disagreed)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s39",
@@ -3930,7 +4382,10 @@
           ],
           "page": 12,
           "quote": "(55% agreed, 34% neutral, 10% disagreed; Figure 5)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s40",
@@ -3959,7 +4414,10 @@
           ],
           "page": 12,
           "quote": "(55% agreed, 34% neutral, 10% disagreed; Figure 5)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s41",
@@ -3988,7 +4446,10 @@
           ],
           "page": 12,
           "quote": "(55% agreed, 34% neutral, 10% disagreed; Figure 5)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s42",
@@ -4017,7 +4478,10 @@
           ],
           "page": 13,
           "quote": "51% of participants responded neutrally, with 42% who agreed and 7% who disagreed (Figure 6).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s43",
@@ -4046,7 +4510,10 @@
           ],
           "page": 13,
           "quote": "51% of participants responded neutrally, with 42% who agreed and 7% who disagreed (Figure 6).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s44",
@@ -4075,7 +4542,10 @@
           ],
           "page": 13,
           "quote": "51% of participants responded neutrally, with 42% who agreed and 7% who disagreed (Figure 6).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s45",
@@ -4122,8 +4592,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v07",
             "v08",
@@ -4160,7 +4628,10 @@
           ],
           "page": 13,
           "quote": "6-10 people in the cotton industry gave the highest average score of 3.94",
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_11",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s48",
@@ -4188,7 +4659,10 @@
           ],
           "page": 13,
           "quote": "while those who knew more than 10 dropped to 3.72 (Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_12"
+          "context_id": "doc_voconiq2025_ctx_12",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s49",
@@ -4217,7 +4691,10 @@
           "page": 14,
           "quote": "gave the highest mean score for \"the cotton industry does enough to protect its biodiversity\" at 3.68",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_13"
+          "context_id": "doc_voconiq2025_ctx_13",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s50",
@@ -4240,7 +4717,10 @@
           ],
           "page": 14,
           "quote": "while the average rating decreased by 0.02 as the number of people known increased (Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_14"
+          "context_id": "doc_voconiq2025_ctx_14",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s51",
@@ -4269,7 +4749,10 @@
           "page": 14,
           "quote": "the cotton industry in Australia uses water responsibly\" at 3.78",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_11"
+          "context_id": "doc_voconiq2025_ctx_11",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s52",
@@ -4297,7 +4780,10 @@
           ],
           "page": 14,
           "quote": "were largely in line with those who knew 3-5 and 10 or more people in comparison (3.77 and 3.76, respectively; Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_13"
+          "context_id": "doc_voconiq2025_ctx_13",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s53",
@@ -4325,7 +4811,10 @@
           ],
           "page": 14,
           "quote": "were largely in line with those who knew 3-5 and 10 or more people in comparison (3.77 and 3.76, respectively; Figure 7).",
-          "context_id": "doc_voconiq2025_ctx_12"
+          "context_id": "doc_voconiq2025_ctx_12",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s54",
@@ -4354,7 +4843,10 @@
           ],
           "page": 15,
           "quote": "46% of Australians were neutral, 45% agreed, and 9% disagreed (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s55",
@@ -4383,7 +4875,10 @@
           ],
           "page": 15,
           "quote": "46% of Australians were neutral, 45% agreed, and 9% disagreed (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s56",
@@ -4412,7 +4907,10 @@
           ],
           "page": 15,
           "quote": "46% of Australians were neutral, 45% agreed, and 9% disagreed (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s57",
@@ -4441,7 +4939,10 @@
           ],
           "page": 15,
           "quote": "the industry’s ability to listen and respect community opinions at 46%, while 43% agreed and 11% disagreed (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s58",
@@ -4470,7 +4971,10 @@
           ],
           "page": 15,
           "quote": "the industry’s ability to listen and respect community opinions at 46%, while 43% agreed and 11% disagreed (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s59",
@@ -4499,7 +5003,10 @@
           ],
           "page": 15,
           "quote": "the industry’s ability to listen and respect community opinions at 46%, while 43% agreed and 11% disagreed (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s60",
@@ -4529,7 +5036,10 @@
           "page": 15,
           "quote": "acknowledge their mistakes after public outcry, I can forgive the mistake\" (47%)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s61",
@@ -4558,7 +5068,10 @@
           ],
           "page": 15,
           "quote": "alongside 40% of participants who responded neutrally and 13% who disagreed to the statement (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s62",
@@ -4587,7 +5100,10 @@
           ],
           "page": 15,
           "quote": "alongside 40% of participants who responded neutrally and 13% who disagreed to the statement (Figure 8).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s63",
@@ -4660,8 +5176,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v08",
             "v11",
@@ -4686,8 +5200,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v08",
             "v11",
@@ -4722,7 +5234,10 @@
           ],
           "page": 15,
           "quote": "The rating for acknowledging mistakes began with a 3.41 in 2020 before it decreased in 2023 to 3.35 and then increased this year to 3.40 (Figure 9).",
-          "context_id": "doc_voconiq2025_ctx_14"
+          "context_id": "doc_voconiq2025_ctx_14",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s68",
@@ -4751,7 +5266,10 @@
           ],
           "page": 17,
           "quote": "it is important for the cotton industry to develop local manufacturing at 80%",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s69",
@@ -4780,7 +5298,10 @@
           ],
           "page": 17,
           "quote": "the industry generates significant local jobs in regional areas (77%; Figure 10).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s70",
@@ -4810,7 +5331,10 @@
           "page": 17,
           "quote": "jobs\" at 43% (38% neutral, 19% disagree)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s71",
@@ -4840,7 +5364,10 @@
           "page": 17,
           "quote": "jobs\" at 43% (38% neutral, 19% disagree)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s72",
@@ -4870,7 +5397,10 @@
           "page": 17,
           "quote": "jobs\" at 43% (38% neutral, 19% disagree)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s73",
@@ -4899,7 +5429,10 @@
           ],
           "page": 17,
           "quote": "with 38% who were neutral, 32% who disagreed, and 31% who agreed (Figure 10).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s74",
@@ -4928,7 +5461,10 @@
           ],
           "page": 17,
           "quote": "with 38% who were neutral, 32% who disagreed, and 31% who agreed (Figure 10).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s75",
@@ -4957,7 +5493,10 @@
           ],
           "page": 17,
           "quote": "with 38% who were neutral, 32% who disagreed, and 31% who agreed (Figure 10).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s76",
@@ -4986,7 +5525,10 @@
           ],
           "page": 17,
           "quote": "Australia receives a fair share of the benefits from the cotton industry at 47%",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s77",
@@ -5015,7 +5557,10 @@
           ],
           "page": 17,
           "quote": "while 45% agreed that regional communities receive a fair share (Figure 11).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s78",
@@ -5044,7 +5589,10 @@
           ],
           "page": 17,
           "quote": "Neutral responses for both measures were high at 42% (Figure 11).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s79",
@@ -5073,7 +5621,10 @@
           ],
           "page": 17,
           "quote": "Neutral responses for both measures were high at 42% (Figure 11).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s80",
@@ -5103,7 +5654,10 @@
           "page": 17,
           "quote": "most of the benefits that come from growing cotton go to cotton farmers\" at 38%, with 43% who were neutral and 19% disagreed (Figure 11).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s81",
@@ -5133,7 +5687,10 @@
           "page": 17,
           "quote": "most of the benefits that come from growing cotton go to cotton farmers\" at 38%, with 43% who were neutral and 19% disagreed (Figure 11).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s82",
@@ -5163,7 +5720,10 @@
           "page": 17,
           "quote": "most of the benefits that come from growing cotton go to cotton farmers\" at 38%, with 43% who were neutral and 19% disagreed (Figure 11).",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s83",
@@ -5192,7 +5752,10 @@
           ],
           "page": 19,
           "quote": "with 54% of participants responding neutrally to the corresponding measure",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s84",
@@ -5221,7 +5784,10 @@
           ],
           "page": 19,
           "quote": "(30% agreed, 16% disagreed; Figure 12)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s85",
@@ -5250,7 +5816,10 @@
           ],
           "page": 19,
           "quote": "(30% agreed, 16% disagreed; Figure 12)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s86",
@@ -5280,7 +5849,10 @@
           "page": 19,
           "quote": "(49% neutral, 41% agreed, 10% disagreed)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s87",
@@ -5310,7 +5882,10 @@
           "page": 19,
           "quote": "(49% neutral, 41% agreed, 10% disagreed)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s88",
@@ -5340,7 +5915,10 @@
           "page": 19,
           "quote": "(49% neutral, 41% agreed, 10% disagreed)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s89",
@@ -5370,7 +5948,10 @@
           "page": 19,
           "quote": "(46% neutral, 45% agreed, 9% disagreed; Figure 12)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s90",
@@ -5400,7 +5981,10 @@
           "page": 19,
           "quote": "(46% neutral, 45% agreed, 9% disagreed; Figure 12)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s91",
@@ -5430,7 +6014,10 @@
           "page": 19,
           "quote": "(46% neutral, 45% agreed, 9% disagreed; Figure 12)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s92",
@@ -5459,7 +6046,10 @@
           ],
           "page": 19,
           "quote": "(73% agreed, 24% neutral, 3% disagreed; Figure 12)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s93",
@@ -5488,7 +6078,10 @@
           ],
           "page": 19,
           "quote": "(73% agreed, 24% neutral, 3% disagreed; Figure 12)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s94",
@@ -5517,7 +6110,10 @@
           ],
           "page": 19,
           "quote": "(73% agreed, 24% neutral, 3% disagreed; Figure 12)",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s95",
@@ -5547,7 +6143,10 @@
           "page": 19,
           "quote": "59% of participants agreed, 29% were neutral, and 12% disagreed (Figure 12)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s96",
@@ -5577,7 +6176,10 @@
           "page": 19,
           "quote": "59% of participants agreed, 29% were neutral, and 12% disagreed (Figure 12)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s97",
@@ -5607,7 +6209,10 @@
           "page": 19,
           "quote": "59% of participants agreed, 29% were neutral, and 12% disagreed (Figure 12)",
           "read_from_image": true,
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s98",
@@ -5636,7 +6241,10 @@
           ],
           "page": 19,
           "quote": "Notably, 71% of Australians agreed",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s99",
@@ -5665,7 +6273,10 @@
           ],
           "page": 20,
           "quote": "their supply chains are free from modern slavery\" at 79% (Figure 13), a stable level of agreement from 2023 when the question was first asked (80%).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s100",
@@ -5683,8 +6294,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v07",
             "v08",
@@ -5722,7 +6331,10 @@
           ],
           "page": 20,
           "quote": "more than half of all survey participants were neutral at 51%, compared with 34% who agreed and 15% who disagreed (Figure 13).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s102",
@@ -5751,7 +6363,10 @@
           ],
           "page": 20,
           "quote": "more than half of all survey participants were neutral at 51%, compared with 34% who agreed and 15% who disagreed (Figure 13).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s103",
@@ -5780,7 +6395,10 @@
           ],
           "page": 20,
           "quote": "more than half of all survey participants were neutral at 51%, compared with 34% who agreed and 15% who disagreed (Figure 13).",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_03",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s104",
@@ -5798,8 +6416,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v07",
             "v08",
@@ -5826,8 +6442,6 @@
           },
           "context_item_ids": [
             "v01",
-            "v02",
-            "v05",
             "v06",
             "v07",
             "v08",
@@ -5858,14 +6472,15 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "q38"
           ],
           "page": 20,
           "quote": "close to half of all participants could not recall or had never heard about the cotton industry before at 46%; 10% said they had heard about the industry in the last week; 14% in the last three months; 7% four to six months ago; and close to a quarter said the last time they heard about the industry was more than six months ago",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_17",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s107",
@@ -5887,14 +6502,15 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "q38"
           ],
           "page": 20,
           "quote": "close to half of all participants could not recall or had never heard about the cotton industry before at 46%; 10% said they had heard about the industry in the last week; 14% in the last three months; 7% four to six months ago; and close to a quarter said the last time they heard about the industry was more than six months ago",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_17",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s108",
@@ -5916,14 +6532,15 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "q38"
           ],
           "page": 20,
           "quote": "close to half of all participants could not recall or had never heard about the cotton industry before at 46%; 10% said they had heard about the industry in the last week; 14% in the last three months; 7% four to six months ago; and close to a quarter said the last time they heard about the industry was more than six months ago",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_17",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s109",
@@ -5945,14 +6562,15 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "q38"
           ],
           "page": 20,
           "quote": "close to half of all participants could not recall or had never heard about the cotton industry before at 46%; 10% said they had heard about the industry in the last week; 14% in the last three months; 7% four to six months ago; and close to a quarter said the last time they heard about the industry was more than six months ago",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_17",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s110",
@@ -5975,14 +6593,15 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "q38"
           ],
           "page": 20,
           "quote": "close to half of all participants could not recall or had never heard about the cotton industry before at 46%; 10% said they had heard about the industry in the last week; 14% in the last three months; 7% four to six months ago; and close to a quarter said the last time they heard about the industry was more than six months ago",
-          "context_id": "doc_voconiq2025_ctx_03"
+          "context_id": "doc_voconiq2025_ctx_17",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s111",
@@ -6004,15 +6623,16 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "g04",
             "q39"
           ],
           "page": 20,
           "quote": "1. Internet (30%).",
-          "context_id": "doc_voconiq2025_ctx_17"
+          "context_id": "doc_voconiq2025_ctx_18",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s112",
@@ -6034,15 +6654,16 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "g04",
             "q39"
           ],
           "page": 20,
           "quote": "2. Television - news (21%).",
-          "context_id": "doc_voconiq2025_ctx_17"
+          "context_id": "doc_voconiq2025_ctx_18",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s113",
@@ -6064,15 +6685,16 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "g04",
             "q39"
           ],
           "page": 20,
           "quote": "3. Social networking, e.g. Facebook, X, Instagram, TikTok, etc. (16%).",
-          "context_id": "doc_voconiq2025_ctx_17"
+          "context_id": "doc_voconiq2025_ctx_18",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s114",
@@ -6094,15 +6716,16 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "g04",
             "q39"
           ],
           "page": 20,
           "quote": "4. Television - current affairs programs (13%).",
-          "context_id": "doc_voconiq2025_ctx_17"
+          "context_id": "doc_voconiq2025_ctx_18",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         },
         {
           "statistic_id": "s115",
@@ -6124,15 +6747,16 @@
             "v03",
             "v04",
             "v05",
-            "v06",
-            "v07",
             "v08",
             "g04",
             "q39"
           ],
           "page": 21,
           "quote": "5. Friends or family (12%).",
-          "context_id": "doc_voconiq2025_ctx_17"
+          "context_id": "doc_voconiq2025_ctx_18",
+          "acceptable_item_ids": [
+            "v11"
+          ]
         }
       ]
     }
