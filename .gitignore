@@ -2,12 +2,12 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-output/**/*.json
+output/
 .env
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
 
-# Copyrighted third-party source PDFs -- not ours to redistribute.
+# Copyrighted third-party source PDFs, not ours to redistribute.
 # See data/document_manifest.json for how to fetch/place them locally.
 data/raw_pdfs/*.pdf
