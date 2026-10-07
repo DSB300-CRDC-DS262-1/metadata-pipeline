@@ -84,7 +84,13 @@
           "item_type": "limitation",
           "value": "industry coding is often incomplete, so cotton cases are hard to identify",
           "page": 3,
-          "quote": "As such determining precisely those events that have occurred on a cotton property is frequently difficult to ascertain."
+          "quote": "As such determining precisely those events that have occurred on a cotton property is frequently difficult to ascertain.",
+          "also_stated": [
+            {
+              "page": 3,
+              "quote": "Although there is an industry coding field (in which cotton would usually be identified - ANZSIC 0152), this is often incomplete or not specified in the records."
+            }
+          ]
         },
         {
           "item_id": "i11",
@@ -105,7 +111,13 @@
           "item_type": "currency_basis",
           "value": "2018 Australian dollars",
           "page": 6,
-          "quote": "All figures have been updated to reflect costs in 2018 Australian dollars (previously expressed in 2012 dollars)."
+          "quote": "All figures have been updated to reflect costs in 2018 Australian dollars (previously expressed in 2012 dollars).",
+          "also_stated": [
+            {
+              "page": 4,
+              "quote": "Earlier data costs (expressed in 2012 dollars), were updated to reflect 2018 Australian dollars."
+            }
+          ]
         },
         {
           "item_id": "i14",
@@ -160,7 +172,13 @@
           "item_type": "limitation",
           "value": "no injury rates, as the number of workers is not reliably known",
           "page": 5,
-          "quote": "Additionally, no calculation of injury rates has been undertaken due to the lack of robust denominator data regarding the number of individuals working in the sector."
+          "quote": "Additionally, no calculation of injury rates has been undertaken due to the lack of robust denominator data regarding the number of individuals working in the sector.",
+          "also_stated": [
+            {
+              "page": 10,
+              "quote": "Firstly, accurate denominator data to ascertain rates of injury and death are not available and have not been presented in this report."
+            }
+          ]
         },
         {
           "item_id": "i21",
