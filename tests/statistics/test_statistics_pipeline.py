@@ -1,7 +1,14 @@
 """The statistics and context pipeline with a fake model (no model needed)."""
 
 from crdc_pipeline.extraction.backends import GenerationResult
-from crdc_pipeline.extraction.contexts.prompts import PageContextItems, PageLinks, StatisticLinks, StudyItems
+from crdc_pipeline.extraction.contexts.prompts import (
+    MethodReaches,
+    PageContextItems,
+    PageLinks,
+    StatisticLinks,
+    StudyDatasets,
+    StudyItems,
+)
 from crdc_pipeline.extraction.contexts.schema import ContextItem
 from crdc_pipeline.extraction.statistics.extract import extract_findings
 from crdc_pipeline.extraction.statistics.prompts import PageStatistics, SamePairs
@@ -20,6 +27,10 @@ class FakeBackend:
             parsed = StudyItems()
         elif schema is SamePairs:
             parsed = SamePairs()
+        elif schema is StudyDatasets:
+            parsed = StudyDatasets()
+        elif schema is MethodReaches:
+            parsed = MethodReaches()
         elif schema is PageLinks:
             parsed = PageLinks(links=[StatisticLinks(statistic_id="p1_s01", item_ids=["p3_i01", "made_up"])])
         elif schema is PageContextItems:

@@ -163,3 +163,80 @@ class DocumentStatisticLinks(BaseModel):
 
 class DocumentLinks(BaseModel):
     links: list[DocumentStatisticLinks] = Field(default_factory=list, max_length=MAX_STATISTICS_PER_PAGE * 10)
+
+
+class Dataset(BaseModel):
+    name: str = Field(description="A short name for the dataset, e.g. 'workers compensation claims'.")
+    item_ids: list[str] = Field(default_factory=list, max_length=MAX_ITEMS_PER_PAGE * 3)
+
+
+class StudyDatasets(BaseModel):
+    datasets: list[Dataset] = Field(default_factory=list, max_length=8)
+    shared_item_ids: list[str] = Field(default_factory=list, max_length=MAX_ITEMS_PER_PAGE * 3)
+
+
+DATASET_PROMPT = """Below are facts about a research document's own study. Some studies report numbers from \
+more than one separate dataset: for example coroners' records of deaths and workers compensation claims, or \
+field measurements and a model built on them. Each dataset has its own source, collection method, sample, \
+period, cleaning and limitations.
+
+Group the facts by the dataset they describe. A fact about how one dataset was collected, cleaned or \
+limited, or what it covers, belongs to that dataset only. Facts that apply to every dataset (the region of \
+the whole study, a scale or currency used for all results, the report as a whole) go in shared_item_ids. \
+If the study has only one dataset, return that one dataset with all its facts and leave shared_item_ids empty.
+
+Facts (ID | kind | fact | sentence):
+{items}
+"""
+
+
+class DatasetNumbers(BaseModel):
+    dataset: str = Field(description="The dataset's name as listed.")
+    statistic_ids: list[str] = Field(default_factory=list, max_length=MAX_STATISTICS_PER_PAGE * 10)
+
+
+class DatasetAssignments(BaseModel):
+    datasets: list[DatasetNumbers] = Field(default_factory=list, max_length=8)
+
+
+ASSIGN_PROMPT = """A research document reports numbers from these datasets of its own study (name: its facts):
+{datasets}
+
+For each dataset, list the statistic_ids of the numbers below that come from it, using the sentence and its \
+page. Leave out numbers cited from other studies and numbers that come from none of them. Each number goes \
+under one dataset at most.
+
+Numbers (statistic_id | page | what | value | sentence):
+{statistics}
+"""
+
+
+class MethodReach(BaseModel):
+    item_id: str
+    applies_to_all: bool = Field(description="True if the fact applies to every number listed.")
+    statistic_ids: list[str] = Field(default_factory=list, max_length=MAX_STATISTICS_PER_PAGE * 10)
+
+
+class MethodReaches(BaseModel):
+    facts: list[MethodReach] = Field(default_factory=list, max_length=MAX_ITEMS_PER_PAGE * 3)
+
+
+METHOD_REACH_PROMPT = """Below are method facts from a research document's own study, and the numbers it reports. \
+For each fact, decide which numbers it applies to: the numbers a reader could not interpret correctly without it.
+
+Most of these facts apply to every number: the system boundary, the functional unit, how the data were \
+collected, cleaned or combined, the sample, and the limitations of the data. Set applies_to_all for them.
+
+Narrow a fact only when it is about one measure, one analysis or one topic: a statistical model used for some \
+results (e.g. path modelling of what drives trust), how averages or mean scores were calculated (not the \
+shares agreeing), a rating scale used for some questions, or a topic covered by some numbers. Then list the \
+statistic_ids it applies to.
+
+Return one entry per fact: its item_id, applies_to_all, and otherwise the statistic_ids it applies to.
+
+Method facts (ID | kind | fact | sentence):
+{items}
+
+Numbers (statistic_id | page | what | value | sentence):
+{statistics}
+"""

@@ -10,6 +10,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from ..backends import Backend
+from ..contexts.datasets import method_reach, split_by_dataset, with_study_items
 from ..contexts.links import document_link_prompt, fit_study_links, item_list, trim_links
 from ..contexts.prompts import (
     CONTEXT_PROMPT,
@@ -54,6 +55,9 @@ class FindingsExtractionResult(BaseModel):
     output_tokens: int = 0
     failed_steps: list[str] = Field(default_factory=list)
     study_item_ids: list[str] = Field(default_factory=list)
+    datasets: dict[str, list[str]] = Field(default_factory=dict)
+    dataset_of: dict[str, str] = Field(default_factory=dict)
+    method_reach: dict[str, list[str]] = Field(default_factory=dict)
 
 
 def extract_findings(
@@ -66,6 +70,7 @@ def extract_findings(
     context_backend: Backend | None = None,
     whole_document: bool = False,
     dedupe: bool = True,
+    datasets: bool = True,
 ) -> FindingsExtractionResult:
     """Context items, then statistics, for every page with text.
 
@@ -74,7 +79,8 @@ def extract_findings(
     `context_backend` runs the context, scope and linking steps on a different model; each step
     runs over all pages before the next, so two local models are swapped as rarely as possible.
     `whole_document` runs the context and linking steps once over the whole document instead of
-    page by page (statistics stay page by page).
+    page by page (statistics stay page by page). `datasets` splits the study's items by dataset when the
+    document reports more than one, so each statistic takes only its own dataset's conditions.
     """
     pages = before_references(pages)
     if exclude_tables:
@@ -169,11 +175,28 @@ def extract_findings(
                 s.model_copy(update={"context_item_ids": list(dict.fromkeys(s.context_item_ids + extra.get(s.statistic_id, [])))})
                 for s in page_statistics
             ]
-        # The study's own conditions apply to all of its numbers, but not to figures cited from other studies.
-        statistics.extend(
-            s if s.record_type == "cited" else s.model_copy(update={"context_item_ids": list(dict.fromkeys(study + s.context_item_ids))})
-            for s in page_statistics
-        )
+        statistics.extend(page_statistics)
+
+    # The study's own conditions apply to all of its numbers (or, with several datasets, to the numbers of
+    # their own dataset), but not to figures cited from other studies.
+    groups, shared, dataset_index, reach = {}, study, {}, {}
+    if datasets:
+        # Items the context step marked as applying to the whole document join the study's items, so they
+        # are split by dataset too, instead of reaching every number (cover-page dates, one dataset's limits).
+        study = study + [i.item_id for i in items if i.whole_document and i.item_type not in STATISTIC_LEVEL
+                         and i.item_id not in study]
+        items = [i.model_copy(update={"whole_document": False}) if i.whole_document else i for i in items]
+        shared = study
+    if datasets and len(study) > 1 and statistics:
+        groups, shared, dataset_index = split_by_dataset(study, items, statistics,
+                                                    lambda p, schema, step: generate(p, schema, step, context_backend))
+    statistics = [with_study_items(s, study, groups, shared, dataset_index) for s in statistics]
+    if datasets and study and statistics:
+        # Method facts that cover only some numbers (one measure, one analysis) come off the rest.
+        reach = method_reach(study, items, statistics, lambda p, schema, step: generate(p, schema, step, context_backend))
+        statistics = [s.model_copy(update={"context_item_ids": [i for i in s.context_item_ids
+                                                                 if i not in reach or s.statistic_id in reach[i]]})
+                      for s in statistics]
 
     if dedupe:
         pairs = duplicate_candidates(statistics)
@@ -196,4 +219,7 @@ def extract_findings(
         output_tokens=usage["output_tokens"],
         failed_steps=failed,
         study_item_ids=study,
+        datasets=groups,
+        dataset_of={k: list(groups)[v] for k, v in dataset_index.items()},
+        method_reach={k: sorted(v) for k, v in reach.items()},
     )
