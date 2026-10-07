@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from ..backends import Backend
+from ..statistics.records import MODELLING_STUDY_SCENARIOS
 from ..statistics.schema import Statistic
 from .prompts import DOCUMENT_LINK_PROMPT, DocumentLinks
 from .schema import Context, ContextItem, group_contexts
@@ -19,14 +20,19 @@ AGREEMENT = re.compile(r"\bagree", re.I)
 def fit_study_links(statistics: list[Statistic], items: list[ContextItem], study: list[str]) -> list[Statistic]:
     """Takes study items off statistics they cannot qualify.
 
-    Model inputs keep only the study's period, region and data source. A rating scale reaches only
+    Model inputs keep only the study's period, region and data source, and so do measurements in a modelling
+    study (scenarios among its items): it measured nothing itself, so they are background figures such as a
+    region's share of production. A rating scale reaches only
     survey answers, and a scale without agreement wording ("1 (Not at all) to 5 (Extremely)") only
     the average ratings, not the shares agreeing.
     """
     by_id = {i.item_id: i for i in items}
+    inputs = {"model_assumption"}
+    if sum(i.item_type == "scenario" for i in items) >= MODELLING_STUDY_SCENARIOS:
+        inputs.add("measurement")
 
     def fits(statistic: Statistic, item: ContextItem) -> bool:
-        if statistic.record_type == "model_assumption" and item.item_type not in INPUT_KINDS:
+        if statistic.record_type in inputs and item.item_type not in INPUT_KINDS:
             return False
         text = f"{item.value} {item.quote}"
         if RATING_SCALE.search(text):

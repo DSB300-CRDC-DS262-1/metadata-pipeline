@@ -174,6 +174,12 @@ def test_study_items_fit_the_statistics_they_reach() -> None:
     assert fitted[2].context_item_ids == study  # a rating: both scales
     assert fitted[3].context_item_ids == ["region", "unit"]  # not a survey answer: no rating scale
 
+    # In a modelling study (scenarios among its items) a measurement is a background figure, fitted like an input.
+    background = stat("96%", 96, unit="%", record_type="measurement", context_item_ids=["region", "unit"])
+    scenarios = [item("s1", "scenario", "N cut to 180 kg N/ha"), item("s2", "scenario", "biodiesel B20")]
+    assert fit_study_links([background], items, study)[0].context_item_ids == ["region", "unit"]
+    assert fit_study_links([background], items + scenarios, study)[0].context_item_ids == ["region"]
+
 
 def test_a_key_kind_missing_from_the_scope_is_taken_from_the_method_page() -> None:
     from crdc_pipeline.extraction.contexts.scope import sharpen_scope
