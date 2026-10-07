@@ -173,3 +173,17 @@ def test_study_items_fit_the_statistics_they_reach() -> None:
     assert fitted[1].context_item_ids == ["region", "unit", "likert", "q1"]  # a share: the agreement scale only
     assert fitted[2].context_item_ids == study  # a rating: both scales
     assert fitted[3].context_item_ids == ["region", "unit"]  # not a survey answer: no rating scale
+
+
+def test_a_key_kind_missing_from_the_scope_is_taken_from_the_method_page() -> None:
+    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
+    from crdc_pipeline.extraction.statistics.periods import with_item_period
+
+    def item(item_id, kind, value, page):
+        return with_item_period(ContextItem(item_id=item_id, item_type=kind, value=value, page=page,
+                                            quote=f"The study reports {value}."))
+
+    items = [item("t", "time_period", "2025-10-30 to 2025-11-17", 5), item("s", "sample_population", "3,063 surveys", 5),
+             item("d", "data_source", "an online research panel", 5), item("other", "data_source", "Kmart Q&A", 9)]
+    assert sharpen_scope(["t", "s"], items) == ["t", "s", "d"]
+    assert sharpen_scope(["t", "s", "other"], items) == ["t", "s", "other"]  # a source was chosen: keep it

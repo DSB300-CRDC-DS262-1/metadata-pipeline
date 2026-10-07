@@ -65,7 +65,7 @@ def not_a_condition(item: ContextItem, running: set[str]) -> bool:
 
 def sharpen_scope(study: list[str], items: list[ContextItem]) -> list[str]:
     """Swaps vague whole-study items for the specific ones in the method: the period, the sample, the
-    collection method and the region.
+    collection method and the region; then fills any key kind still missing from the method's page.
 
     A model asked for the study's period often picks a span of years ("2020-2025") over the
     fieldwork dates printed in the method ("30 October to 17 November 2025"). The period goes
@@ -73,7 +73,25 @@ def sharpen_scope(study: list[str], items: list[ContextItem]) -> list[str]:
     """
     by_id = {i.item_id: i for i in items}
     study = _sharpen_sample(_sharpen_period(study, items, by_id), items, by_id)
-    return _sharpen_region(_sharpen_collection(study, items, by_id), items, by_id)
+    study = _sharpen_region(_sharpen_collection(study, items, by_id), items, by_id)
+    return _fill_missing_kinds(study, items, by_id)
+
+
+# The kinds every study states for its own data; the scope step sometimes leaves one out.
+KEY_KINDS = ("time_period", "geographic_region", "sample_population", "data_source", "collection_method")
+
+
+def _fill_missing_kinds(study: list[str], items: list[ContextItem], by_id: dict[str, ContextItem]) -> list[str]:
+    """A key kind the scope step left out is taken from the method's page, if the page states one.
+
+    The method's page is the page of the study's chosen period, sample or collection method (e.g. a survey's
+    data source, "an online research panel", printed beside its fieldwork dates).
+    """
+    pages = {by_id[i].page for i in study if by_id[i].item_type in ("time_period", "sample_population", "collection_method")}
+    chosen = {by_id[i].item_type for i in study}
+    added = [next(i.item_id for i in items if i.item_type == kind and i.page in pages)
+             for kind in KEY_KINDS if kind not in chosen and any(i.item_type == kind and i.page in pages for i in items)]
+    return study + added
 
 
 def _method_pages(study: list[str], by_id: dict[str, ContextItem]) -> set[int]:

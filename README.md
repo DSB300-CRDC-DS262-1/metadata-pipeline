@@ -172,7 +172,8 @@ model never needs the whole document at once:
    method facts that apply to all results. These reach every statistic the
    study reports itself, but not figures cited from other studies. A vague
    period, sample, collection method or region gives way to the one stated
-   on the method's page.
+   on the method's page, and a key kind the scope step left out is taken from
+   that page.
 3. **Statistics** per page, then a **linking** call per page for the
    specific items each number needs (its survey question, scenario, source).
 4. **Plain-code rules**: the reading the wording states ("just over" is a
