@@ -33,7 +33,7 @@ Gemini is optional. To use it, copy `.env.example` to `.env` and set
    copyrighted third-party papers). `data/document_manifest.json` lists the
    four documents CRDC provided, their filenames and where each was
    downloaded from (`retrieved_from`).
-2. Run `pytest`; `test_sample_documents.py` picks them up.
+2. Run `pytest`; `tests/ingestion/test_sample_documents.py` picks them up.
 
 ## Running the tests
 
@@ -271,17 +271,24 @@ scripts/
   statistics/run_statistics_extraction.py    runs statistics and context extraction and scores both
   statistics/verify_ground_truth.py          checks the older ground-truth statistics against the PDFs
 tests/
-  test_layout.py, test_loader.py   column detection and loading (synthetic PDFs)
-  test_symbols.py                  wrongly labelled symbol detection and rule learning
-  test_metadata_extraction.py      schema, prompt and tidy rules
-  test_printed.py                  article history, DOI, journal header, ISSN
-  test_backends.py                 backends with mocked HTTP (no server needed)
-  test_scoring.py                  metadata field matching
-  test_findings.py                 statistics and context schema, grouping into contexts
-  test_statistics_extraction.py    statistics pipeline with a fake model, and its rules
-  test_findings_scoring.py         statistics and context link scoring
-  test_findings_reference.py       reference statistics and contexts fit the schema and are quoted from their page
-  test_sample_documents.py         checks against the real sample PDFs
+  conftest.py                          reads the sample PDFs once, to check reference quotes
+  test_backends.py                     backends with mocked HTTP (no server needed)
+  ingestion/                           column detection, loading (synthetic PDFs), symbols, the sample PDFs
+  metadata/
+    test_metadata_extraction.py        schema, prompt and tidy rules
+    test_printed.py                    article history, DOI, journal header, ISSN
+    test_metadata_scoring.py           field matching
+  contexts/
+    test_context_schema.py             grouping statistics into contexts
+    test_context_rules.py              the study's scope, labels, item periods and links
+    test_context_scoring.py            context item and link scoring
+    test_contexts_reference.py         reference items fit the schema and are quoted from their page
+  statistics/
+    test_statistics_pipeline.py        the whole pipeline with a fake model
+    test_statistics_rules.py           readings, types, periods, filters and duplicates
+    test_statistics_schema.py          statistic schema
+    test_statistics_scoring.py         statistic scoring
+    test_statistics_reference.py       reference statistics fit the schema and are quoted from their page
 data/
   raw_pdfs/                        the four source PDFs (gitignored)
   document_manifest.json           document_id, filename and download link

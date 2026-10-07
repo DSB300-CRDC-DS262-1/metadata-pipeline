@@ -123,7 +123,7 @@ def test_live_extraction_on_aghealth2019() -> None:
     from crdc_pipeline.extraction import extract_metadata, make_backend
     from crdc_pipeline.ingestion.loader import load_document
 
-    pdf_path = Path(__file__).resolve().parent.parent / "data" / "raw_pdfs" / "aghealth2019.pdf"
+    pdf_path = Path(__file__).resolve().parents[2] / "data" / "raw_pdfs" / "aghealth2019.pdf"
     if not pdf_path.is_file():
         pytest.skip("data/raw_pdfs/aghealth2019.pdf not found")
 

@@ -1,5 +1,7 @@
+"""Context items grouped into contexts."""
+
 from crdc_pipeline.extraction.contexts.schema import ContextItem, group_contexts
-from crdc_pipeline.extraction.statistics.schema import Statistic, constraints_for
+from crdc_pipeline.extraction.statistics.schema import Statistic
 
 
 def item(item_id: str, whole_document: bool = False) -> ContextItem:
@@ -31,8 +33,3 @@ def test_survey_questions_stay_on_the_statistic() -> None:
 def test_unknown_item_ids_are_ignored() -> None:
     contexts, assigned = group_contexts("doc", [item("a")], [statistic("s1", ["a", "made_up"])])
     assert contexts[0].item_ids == ["a"]
-
-
-def test_constraints_come_from_the_statistic_type() -> None:
-    assert constraints_for(statistic("s1", [], "percentage")) == ["non_negative", "at_most_100"]
-    assert constraints_for(statistic("s1", [], "index")) == []

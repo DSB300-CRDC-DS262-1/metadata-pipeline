@@ -1,64 +1,15 @@
-"""Two-pass statistics extraction with a fake backend (no model needed)."""
+"""Rules applied to each statistic: readings, types, periods, filters and duplicates."""
 
-from crdc_pipeline.extraction.backends import GenerationResult
+from crdc_pipeline.extraction.contexts.prompts import CONTEXT_PROMPT, PageContextItems
 from crdc_pipeline.extraction.contexts.schema import ContextItem
+from crdc_pipeline.extraction.statistics.prompts import STATISTICS_PROMPT, PageStatistics
 from crdc_pipeline.extraction.statistics.schema import Statistic
-from crdc_pipeline.extraction.statistics.extract import extract_findings
-from crdc_pipeline.extraction.contexts.prompts import (
-    CONTEXT_PROMPT,
-    PageContextItems,
-    PageLinks,
-    StatisticLinks,
-    StudyItems,
-)
-from crdc_pipeline.extraction.statistics.prompts import STATISTICS_PROMPT, PageStatistics, SamePairs
 
 
-class FakeBackend:
-    label = "fake"
-
-    def __init__(self):
-        self.prompts = []
-
-    def generate(self, prompt, schema, images=None):
-        self.prompts.append(prompt)
-        if schema is StudyItems:
-            parsed = StudyItems()
-        elif schema is SamePairs:
-            parsed = SamePairs()
-        elif schema is PageLinks:
-            parsed = PageLinks(links=[StatisticLinks(statistic_id="p1_s01", item_ids=["p3_i01", "made_up"])])
-        elif schema is PageContextItems:
-            parsed = PageContextItems(items=[ContextItem(item_id="item_01", item_type="data_source", value="NCIS",
-                                                         quote="Data were drawn from the NCIS database.", page=99)])
-        else:
-            parsed = PageStatistics(statistics=[Statistic(
-                statistic_id="stat_01", variable="deaths", value=6, reported_text="six", unit="deaths",
-                statistic_type="count", record_type="measurement", value_status="exact",
-                context_item_ids=["p1_i01", "made_up"], page=99, quote="six deaths")])
-        return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=10, output_tokens=5)
-
-
-def test_ids_pages_and_contexts_are_set_in_code() -> None:
-    backend = FakeBackend()
-    result = extract_findings(["page one text", "", "page three text"], backend, "doc_x", dedupe=False)
-    assert [i.item_id for i in result.context_items] == ["p1_i01", "p3_i01"]
-    assert [s.statistic_id for s in result.statistics] == ["p1_s01", "p3_s01"]
-    assert [s.page for s in result.statistics] == [1, 3]
-    assert result.statistics[0].context_item_ids == ["p1_i01", "p3_i01"]  # unknown IDs dropped, links merged
-    assert result.statistics[1].context_item_ids == ["p1_i01"]
-    assert result.context_ids["p1_s01"] != result.context_ids["p3_s01"]
-    assert len(backend.prompts) == 7  # the empty page is skipped
-    assert result.seconds == 7.0
-
-
-def test_statistics_prompt_lists_every_context_item() -> None:
-    backend = FakeBackend()
-    extract_findings(["first", "second"], backend, "doc_x")
-    statistics_prompt = next(p for p in backend.prompts if "List every number" in p)
-    assert "=== page 1 ===" in statistics_prompt
-    assert "p1_i01 | data_source | NCIS" in statistics_prompt
-    assert "p2_i01 | data_source | NCIS" in statistics_prompt
+def stat(reported, value=None, status="exact", **extra):
+    defaults = {"quote": "q", "record_type": "measurement", "variable": "v", "statistic_type": "other",
+                "statistic_id": "s", "page": 1}
+    return Statistic(value=value, reported_text=reported, value_status=status, **{**defaults, **extra})
 
 
 def test_prompts_keep_dates_at_printed_precision() -> None:
@@ -69,12 +20,6 @@ def test_prompts_keep_dates_at_printed_precision() -> None:
 def test_schemas_cap_list_lengths() -> None:
     assert PageStatistics.model_json_schema()["properties"]["statistics"]["maxItems"] == 60
     assert PageContextItems.model_json_schema()["properties"]["items"]["maxItems"] == 30
-
-
-def stat(reported, value=None, status="exact", **extra):
-    defaults = {"quote": "q", "record_type": "measurement", "variable": "v", "statistic_type": "other",
-                "statistic_id": "s", "page": 1}
-    return Statistic(value=value, reported_text=reported, value_status=status, **{**defaults, **extra})
 
 
 def test_wording_sets_the_reading_and_fills_bounds() -> None:
@@ -104,18 +49,6 @@ def test_table_rows_are_dropped_but_number_heavy_prose_is_kept() -> None:
     assert without_tables(text).splitlines() == text.splitlines()[1:]
 
 
-def test_a_failed_page_is_recorded_and_the_rest_continue() -> None:
-    class Flaky(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if "=== page 1 ===" in prompt and schema is PageStatistics:
-                raise RuntimeError("token repeat limit reached")
-            return super().generate(prompt, schema, images)
-
-    result = extract_findings(["one", "two"], Flaky(), "doc_x")
-    assert [s.page for s in result.statistics] == [2]
-    assert result.failed_steps and "page 1 statistics" in result.failed_steps[0]
-
-
 def test_survey_answers_are_labelled_from_the_quote() -> None:
     from crdc_pipeline.extraction.statistics.values import label_survey_answer
 
@@ -125,106 +58,6 @@ def test_survey_answers_are_labelled_from_the_quote() -> None:
         assert (labelled.response_category, labelled.record_type) == (category, "survey_response")
     change = label_survey_answer(stat("0.9%", 0.9, quote="While agreement to this question has grown 0.9% since"))
     assert change.response_category is None
-
-
-def test_linking_pass_adds_items_from_other_pages() -> None:
-    class Linking(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if schema is PageLinks:
-                self.prompts.append(prompt)
-                ids = ["p2_i01"] if "Numbers on page 1" in prompt else []
-                parsed = PageLinks(links=[StatisticLinks(statistic_id="p1_s01", item_ids=ids)])
-                return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-            return super().generate(prompt, schema, images)
-
-    result = extract_findings(["one", "two"], Linking(), "doc_x")
-    assert result.statistics[0].context_item_ids == ["p1_i01", "p2_i01"]
-    assert extract_findings(["one", "two"], Linking(), "doc_x", link=False).statistics[0].context_item_ids == ["p1_i01"]
-
-
-def test_whole_study_items_reach_every_statistic_except_cited_ones() -> None:
-    class Scoped(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if schema is StudyItems:
-                parsed = StudyItems(item_ids=["p2_i01", "made_up"])
-                return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-            result = super().generate(prompt, schema, images)
-            if schema is PageStatistics and "=== page 2 ===" in prompt:
-                cited = result.parsed.statistics[0].model_copy(update={"record_type": "cited", "context_item_ids": []})
-                result.parsed.statistics = [cited]
-            return result
-
-    result = extract_findings(["one", "two"], Scoped(), "doc_x", link=False)
-    assert result.study_item_ids == ["p2_i01"]
-    assert result.statistics[0].context_item_ids == ["p2_i01", "p1_i01"]
-    assert result.statistics[1].context_item_ids == []
-
-
-def test_context_steps_can_use_another_model() -> None:
-    statistics_model, context_model = FakeBackend(), FakeBackend()
-    extract_findings(["one", "two"], statistics_model, "doc_x", context_backend=context_model, dedupe=False)
-    assert all("List every number" in p for p in statistics_model.prompts)
-    assert len(statistics_model.prompts) == 2
-    assert not any("List every number" in p for p in context_model.prompts)
-
-
-def test_whole_document_mode_uses_one_context_call_and_one_link_call() -> None:
-    from crdc_pipeline.extraction.contexts.prompts import (
-        DocumentContextItems,
-        DocumentLinks,
-        DocumentStatisticLinks,
-    )
-
-    class Whole(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if schema not in (DocumentContextItems, DocumentLinks):
-                return super().generate(prompt, schema, images)
-            self.prompts.append(prompt)
-            if schema is DocumentContextItems:
-                parsed = DocumentContextItems(items=[
-                    ContextItem(item_id="x", item_type="limitation", value="provisional", quote="Data were provisional at the time of writing.", page=2),
-                    ContextItem(item_id="y", item_type="other", value="no such page", quote="Data were provisional at the time of writing.", page=9)])
-            else:
-                parsed = DocumentLinks(links=[DocumentStatisticLinks(statistic_id="p1_s01", item_ids=["p2_i001"])])
-            return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-
-    backend = Whole()
-    result = extract_findings(["one", "two"], backend, "doc_x", whole_document=True, scope=False, dedupe=False)
-    assert [i.item_id for i in result.context_items] == ["p2_i001"]  # an item on a page with no text is dropped
-    assert "=== page 1 ===" in backend.prompts[0] and "=== page 2 ===" in backend.prompts[0]
-    assert result.statistics[0].context_item_ids == ["p2_i001"]
-    assert len(backend.prompts) == 4  # one context call, two statistics pages, one link call
-
-
-def test_relink_replaces_links_with_one_document_call() -> None:
-    from crdc_pipeline.extraction.contexts.links import relink
-    from crdc_pipeline.extraction.contexts.prompts import DocumentLinks, DocumentStatisticLinks
-
-    class Linker:
-        def generate(self, prompt, schema, images=None):
-            assert schema is DocumentLinks and "s1 | 1 |" in prompt
-            parsed = DocumentLinks(links=[DocumentStatisticLinks(statistic_id="s1", item_ids=["a", "a", "gone"])])
-            return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-
-    item = ContextItem(item_id="a", item_type="limitation", value="v", quote="Data were provisional at the time of writing.", page=1)
-    old = stat("six", 6).model_copy(update={"statistic_id": "s1", "context_item_ids": ["a", "old"]})
-    linked, contexts, assigned, failed = relink([item], [old], Linker(), "doc_x")
-    assert linked[0].context_item_ids == ["a"] and assigned["s1"] == contexts[0].context_id and failed == []
-
-
-def test_figure_and_table_captions_are_not_context() -> None:
-    class Captions(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if schema is PageContextItems:
-                self.prompts.append(prompt)
-                parsed = PageContextItems(items=[
-                    ContextItem(item_id="a", item_type="time_period", value="2025", quote="Figure 12: Distribution of response, 2025.", page=1),
-                    ContextItem(item_id="b", item_type="data_source", value="NCIS", quote="Data were drawn from the NCIS database.", page=1)])
-                return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-            return super().generate(prompt, schema, images)
-
-    result = extract_findings(["one"], Captions(), "doc_x", link=False, scope=False)
-    assert [i.value for i in result.context_items] == ["NCIS"]
 
 
 def test_percentages_written_as_fractions_take_the_printed_number() -> None:
@@ -301,93 +134,6 @@ def test_values_whose_only_numbers_are_years_are_dropped() -> None:
     assert tidy_statistic(stat("five-year period 2012-13 to 2016-17")) is None
     assert tidy_statistic(stat("$2070/t", 2070)) is not None
     assert tidy_statistic(stat("$2.18 million (2009-14)", 2.18)) is not None
-
-
-def test_time_period_items_cover_every_period_they_print() -> None:
-    from crdc_pipeline.extraction.statistics.periods import with_item_period
-
-    def period(value):
-        found = with_item_period(ContextItem(item_id="a", item_type="time_period", value=value, page=1, quote=value)).period
-        return (found.start, found.end) if found else None
-
-    assert period("three production seasons of 2011-2012, 2012-2013, and 2013-2014") == ("2011", "2014")
-    assert period("recruited between 30 October and 17 November 2025") == ("2025-10-30", "2025-11-17")
-    assert period("since 2001") == ("2001", None)
-    assert period("Oct 2019 - Dec 2023") == ("2019-10", "2023-12")
-
-
-def test_a_span_of_years_gives_way_to_the_fieldwork_dates() -> None:
-    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
-    from crdc_pipeline.extraction.statistics.periods import with_item_period
-
-    def item(item_id, value):
-        return with_item_period(ContextItem(item_id=item_id, item_type="time_period", value=value, page=1, quote=value))
-
-    items = [item("a", "2020-2025"), item("b", "between 30 October and 17 November 2025"), item("c", "Oct 2019 - Dec 2023"),
-             ContextItem(item_id="x", item_type="geographic_region", value="Australia", page=1, quote="across Australia")]
-    assert sharpen_scope(["a", "x"], items) == ["b", "x"]
-    assert sharpen_scope(["c"], [items[0], items[2]]) == ["c"]  # a dated span over several years is not fieldwork
-
-
-def test_a_sample_without_a_size_gives_way_to_the_sized_sample_in_the_method() -> None:
-    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
-
-    items = [
-        ContextItem(item_id="m", item_type="collection_method", value="online survey", page=5,
-                    quote="An online survey methodology was used to access the views of Australians."),
-        ContextItem(item_id="v", item_type="sample_population", value="Australians", page=15,
-                    quote="When asked if the industry was prepared to change, Australians agreed."),
-        ContextItem(item_id="s", item_type="sample_population", value="3,063 surveys analysed", page=5,
-                    quote="3,063 surveys were included for analysis after data cleaning."),
-        ContextItem(item_id="p", item_type="sample_population", value="70,000 members in 14 countries", page=2,
-                    quote="The platform engaged over 70,000 community members in 14 countries."),
-    ]
-    assert sharpen_scope(["m", "v"], items) == ["m", "s"]
-
-
-def test_items_quoting_only_a_phrase_are_dropped() -> None:
-    from crdc_pipeline.extraction.contexts.scope import is_label
-
-    phrase = ContextItem(item_id="a", item_type="geographic_region", value="Australia", page=9,
-                         quote="Australia's cotton industry")
-    question = ContextItem(item_id="b", item_type="survey_question", value="water", page=9, quote="uses water responsibly")
-    assert is_label(phrase, "")
-    assert not is_label(question, "")
-
-
-def test_a_second_scope_call_adds_whole_study_method_facts() -> None:
-    from crdc_pipeline.extraction.contexts.prompts import METHOD_SCOPE_PROMPT
-
-    class Methods(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if schema is PageContextItems:
-                kind = "data_source" if "=== page 1 ===" in prompt else "functional_unit"
-                parsed = PageContextItems(items=[ContextItem(item_id="item_01", item_type=kind, value="v", page=1,
-                                                             quote="Results are expressed per tonne of lint.")])
-                return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-            if schema is StudyItems:
-                method_call = prompt.startswith(METHOD_SCOPE_PROMPT.split("{")[0][:40])
-                parsed = StudyItems(item_ids=["p2_i01", "p1_i01"] if method_call else ["p1_i01"])
-                return GenerationResult(parsed=parsed, model="fake", seconds=1.0, prompt_tokens=1, output_tokens=1)
-            return super().generate(prompt, schema, images)
-
-    result = extract_findings(["one", "two"], Methods(), "doc_x", link=False)
-    assert result.study_item_ids == ["p1_i01", "p2_i01"]  # the method call only adds method kinds
-
-
-def test_the_sample_is_found_on_the_page_of_the_sharpened_period() -> None:
-    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
-    from crdc_pipeline.extraction.statistics.periods import with_item_period
-
-    def period(item_id, value, page):
-        return with_item_period(ContextItem(item_id=item_id, item_type="time_period", value=value, page=page, quote=value))
-
-    items = [period("a", "2020-2025", 15), period("b", "between 30 October and 17 November 2025", 5),
-             ContextItem(item_id="v", item_type="sample_population", value="Australians", page=15,
-                         quote="Most Australians agreed with the statement."),
-             ContextItem(item_id="s", item_type="sample_population", value="3,063 surveys analysed", page=5,
-                         quote="3,063 surveys were included for analysis after data cleaning.")]
-    assert sharpen_scope(["a", "v"], items) == ["b", "s"]
 
 
 def test_a_measurement_linked_to_a_survey_question_is_a_survey_answer() -> None:
@@ -488,19 +234,6 @@ def test_a_duplicate_judged_the_same_is_dropped_and_its_links_kept() -> None:
     assert drop_duplicates([abstract, results], set(), pairs) == [abstract, results]
 
 
-def test_the_pipeline_asks_about_same_value_pairs_and_drops_the_later_one() -> None:
-    class Same(FakeBackend):
-        def generate(self, prompt, schema, images=None):
-            if schema is SamePairs:
-                return GenerationResult(parsed=SamePairs(pair_ids=["pair_001"]), model="fake", seconds=1.0,
-                                        prompt_tokens=1, output_tokens=1)
-            return super().generate(prompt, schema, images)
-
-    result = extract_findings(["one", "two"], Same(), "doc_x", link=False, scope=False)
-    assert [s.page for s in result.statistics] == [1]
-    assert len(extract_findings(["one", "two"], Same(), "doc_x", link=False, scope=False, dedupe=False).statistics) == 2
-
-
 def test_numbers_that_set_up_the_survey_or_report_are_not_findings() -> None:
     from crdc_pipeline.extraction.statistics.filters import is_structural
 
@@ -560,19 +293,6 @@ def test_ranks_are_positions_and_medians_are_medians() -> None:
     assert label_type(stat("sixth", 6, unit="rank", statistic_type="count")).statistic_type == "other"
     median = stat("10.28 bales per ha", 10.28, unit="bales/ha", variable="median farm yield", statistic_type="average")
     assert label_type(median).statistic_type == "median"
-
-
-def test_linked_items_that_repeat_a_kind_the_study_covers_are_dropped() -> None:
-    from crdc_pipeline.extraction.contexts.links import trim_links
-
-    def item(item_id, kind, page):
-        return ContextItem(item_id=item_id, item_type=kind, value="v", page=page, quote="A fact stated in a sentence.")
-
-    items = [item("st", "time_period", 5), item("ss", "sample_population", 5), item("t2", "time_period", 9),
-             item("sub", "sample_population", 9), item("far", "sample_population", 2), item("q", "survey_question", 9)]
-    answer = stat("38%", 38, page=9, context_item_ids=["st", "ss", "t2", "sub", "far", "q"])
-    trimmed = trim_links([answer], items, ["st", "ss"])[0]
-    assert trimmed.context_item_ids == ["st", "ss", "sub", "q"]
 
 
 def test_two_ends_of_a_printed_range_are_one_statistic() -> None:
@@ -681,33 +401,6 @@ def test_treatment_timings_and_count_adjectives_are_setup() -> None:
     assert is_structural(stat("25-boll", 25, quote="by harvesting a 25-boll sample by hand"))
     assert not is_structural(stat("within four weeks", 4, quote="which occurs within four weeks of harvest"))
     assert not is_structural(stat("350 GDDs", 350, quote="when 350 GDDs past cutout in northern Arkansas"))
-
-
-def test_a_region_from_the_abstract_gives_way_to_the_sites_in_the_method() -> None:
-    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
-    from crdc_pipeline.extraction.statistics.periods import with_item_period
-
-    def item(item_id, kind, value, page):
-        made = ContextItem(item_id=item_id, item_type=kind, value=value, page=page, quote=f"The study reports {value}.")
-        return with_item_period(made)
-
-    items = [item("r1", "geographic_region", "mid-southern United States", 1),
-             item("t", "time_period", "2015-2017", 2), item("r2", "geographic_region", "Starkville and Stoneville, MS", 2)]
-    assert sharpen_scope(["r1", "t"], items) == ["r2", "t"]
-
-
-def test_a_collection_method_under_one_chart_gives_way_to_the_one_in_the_method() -> None:
-    from crdc_pipeline.extraction.contexts.scope import sharpen_scope
-    from crdc_pipeline.extraction.statistics.periods import with_item_period
-
-    def item(item_id, kind, value, page):
-        made = ContextItem(item_id=item_id, item_type=kind, value=value, page=page, quote=f"The study reports {value}.")
-        return with_item_period(made)
-
-    items = [item("t", "time_period", "2025-10-30 to 2025-11-17", 5), item("m", "collection_method", "online survey", 5),
-             item("c1", "collection_method", "Survey responses", 15), item("c2", "collection_method", "a survey", 11)]
-    assert sharpen_scope(["t", "c1", "c2"], items) == ["t", "m"]
-    assert sharpen_scope(["t", "m"], items) == ["t", "m"]
 
 
 def test_p_values_bounds_symbols_and_physical_quantities() -> None:
