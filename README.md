@@ -4,6 +4,22 @@ This repository is for the development of a python application that can extract 
 
 ![Tests](https://github.com/DSB300-CRDC-DS262-1/metadata-pipeline/actions/workflows/tests.yml/badge.svg)
 
+> **About this branch.** `amaan/full-local-extraction` is a learning branch and will not be merged into
+> `main`. It runs the whole pipeline (metadata, statistics and their contexts) on a local model, Gemma 4 E4B
+> through Ollama, with plain-code rules that check the model's answers, and scores every stage against
+> references checked by hand against the four PDFs CRDC provided.
+>
+> **How it differs from `main`:** `main` has the same local metadata extraction (PR #9) in a flat layout, and
+> statistics and context extraction through Gemini. Here the code is organised by extraction type
+> (`extraction/metadata/`, `contexts/`, `statistics/`), statistics and contexts are extracted page by page by
+> the local model in one pass, and the references are in `data/reference/` (metadata, statistics, contexts).
+>
+> **Results on the four documents:** metadata 76 of 76 fields; statistics recall 99% (237 of 239) and
+> precision 96%; context links recall 85% and precision 57% against the reference.
+>
+> **Where to look:** the rules are in `src/crdc_pipeline/extraction/*/` and each one has a test in `tests/`;
+> "How metadata is extracted" and "Statistics and contexts" below explain them in order.
+
 Extracts metadata and prose-reported quantitative statistics from CRDC
 research PDFs into structured JSON (`documents` / `contexts` /
 `statistics`, per `data/schema_worked_examples.json`). Text-layer
@@ -180,9 +196,12 @@ model never needs the whole document at once:
    lower bound), values as printed ("80%" is 80, "half" is 50%), the period
    nearest the value in its sentence at printed precision, survey answers
    dated to the fieldwork year, citations make a figure "cited". Table rows,
-   chart values, reference lists, date-only values and numbers that only set
-   up the report (subgroup definitions, scale ends, "three main themes") are
-   dropped; a bracketed unit conversion and the two ends of a printed range
+   chart and infographic labels, reference lists, date-only values and
+   numbers that only set up the report are dropped: subgroup definitions and
+   bounds ("6-10 people", "(5+ days)"), scale ends, counts of the report's own
+   parts ("three main themes", "three production seasons"), thresholds in a
+   rule ("if case numbers are below five", "the 1% cut-off") and period
+   lengths ("the five-year period"); a bracketed unit conversion and the two ends of a printed range
    are kept as one statistic.
 5. **Context items that are not conditions** are dropped before scoping and
    linking: running headers and footers, thanks, disclaimers and copyright
@@ -190,7 +209,9 @@ model never needs the whole document at once:
    Study items are then fitted to each statistic: a model input keeps only the
    study's period, region and data source, and a rating scale reaches only
    survey answers (a 1 to 5 scale without agreement wording only the ratings).
-6. **Duplicates**: numbers with the same value and unit are paired, and one
+6. **Duplicates**: numbers with the same value and unit are paired (also a
+   value restated as a bound, "approaching" and "approximately $3.5 million",
+   or rounded, with units in any word order), and one
    model call per document judges which pairs are the same measurement (the
    abstract repeating a result). The later one is dropped and the earlier
    keeps both sets of links; different survey questions or groups are kept
@@ -203,7 +224,7 @@ model never needs the whole document at once:
 
 Scored against `data/reference/statistics.json` and `contexts.json` (four
 documents, 239 statistics), the latest E4B run finds 99% of the reference
-statistics (237) at 88% precision. Field agreement on matched statistics:
+statistics (237) at 96% precision. Field agreement on matched statistics:
 value reading 99%, type 92%, period 90%, record type 87% (repeat runs vary by
 a few points). Context links reach 85% of the facts the reference links, and
 57% of the links given are right. Key conditions are right for nearly all
