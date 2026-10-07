@@ -425,3 +425,53 @@ def test_shared_units_and_the_amount_of_a_change() -> None:
     change = label_change(stat("0.09", 0.09, record_type="survey_response", quote="having increased by 0.09 between 2020 and 2025"))
     level = label_change(stat("49%", 49, record_type="survey_response", quote="neutral responses increased from 49% in 2023"))
     assert change.record_type == "derived" and level.record_type == "survey_response"
+
+
+def test_thresholds_period_lengths_group_bounds_and_counts_are_setup() -> None:
+    from crdc_pipeline.extraction.statistics.filters import is_structural
+
+    setup = [
+        stat("five", 5, quote="In compliance with the ethics agreement, if case numbers are below five, we are required not to provide the precise number."),
+        stat("1%", 1, quote="All process flows with a cumulative mass or energy of less than 1% were excluded, e.g. packaging glues."),
+        stat("1%", 1, quote="The increase in emissions was negligible and below the 1% cut-off for inclusion in the LCA."),
+        stat("five", 5, quote="Workers compensation data were accessed for the five-year period 2012-13 to 2016-17."),
+        stat("two", 2, quote="This may be reflected in the lower number of weeks lost in the last two years of this study period."),
+        stat("three years", 3, quote="the first interval (2008-09 to 2011-12), is only three years in duration"),
+        stat("5+ days", 5, quote="Serious injury claims (5+ days), comprised virtually all of the time lost (~99%)."),
+        stat("10", 10, quote="those who knew 6-10 people in the cotton industry gave the highest average score of 3.94"),
+        stat("three", 3, quote="The foreground data were for the three production seasons from 2011-2012 to 2013-2014."),
+        stat("one", 1, quote="The study used a functional unit of one tonne of cotton lint at port."),
+        stat("two", 2, quote="The relationship is measured through two core trust and acceptance items."),
+    ]
+    for s in setup:
+        assert is_structural(s), s.quote
+    findings = [
+        stat("fewer than five", None, quote="In the more recent period, there have been fewer than five cases on a cotton property."),
+        stat("6-month", 6, quote="Cotton is an annual summer crop, with a 6-month production season."),
+        stat("3-5 years or longer", None, quote="(which in some instances can take 3-5 years or longer)"),
+        stat("3.94", 3.94, quote="those who knew 6-10 people in the cotton industry gave the highest average score of 3.94"),
+    ]
+    for s in findings:
+        assert not is_structural(s), s.quote
+
+
+def test_chart_labels_are_dropped_but_numbered_answers_are_kept() -> None:
+    from crdc_pipeline.extraction.statistics.filters import is_table_row
+
+    assert is_table_row(stat("0.16%", 0.16, quote="Prefer not to say: 0.16%"), "")
+    assert is_table_row(stat("7.35%", 7.35, quote="Yes 7.35%"), "")
+    assert not is_table_row(stat("30%", 30, quote="1. Internet (30%)."), "")
+    assert not is_table_row(stat("12%", 12, quote="5. Friends or family (12%)"), "")
+
+
+def test_a_value_restated_as_a_bound_or_rounded_is_a_duplicate_candidate() -> None:
+    from crdc_pipeline.extraction.statistics.duplicates import duplicate_candidates
+
+    bound = stat("approaching $3.5 million", None, status="upper_bound", value_max=3.5, unit="AUD million", statistic_id="a")
+    again = stat("approximately $3.5 million", 3.5, status="approximate", unit="million AUD", statistic_id="b")
+    rounded = stat("10.3 bales/ha", 10.3, unit="bales/ha", statistic_id="c")
+    exact = stat("10.28 bales/ha", 10.28, unit="bales/ha", statistic_id="d")
+    whole = stat("three", 3, statistic_id="e")
+    share = stat("2.6%", 2.6, unit="%", statistic_id="f")
+    pairs = duplicate_candidates([bound, again, rounded, exact, whole, share])
+    assert [(a.statistic_id, b.statistic_id) for a, b in pairs] == [("a", "b"), ("c", "d")]

@@ -13,8 +13,31 @@ def _numbers(statistic: Statistic) -> tuple:
 
 
 def _units_agree(first: Statistic, second: Statistic) -> bool:
+    """Units that agree, in any word order ("AUD million", "million AUD")."""
     a, b = (first.unit or "").strip().lower(), (second.unit or "").strip().lower()
-    return not a or not b or a == b or a in b or b in a
+    return not a or not b or a == b or a in b or b in a or set(a.split()) == set(b.split())
+
+
+def _decimals(number: float) -> int:
+    text = f"{number:.6f}".rstrip("0").rstrip(".")
+    return len(text.split(".")[1]) if "." in text else 0
+
+
+def _same_numbers(first: Statistic, second: Statistic) -> bool:
+    """The same printed numbers; or, with units given on both sides that agree, the same number stated as
+    a value and as a bound ("approaching $3.5 million", "approximately $3.5 million") or rounded (10.28
+    restated as 10.3)."""
+    if _numbers(first) == _numbers(second):
+        return True
+    if not ((first.unit or "").strip() and (second.unit or "").strip() and _units_agree(first, second)):
+        return False
+    a = [n for n in _numbers(first) if n is not None]
+    b = [n for n in _numbers(second) if n is not None]
+    if len(a) != 1 or len(b) != 1:
+        return False
+    x, y = a[0], b[0]
+    places = min(_decimals(x), _decimals(y))
+    return x == y or (places >= 1 and abs(x - y) <= 0.5 * 10 ** -places + 1e-9)
 
 
 def duplicate_candidates(statistics: list[Statistic]) -> list[tuple[Statistic, Statistic]]:
@@ -23,7 +46,7 @@ def duplicate_candidates(statistics: list[Statistic]) -> list[tuple[Statistic, S
     for j, later in enumerate(statistics):
         if all(n is None for n in _numbers(later)):
             continue
-        earlier = next((s for s in statistics[:j] if _numbers(s) == _numbers(later) and _units_agree(s, later)), None)
+        earlier = next((s for s in statistics[:j] if _same_numbers(s, later) and _units_agree(s, later)), None)
         if earlier is not None:
             pairs.append((earlier, later))
     return pairs[:MAX_DUPLICATE_PAIRS]

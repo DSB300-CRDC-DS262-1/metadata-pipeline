@@ -39,7 +39,21 @@ def before_references(pages: list[str]) -> list[str]:
 
 
 # Numbers that define a subgroup ("those who knew 6-10 people"), not results about it.
-SUBGROUP = re.compile(r"\b(?:who|that)\s+(?:knew|know|had|have|were|are|aged)\s+(?:about\s+)?$", re.I)
+SUBGROUP = re.compile(r"\b(?:who|that)\s+(?:knew|know|had|have|were|are|aged)\s+(?:about\s+)?(?:\d+\s*[-–]\s*)?$", re.I)
+# A group's bound in brackets after its name: "Serious injury claims (5+ days)".
+GROUP_BOUND = re.compile(r"^\d+(?:\+|\s*[-–]\s*\d+)\s*(?:days?|weeks?|months?|years?)$", re.I)
+# A number in a rule the report applies: "if case numbers are below five", "less than 1% were excluded",
+# "below the 1% cut-off", "removal of surveys where ... less than 5 minutes".
+CONDITION = re.compile(r"\b(?:if|where|unless)\b[^.;]{0,90}$", re.I)
+RULE_WORDS = re.compile(r"\b(?:excluded|exclusion|removal|removed|required|cut-off|threshold)\b", re.I)
+RULE_AFTER = re.compile(r"^[^.;]{0,40}?\b(?:cut-off|were excluded|threshold)\b", re.I)
+# The length of a period or reporting interval: "the five-year period", "five-year reporting intervals",
+# "the last two years of this study period", "only three years in duration".
+PERIOD_LENGTH = re.compile(
+    r"^\S+?[- ](?:years?|months?)\b(?:\s+(?:of|in)\s+(?:this|the)\s+(?:study\s+)?period|\s+in duration|"
+    r"\s*(?:reporting\s+)?(?:period|intervals?)\b)", re.I)
+# The functional unit an LCA's results are expressed per ("a functional unit of one tonne").
+FUNCTIONAL_UNIT = re.compile(r"\bfunctional unit\s+(?:was|is|of)\s+(?:a|an|the)?\s*$", re.I)
 
 
 # The ends of a rating scale ("from 1 (Not at all) to 5 (Extremely)").
@@ -50,7 +64,8 @@ SCALE = re.compile(r"\bscale\s+(?:of|from)\s+(\d+)\b[^.;]{0,40}?\bto\s+(\d+)\b",
 OWN_PARTS = re.compile(
     r"\b(?:themes?|items?|measures?|groupings?|groups?|variables?|areas?|categories|intervals?|questions?|"
     r"topics?|sections?|chapters?|tests?|parts?|steps?|phases?|options?|strategies|scenarios?|"
-    r"replications?|replicates?|rows?|plots?|blocks?)\b", re.I)
+    r"replications?|replicates?|rows?|plots?|blocks?|seasons?|crops?|inputs?)\b", re.I)
+OWN_PARTS_REACH = 5  # words after the number to look for what it counts
 
 
 # A number defined by an equals sign ("NAWF = 5", "1 = Strongly disagree").
@@ -81,6 +96,13 @@ def is_structural(statistic: Statistic) -> bool:
     at = quote.find(reported)
     if at >= 0 and SUBGROUP.search(quote[:at]):
         return True
+    if at >= 0 and GROUP_BOUND.match(reported) and quote[at - 1:at] == "(":
+        return True
+    after = quote[at + len(reported):] if at >= 0 else ""
+    if at >= 0 and ((CONDITION.search(quote[:at]) and RULE_WORDS.search(quote)) or RULE_AFTER.match(after)):
+        return True  # a threshold in a rule, not a finding
+    if at >= 0 and (PERIOD_LENGTH.match(reported + after) or FUNCTIONAL_UNIT.search(quote[:at])):
+        return True
     scale = SCALE.search(quote)
     if scale and reported in scale.groups():
         return True
@@ -102,14 +124,16 @@ def is_structural(statistic: Statistic) -> bool:
     numeric = sum(bool(re.fullmatch(r"[\d.,%]+", t)) for t in tokens)
     if not re.search(r"[A-Za-z]{3,}", quote) and len(numbers) >= 2 and 2 * numeric >= len(tokens):
         return True  # "n 3.54 3.51": a chart's labels, no words ("53% in 2023" is kept)
-    if SMALL_WORD_NUMBER.match(reported) and at >= 0:
-        following = re.findall(r"[A-Za-z]+", quote[at + len(reported):at + len(reported) + 40])[:3]
+    first = reported.split()[0] if reported.split() else ""
+    if SMALL_WORD_NUMBER.match(first) and at >= 0:
+        following = re.findall(r"[A-Za-z]+", quote[at + len(first):at + len(first) + 60])[:OWN_PARTS_REACH]
         if any(OWN_PARTS.fullmatch(word) for word in following):
             return True
     return False
 
 
 TABLE_ROW_MAX_WORDS = 15
+CHART_LABEL_MAX_WORDS = 6
 
 
 def is_table_row(statistic: Statistic, page_text: str) -> bool:
@@ -119,6 +143,9 @@ def is_table_row(statistic: Statistic, page_text: str) -> bool:
         return True
     if len(quote.split()) >= TABLE_ROW_MAX_WORDS or quote.endswith((".", "?", "!")):
         return False
+    if (len(quote.split()) <= CHART_LABEL_MAX_WORDS and quote.endswith(statistic.reported_text.strip())
+            and not re.match(r"^\W*\d+\.\s", quote)):
+        return True  # "Prefer not to say: 0.16%": a chart or infographic label, not a sentence or numbered list item
     if not quote.endswith(statistic.reported_text.strip()):
         return False
     return any(" ".join(line.split()) == quote for line in page_text.splitlines())
