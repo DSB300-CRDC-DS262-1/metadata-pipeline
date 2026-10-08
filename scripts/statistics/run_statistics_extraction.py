@@ -43,7 +43,7 @@ def parse_args() -> argparse.Namespace:
                         help="keep the text layer even where it is unreadable; by default pages with unreadable "
                              "characters, garbled text or no text are read from the page image (local vision model)")
     parser.add_argument("--exclude-tables", action="store_true", help="drop table and chart lines before extraction")
-    parser.add_argument("--no-link", action="store_true", help="skip the separate linking pass")
+    parser.add_argument("--link", action="store_true", help="add the per-page linking pass (about a quarter more model time; context links 71%%/75%% without, 74%%/73%% with)")
     parser.add_argument("--context-backend", choices=["gemini", "ollama"], help="backend for the context steps (default: --backend)")
     parser.add_argument("--context-model", help="model for the context, scope and linking steps (default: --model)")
     parser.add_argument("--context-think", choices=["default", "on", "off"], default="default")
@@ -173,7 +173,7 @@ def main() -> None:
             print(f"[skip] {document_id}: {pdf.name} not found")
             continue
         pages = [p.text for p in load_document(pdf, document_id, vision=transcribe).pages]
-        result = extract_findings(pages, backend, document_id, exclude_tables=args.exclude_tables, link=not args.no_link, scope=not args.no_scope,
+        result = extract_findings(pages, backend, document_id, exclude_tables=args.exclude_tables, link=args.link, scope=not args.no_scope,
                                   context_backend=context_backend, whole_document=args.whole_document,
                                   dedupe=not args.no_dedupe, datasets=not args.no_datasets, drop_table_rows=args.drop_table_rows, workers=args.workers)
         saved = {"document_id": document_id, **json.loads(result.model_dump_json())}
