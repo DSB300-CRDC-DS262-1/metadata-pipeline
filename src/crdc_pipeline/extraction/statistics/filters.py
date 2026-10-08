@@ -217,3 +217,11 @@ def value_not_in_quote(statistic: Statistic) -> bool:
     digits = re.findall(r"\d+(?:\.\d+)?", statistic.reported_text.replace(",", ""))
     quote = statistic.quote.replace(",", "")
     return bool(digits) and not all(d in quote for d in digits)
+
+
+def value_not_on_page(statistic: Statistic, page_text: str) -> bool:
+    """The value's digits appear nowhere on its page: the model changed a digit while copying ("1261 GL" for
+    the printed "1281 GL"). A scan's split decimal ("11. 7") is closed up first."""
+    digits = re.findall(r"\d+(?:\.\d+)?", statistic.reported_text.replace(",", ""))
+    page = re.sub(r"(\d)\.\s+(\d)", r"\1.\2", page_text.replace(",", ""))
+    return bool(digits) and not all(d in page for d in digits)

@@ -500,3 +500,13 @@ def test_scale_ends_and_counts_of_the_reports_own_findings_are_not_findings() ->
     assert is_structural(stat("1 to 5", quote=scale)) and is_structural(stat("5", 5, quote=scale))
     assert is_structural(stat("two", 2, quote="The responses to these inquiries revealed two key findings."))
     assert is_structural(stat("single", 1, quote="Acceptance is measured using a single item, using the same scale."))
+
+
+def test_a_value_whose_digits_are_not_on_its_page_was_misread() -> None:
+    from crdc_pipeline.extraction.statistics.filters import value_not_on_page
+
+    page = "Between 1988 and 1994 the cotton industry used an average of 1281 GL per annum.\nMacintyre valley (11. 7 ML/ha)"
+    assert value_not_on_page(stat("1261 GL", 1261, quote="used an average of 1261 GL per annum"), page)
+    assert not value_not_on_page(stat("1281 GL", 1281), page)
+    assert not value_not_on_page(stat("11.7 ML/ha", 11.7), page)  # the scan split the decimal
+    assert not value_not_on_page(stat("eight", 8), page)

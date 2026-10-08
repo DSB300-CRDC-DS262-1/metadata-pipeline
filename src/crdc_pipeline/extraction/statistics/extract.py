@@ -49,6 +49,7 @@ from .filters import (
     is_structural,
     is_table_row,
     value_not_in_quote,
+    value_not_on_page,
     without_tables,
     word_number_note,
 )
@@ -158,7 +159,8 @@ def extract_findings(
     for n, text in numbered:
         prompt = STATISTICS_PROMPT.format(page=n, text=text, items=item_list(items), word_numbers=word_number_note(text))
         found = [s for s in generate(prompt, PageStatistics, f"page {n} statistics", backend).statistics
-                 if not is_table_row(s, text) and not is_structural(s) and not value_not_in_quote(s)]
+                 if not is_table_row(s, text) and not is_structural(s) and not value_not_in_quote(s)
+                 and not value_not_on_page(s, text)]
         kept = merge_ranges(drop_conversions([with_period(label_type(shared_unit(label_change(label_cited(label_survey_answer(s, text))))))
                                  for s in (tidy_statistic(s) for s in found) if s is not None]))
         by_page.append((n, [

@@ -49,20 +49,35 @@ def split_by_dataset(
         return {}, study, {}
     shared = [i for i in study if i not in seen]
     datasets = "\n".join(f"- {name}: " + "; ".join(by_id[i].value for i in ids) for name, ids in groups)
-    numbers = "\n".join(f"{s.statistic_id} | {s.page} | {s.variable} | {s.reported_text} | {s.quote}"
-                        for s in statistics if s.record_type != "cited")
-    picked = generate(ASSIGN_PROMPT.format(datasets=datasets, statistics=numbers), DatasetAssignments, "dataset assignment")
     names = [name.lower() for name, _ in groups]
     assigned: dict[str, int] = {}
-    for n, entry in enumerate(picked.datasets):
-        # By name; an answer whose name was reworded is taken by its position in the list.
-        index = names.index(entry.dataset.lower()) if entry.dataset.lower() in names else n
-        if index < len(groups):
-            for listed_id in entry.statistic_ids:
-                # The model sometimes copies the whole listed line ("p5_s01 | 5 | Deaths | six | ...").
-                statistic_id = re.split(r"[\s|:]", listed_id.strip(), maxsplit=1)[0]
-                assigned.setdefault(statistic_id, index)
+    for batch in _batches([s for s in statistics if s.record_type != "cited"]):
+        picked = generate(ASSIGN_PROMPT.format(datasets=datasets, statistics=_rows(batch)), DatasetAssignments,
+                          "dataset assignment")
+        for n, entry in enumerate(picked.datasets):
+            # By name; an answer whose name was reworded is taken by its position in the list.
+            index = names.index(entry.dataset.lower()) if entry.dataset.lower() in names else n
+            if index < len(groups):
+                for listed_id in entry.statistic_ids:
+                    assigned.setdefault(_listed_id(listed_id), index)
     return dict(groups), shared, assigned
+
+
+# Numbers per call: a few hundred in one prompt made the model reason until its context ran out.
+STATISTICS_PER_CALL = 120
+
+
+def _batches(statistics: list[Statistic]) -> list[list[Statistic]]:
+    return [statistics[k:k + STATISTICS_PER_CALL] for k in range(0, len(statistics), STATISTICS_PER_CALL)]
+
+
+def _rows(statistics: list[Statistic]) -> str:
+    return "\n".join(f"{s.statistic_id} | {s.page} | {s.variable} | {s.reported_text} | {s.quote}" for s in statistics)
+
+
+def _listed_id(listed: str) -> str:
+    """The model sometimes copies the whole listed line ("p5_s01 | 5 | Deaths | six | ...")."""
+    return re.split(r"[\s|:]", listed.strip(), maxsplit=1)[0]
 
 
 def with_study_items(statistic: Statistic, study: list[str], datasets: dict[str, list[str]], shared: list[str],
@@ -100,15 +115,13 @@ def method_reach(
     if not methods or not numbers:
         return {}
     listed = "\n".join(f"{i} | {by_id[i].item_type} | {by_id[i].value} | {by_id[i].quote}" for i in methods)
-    rows = "\n".join(f"{s.statistic_id} | {s.page} | {s.variable} | {s.reported_text} | {s.quote}" for s in numbers)
-    answer = generate(METHOD_REACH_PROMPT.format(items=listed, statistics=rows), MethodReaches, "method reach")
-    known = {s.statistic_id for s in numbers}
-    reach = {}
-    for fact in answer.facts:
-        if fact.item_id not in methods or fact.applies_to_all:
-            continue
-        ids = {re.split(r"[\s|:]", s.strip(), maxsplit=1)[0] for s in fact.statistic_ids} & known
-        # A fact kept on a large share of the numbers is the study's own; the model only listed some of them.
-        if len(ids) < WIDE_REACH * len(numbers):
-            reach[fact.item_id] = ids
-    return reach
+    covered: dict[str, set[str]] = {i: set() for i in methods}
+    for batch in _batches(numbers):
+        answer = generate(METHOD_REACH_PROMPT.format(items=listed, statistics=_rows(batch)), MethodReaches, "method reach")
+        ids = {s.statistic_id for s in batch}
+        narrowed = {f.item_id: {_listed_id(x) for x in f.statistic_ids} & ids
+                    for f in answer.facts if f.item_id in covered and not f.applies_to_all}
+        for item_id in covered:  # a fact the model left out, or applied to all, covers the whole batch
+            covered[item_id] |= narrowed.get(item_id, ids)
+    # A fact kept on a large share of the numbers is the study's own; the model only listed some of them.
+    return {i: ids for i, ids in covered.items() if len(ids) < WIDE_REACH * len(numbers)}
