@@ -57,14 +57,14 @@ FUNCTIONAL_UNIT = re.compile(r"\bfunctional unit\s+(?:was|is|of)\s+(?:a|an|the)?
 
 
 # The ends of a rating scale ("from 1 (Not at all) to 5 (Extremely)").
-SCALE = re.compile(r"\bscale\s+(?:of|from)\s+(\d+)\b[^.;]{0,40}?\bto\s+(\d+)\b", re.I)
+SCALE = re.compile(r"\bscale\s+(?:ranging\s+)?(?:of|from)\s+(\d+)\b[^.;]{0,40}?\bto\s+(\d+)\b", re.I)
 
 
 # A count of the report's own parts ("three main themes", "two core items").
 OWN_PARTS = re.compile(
     r"\b(?:themes?|items?|measures?|groupings?|groups?|variables?|areas?|categories|intervals?|questions?|"
     r"topics?|sections?|chapters?|tests?|parts?|steps?|phases?|options?|strategies|scenarios?|"
-    r"replications?|replicates?|rows?|plots?|blocks?|seasons?|crops?|inputs?)\b", re.I)
+    r"replications?|replicates?|rows?|plots?|blocks?|seasons?|crops?|inputs?|findings?)\b", re.I)
 OWN_PARTS_REACH = 5  # words after the number to look for what it counts
 
 
@@ -86,7 +86,7 @@ TIMING = re.compile(r"^(?:\d+|one|two|three|four|five|six|seven|eight)\s+(?:week
 SHARE_RESTATED_WITHIN = 10  # percentage points between "close to half" and the exact figure after it
 
 
-SMALL_WORD_NUMBER = re.compile(r"^(?:one|two|three|four|five|six|seven|eight|nine|ten)$", re.I)
+SMALL_WORD_NUMBER = re.compile(r"^(?:single|one|two|three|four|five|six|seven|eight|nine|ten)$", re.I)
 
 
 NUMBER_WORDS = ("one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|half|quarter|"
@@ -123,7 +123,7 @@ def is_structural(statistic: Statistic) -> bool:
     if at >= 0 and (PERIOD_LENGTH.match(reported + after) or FUNCTIONAL_UNIT.search(quote[:at])):
         return True
     scale = SCALE.search(quote)
-    if scale and reported in scale.groups():
+    if scale and (reported in scale.groups() or reported == "{} to {}".format(*scale.groups())):
         return True
     if CAPTION.match(quote):
         return True  # a value read off a chart, quoted from its caption

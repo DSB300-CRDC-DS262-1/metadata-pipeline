@@ -491,3 +491,12 @@ def test_table_rows_chart_labels_and_misread_values_are_left_out() -> None:
     assert is_structural(stat("a third", quote="These assessments provide a third-party expert assessment of the industry."))
     assert not is_structural(stat("up to a third", quote="which may offset up to a third of the annual increase in CO2"))
     assert not is_structural(stat("two-thirds", quote="Two-thirds of growers used the app."))
+
+
+def test_scale_ends_and_counts_of_the_reports_own_findings_are_not_findings() -> None:
+    from crdc_pipeline.extraction.statistics.filters import is_structural
+
+    scale = "trust is assessed through three distinct questions, employing a scale ranging from 1 (Not at all) to 5 (Extremely)."
+    assert is_structural(stat("1 to 5", quote=scale)) and is_structural(stat("5", 5, quote=scale))
+    assert is_structural(stat("two", 2, quote="The responses to these inquiries revealed two key findings."))
+    assert is_structural(stat("single", 1, quote="Acceptance is measured using a single item, using the same scale."))
