@@ -7,6 +7,9 @@ are set in code. The context steps' prompts and rules are in extraction/contexts
 
 from __future__ import annotations
 
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
 from pydantic import BaseModel, Field
 
 from ..backends import Backend
@@ -92,6 +95,7 @@ def extract_findings(
     dedupe: bool = True,
     datasets: bool = True,
     drop_table_rows: bool = False,
+    workers: int = 1,
 ) -> FindingsExtractionResult:
     """Context items, then statistics, for every page with text.
 
@@ -102,6 +106,8 @@ def extract_findings(
     `whole_document` runs the context and linking steps once over the whole document instead of
     page by page (statistics stay page by page). `datasets` splits the study's items by dataset when the
     document reports more than one, so each statistic takes only its own dataset's conditions.
+    `workers` pages are sent to the model at once in the page-by-page steps (a local server answers several
+    requests together, faster than one after another); results keep page order.
     """
     pages = before_references(pages)
     if exclude_tables:
@@ -111,18 +117,29 @@ def extract_findings(
     models: list[str] = []
     failed: list[str] = []
 
+    lock = threading.Lock()
+
     def generate(prompt: str, schema: type[BaseModel], step: str, model: Backend) -> BaseModel:
         try:
             result = model.generate(prompt, schema)
         except RuntimeError as exc:  # e.g. the model looping until the server stops it
-            failed.append(f"{step}: {exc}")
+            with lock:
+                failed.append(f"{step}: {exc}")
             return schema()
-        usage["seconds"] += result.seconds
-        usage["prompt_tokens"] += result.prompt_tokens or 0
-        usage["output_tokens"] += result.output_tokens or 0
-        if result.model not in models:
-            models.append(result.model)
+        with lock:
+            usage["seconds"] += result.seconds
+            usage["prompt_tokens"] += result.prompt_tokens or 0
+            usage["output_tokens"] += result.output_tokens or 0
+            if result.model not in models:
+                models.append(result.model)
         return result.parsed
+
+    def generate_all(calls: list[tuple[str, type[BaseModel], str, Backend]]) -> list[BaseModel]:
+        """Several calls at once, answers in the order asked."""
+        if workers <= 1 or len(calls) <= 1:
+            return [generate(*call) for call in calls]
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            return list(pool.map(lambda call: generate(*call), calls))
 
     numbered = [(n, text) for n, text in enumerate(pages, start=1) if text.strip()]
     items: list[ContextItem] = []
@@ -133,9 +150,10 @@ def extract_findings(
         for k, item in enumerate((i for i in found if i.page in pages_with_text), start=1):
             items.append(item.model_copy(update={"item_id": f"p{item.page}_i{k:03d}"}))
     else:
-        for n, text in numbered:
-            prompt = CONTEXT_PROMPT.format(page=n, text=text)
-            for k, item in enumerate(generate(prompt, PageContextItems, f"page {n} context", context_backend).items, start=1):
+        answers = generate_all([(CONTEXT_PROMPT.format(page=n, text=text), PageContextItems, f"page {n} context",
+                                 context_backend) for n, text in numbered])
+        for (n, _), answer in zip(numbered, answers):
+            for k, item in enumerate(answer.items, start=1):
                 items.append(item.model_copy(update={"item_id": f"p{n}_i{k:02d}", "page": n}))
     # A figure or table caption only says what a chart shows; it never matched a real context fact. Running
     # headers and footers, thanks and disclaimers, and generic words ("Survey") are not conditions either.
@@ -158,9 +176,11 @@ def extract_findings(
             study += [i for i in dict.fromkeys(picked) if i in method_ids and i not in study][:MAX_METHOD_ITEMS]
 
     by_page: list[tuple[int, list[Statistic]]] = []
-    for n, text in numbered:
-        prompt = STATISTICS_PROMPT.format(page=n, text=text, items=item_list(items), word_numbers=word_number_note(text))
-        found = [s for s in generate(prompt, PageStatistics, f"page {n} statistics", backend).statistics
+    answers = generate_all([(STATISTICS_PROMPT.format(page=n, text=text, items=item_list(items),
+                                                      word_numbers=word_number_note(text)),
+                             PageStatistics, f"page {n} statistics", backend) for n, text in numbered])
+    for (n, text), answer in zip(numbered, answers):
+        found = [s for s in answer.statistics
                  if not (drop_table_rows and is_table_row(s, text)) and not is_structural(s) and not value_not_in_quote(s)
                  and not value_not_on_page(s, text)]
         ticks = {id(s) for s in axis_ticks(found)}
@@ -187,14 +207,16 @@ def extract_findings(
         ]
 
     statistics: list[Statistic] = []
+    to_link = [(n, stats) for n, stats in by_page if link and not whole_document and stats]
+    answers = generate_all([
+        (LINK_PROMPT.format(page=n, items=item_list(items), statistics="\n".join(
+            f"{s.statistic_id} | {s.variable} | {s.reported_text} | {s.quote}" for s in stats)),
+         PageLinks, f"page {n} links", context_backend)
+        for n, stats in to_link])
+    page_links = {n: answer.links for (n, _), answer in zip(to_link, answers)}
     for n, page_statistics in by_page:
-        if link and not whole_document and page_statistics:
-            listed = "\n".join(
-                f"{s.statistic_id} | {s.variable} | {s.reported_text} | {s.quote}" for s in page_statistics
-            )
-            prompt = LINK_PROMPT.format(page=n, items=item_list(items), statistics=listed)
-            links = generate(prompt, PageLinks, f"page {n} links", context_backend).links
-            extra = {entry.statistic_id: [i for i in entry.item_ids if i in known] for entry in links}
+        if n in page_links:
+            extra = {entry.statistic_id: [i for i in entry.item_ids if i in known] for entry in page_links[n]}
             page_statistics = [
                 s.model_copy(update={"context_item_ids": list(dict.fromkeys(s.context_item_ids + extra.get(s.statistic_id, [])))})
                 for s in page_statistics
