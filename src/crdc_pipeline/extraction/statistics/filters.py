@@ -3,6 +3,7 @@ describe how a report or study is set up."""
 
 from __future__ import annotations
 
+import math
 import re
 
 from .schema import Statistic
@@ -225,3 +226,23 @@ def value_not_on_page(statistic: Statistic, page_text: str) -> bool:
     digits = re.findall(r"\d+(?:\.\d+)?", statistic.reported_text.replace(",", ""))
     page = re.sub(r"(\d)\.\s+(\d)", r"\1.\2", page_text.replace(",", ""))
     return bool(digits) and not all(d in page for d in digits)
+
+
+MAX_AXIS_TICKS = 12  # an axis has at most this many steps
+
+
+def axis_ticks(statistics: list[Statistic]) -> list[Statistic]:
+    """Numbers read off a chart's axis: three or more on a page with the same quote apart from the number,
+    all whole multiples of one step ("... rolling average Bees 0", "... Bees 40", "... Bees 60")."""
+    groups: dict[str, list[Statistic]] = {}
+    for s in statistics:
+        groups.setdefault(re.sub(r"\d[\d,.]*", "#", " ".join(s.quote.split())), []).append(s)
+    ticks = []
+    for group in groups.values():
+        values = sorted({s.value for s in group if s.value is not None})
+        if len(values) < 3 or any(v != int(v) for v in values):
+            continue
+        step = math.gcd(*(int(v) for v in values))
+        if step and max(values) / step <= MAX_AXIS_TICKS:
+            ticks += group
+    return ticks

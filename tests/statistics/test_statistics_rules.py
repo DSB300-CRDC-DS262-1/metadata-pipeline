@@ -510,3 +510,12 @@ def test_a_value_whose_digits_are_not_on_its_page_was_misread() -> None:
     assert not value_not_on_page(stat("1281 GL", 1281), page)
     assert not value_not_on_page(stat("11.7 ML/ha", 11.7), page)  # the scan split the decimal
     assert not value_not_on_page(stat("eight", 8), page)
+
+
+def test_numbers_read_off_a_chart_axis_are_left_out() -> None:
+    from crdc_pipeline.extraction.statistics.filters import axis_ticks
+
+    axis = [stat(str(v), v, quote=f"Environmental toxic load: five-year rolling average Bees {v}") for v in (0, 40, 60, 80)]
+    answers = [stat(f"{v}%", v, quote=f"Agree with: the industry uses water responsibly {v}%") for v in (20, 40)]
+    shares = [stat(f"{v}%", v, quote=f"Recommended thresholds are used {v}%") for v in (94, 95, 97)]
+    assert axis_ticks(axis + answers + shares) == axis
