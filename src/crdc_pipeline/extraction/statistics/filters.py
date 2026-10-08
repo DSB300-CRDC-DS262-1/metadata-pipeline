@@ -89,6 +89,25 @@ SHARE_RESTATED_WITHIN = 10  # percentage points between "close to half" and the 
 SMALL_WORD_NUMBER = re.compile(r"^(?:one|two|three|four|five|six|seven|eight|nine|ten)$", re.I)
 
 
+NUMBER_WORDS = ("one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|half|quarter|"
+                "first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth")
+# What may follow a number word's hyphen and still leave a number: "two-thirds", "five-fold", "twenty-five".
+STILL_A_NUMBER = re.compile(r"^(?:thirds?|quarters?|halves|fold|" + NUMBER_WORDS + r")$", re.I)
+
+
+def _only_as_adjective(reported: str, quote: str) -> bool:
+    """Every number word of the value appears in the quote only inside a hyphenated word ("third-party",
+    "five-year"), so the model read a compound as a number."""
+    words = re.findall(r"\b(?:" + NUMBER_WORDS + r")\b", reported, re.I)
+    if not words:
+        return False
+    for word in words:
+        uses = list(re.finditer(r"\b" + word + r"\b(-[A-Za-z]+)?", quote, re.I))
+        if not uses or any(not m.group(1) or STILL_A_NUMBER.match(m.group(1)[1:]) for m in uses):
+            return False
+    return True
+
+
 def is_structural(statistic: Statistic) -> bool:
     """Numbers that describe how the report or survey is set up rather than a finding."""
     reported = statistic.reported_text.strip()
@@ -124,6 +143,8 @@ def is_structural(statistic: Statistic) -> bool:
     numeric = sum(bool(re.fullmatch(r"[\d.,%]+", t)) for t in tokens)
     if not re.search(r"[A-Za-z]{3,}", quote) and len(numbers) >= 2 and 2 * numeric >= len(tokens):
         return True  # "n 3.54 3.51": a chart's labels, no words ("53% in 2023" is kept)
+    if not re.search(r"\d", reported) and _only_as_adjective(reported, quote):
+        return True  # "third-party", "a five-year average": a number word inside a compound word
     first = reported.split()[0] if reported.split() else ""
     if SMALL_WORD_NUMBER.match(first) and at >= 0:
         following = re.findall(r"[A-Za-z]+", quote[at + len(first):at + len(first) + 60])[:OWN_PARTS_REACH]
@@ -133,13 +154,30 @@ def is_structural(statistic: Statistic) -> bool:
 
 
 TABLE_ROW_MAX_WORDS = 15
-CHART_LABEL_MAX_WORDS = 6
+CHART_LABEL_MAX_WORDS = 12
+NUMBER_RUN = 3  # numbers in a row with no words between: table cells or chart labels ("35% 21% 37% 7%")
+
+
+def _in_number_run(quote: str, reported: str) -> bool:
+    """The value sits in a run of numbers with no words between them: a table row or chart labels
+    ("35% 21% 37% 7%"). A sentence separates its numbers with words; a run elsewhere in the quote (a
+    journal header pasted into the sentence) says nothing about this value."""
+    value = reported.split()[0] if reported.split() else ""
+    runs, run = [], []
+    for token in quote.split():
+        if TABLE_TOKEN.fullmatch(token) and re.search(r"\d", token):
+            run.append(token)
+        else:
+            runs.append(run)
+            run = []
+    runs.append(run)
+    return bool(value) and any(len(r) >= NUMBER_RUN and any(value in t for t in r) for r in runs)
 
 
 def is_table_row(statistic: Statistic, page_text: str) -> bool:
     """A quote that is a whole short line ending in the value, with no sentence ending: a table row."""
     quote = " ".join(statistic.quote.split())
-    if _mostly_numbers(quote):
+    if _mostly_numbers(quote) or _in_number_run(quote, statistic.reported_text):
         return True
     if len(quote.split()) >= TABLE_ROW_MAX_WORDS or quote.endswith((".", "?", "!")):
         return False
@@ -171,3 +209,11 @@ def word_number_note(text: str) -> str:
 
 
 CAPTION = re.compile(r"^\W*(figure|fig\.|table)\s*\d", re.I)
+
+
+def value_not_in_quote(statistic: Statistic) -> bool:
+    """The value's digits do not appear in its own quote: the model paired the number with the wrong text,
+    which happens on pages whose columns or charts are read out of order. Values in words ("eight") are kept."""
+    digits = re.findall(r"\d+(?:\.\d+)?", statistic.reported_text.replace(",", ""))
+    quote = statistic.quote.replace(",", "")
+    return bool(digits) and not all(d in quote for d in digits)

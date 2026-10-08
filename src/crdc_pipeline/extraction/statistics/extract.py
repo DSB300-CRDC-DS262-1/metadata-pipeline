@@ -43,12 +43,23 @@ from .duplicates import (
     merge_ranges,
     pair_numbers,
 )
-from .filters import CAPTION, before_references, is_structural, is_table_row, without_tables, word_number_note
+from .filters import (
+    CAPTION,
+    before_references,
+    is_structural,
+    is_table_row,
+    value_not_in_quote,
+    without_tables,
+    word_number_note,
+)
 from .periods import date_survey_answers, survey_year, with_item_period, with_period
 from .prompts import STATISTICS_PROMPT, PageStatistics, SamePairs
 from .records import answers_to_questions, modelled_results
 from .schema import Statistic
 from .values import label_change, label_cited, label_survey_answer, label_type, shared_unit, tidy_statistic
+
+
+DUPLICATE_BATCH = 50
 
 
 class FindingsExtractionResult(BaseModel):
@@ -147,7 +158,7 @@ def extract_findings(
     for n, text in numbered:
         prompt = STATISTICS_PROMPT.format(page=n, text=text, items=item_list(items), word_numbers=word_number_note(text))
         found = [s for s in generate(prompt, PageStatistics, f"page {n} statistics", backend).statistics
-                 if not is_table_row(s, text) and not is_structural(s)]
+                 if not is_table_row(s, text) and not is_structural(s) and not value_not_in_quote(s)]
         kept = merge_ranges(drop_conversions([with_period(label_type(shared_unit(label_change(label_cited(label_survey_answer(s, text))))))
                                  for s in (tidy_statistic(s) for s in found) if s is not None]))
         by_page.append((n, [
@@ -212,9 +223,14 @@ def extract_findings(
 
     if dedupe:
         pairs = duplicate_candidates(statistics)
-        if pairs:
-            chosen = generate(duplicate_prompt(pairs), SamePairs, "duplicates", backend).pair_ids
-            statistics = drop_duplicates(statistics, pair_numbers(chosen, len(pairs)), pairs)
+        # A few dozen pairs per call: a long list made the model reason until its context ran out.
+        same: set[int] = set()
+        for start in range(0, len(pairs), DUPLICATE_BATCH):
+            batch = pairs[start:start + DUPLICATE_BATCH]
+            chosen = generate(duplicate_prompt(batch), SamePairs, "duplicates", backend).pair_ids
+            same |= {start + k for k in pair_numbers(chosen, len(batch))}
+        if same:
+            statistics = drop_duplicates(statistics, same, pairs)
     statistics = trim_links(statistics, items, study)
     statistics = modelled_results(answers_to_questions(statistics, items), items)
     statistics = fit_questions(fit_study_links(statistics, items, study), items)

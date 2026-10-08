@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from .prompts import DUPLICATE_PROMPT, MAX_DUPLICATE_PAIRS
+from .prompts import DUPLICATE_PROMPT
 from .schema import Statistic
 
 
@@ -49,7 +49,7 @@ def duplicate_candidates(statistics: list[Statistic]) -> list[tuple[Statistic, S
         earlier = next((s for s in statistics[:j] if _same_numbers(s, later) and _units_agree(s, later)), None)
         if earlier is not None:
             pairs.append((earlier, later))
-    return pairs[:MAX_DUPLICATE_PAIRS]
+    return pairs
 
 
 def duplicate_prompt(pairs: list[tuple[Statistic, Statistic]]) -> str:

@@ -220,3 +220,15 @@ def test_a_survey_answer_without_a_question_takes_the_statement_its_sentence_quo
     assert [i.value for i in items] == ["plays an important role in regional communities",
                                         "creates an important export product for Australia"]
     assert [s.context_item_ids for s in linked] == [["p8_q01"], ["p8_q01"], ["p8_q02"]]
+
+
+def test_a_chart_legend_or_heading_of_capitalised_names_is_a_label() -> None:
+    from crdc_pipeline.extraction.contexts.scope import is_label
+
+    def item(quote, kind="geographic_region"):
+        return ContextItem(item_id="i", item_type=kind, value=quote, quote=quote, page=7)
+
+    assert is_label(item("China Bangladesh Indonesia Pakistan Turkiye Vietnam India Malaysia Thailand Other"), "")
+    assert is_label(item("2015 2016 2017 2018 2019 2020 2021 2022 2023 2024", "time_period"), "")
+    assert not is_label(item("Central Queensland, Darling Downs, Macintyre-Balonne, Northern NSW"), "")
+    assert not is_label(item("Data were drawn from the National Coroners Information System."), "")

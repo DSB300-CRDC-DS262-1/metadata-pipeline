@@ -475,3 +475,19 @@ def test_a_value_restated_as_a_bound_or_rounded_is_a_duplicate_candidate() -> No
     share = stat("2.6%", 2.6, unit="%", statistic_id="f")
     pairs = duplicate_candidates([bound, again, rounded, exact, whole, share])
     assert [(a.statistic_id, b.statistic_id) for a, b in pairs] == [("a", "b"), ("c", "d")]
+
+
+def test_table_rows_chart_labels_and_misread_values_are_left_out() -> None:
+    from crdc_pipeline.extraction.statistics.filters import is_structural, is_table_row, value_not_in_quote
+
+    row = stat("23%", 23, quote="Weather monitoring services are accurate enough for me to determine the inversion risk 2% 4% 23% 30% 33% 8%")
+    label = stat("0.6", 0.6, quote="Australian Raw Cotton Exports (million tonnes) 0.6")
+    header = stat("9.85 bales/ha", 9.85, quote="at 12 bales/ha (2.7 t/ha)ner Production 212 (2019) 974-985 975 (irrigated) in 2014-15 "
+                                            "and 9.85 bales/ha (2.2 t/ha) (irrigated) in 2009-14 (Roth, 2014) due to breeding.")
+    assert is_table_row(row, "") and is_table_row(label, "")
+    assert not is_table_row(header, "")  # a journal header pasted into the sentence, away from the value
+    assert value_not_in_quote(stat("0.79 bales/ML", 0.79, quote="The range of water use efficiency has slowed since 2007."))
+    assert not value_not_in_quote(stat("eight", 8, quote="taking the total for the period to eight."))
+    assert is_structural(stat("a third", quote="These assessments provide a third-party expert assessment of the industry."))
+    assert not is_structural(stat("up to a third", quote="which may offset up to a third of the annual increase in CO2"))
+    assert not is_structural(stat("two-thirds", quote="Two-thirds of growers used the app."))

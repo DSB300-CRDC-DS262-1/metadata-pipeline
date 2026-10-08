@@ -21,6 +21,8 @@ def is_label(item: ContextItem, page_text: str) -> bool:
         return False
     if len(quote.split()) < MIN_QUOTE_WORDS:
         return True  # "Australia's cotton industry": a phrase, not a statement of the fact
+    if all(re.fullmatch(r"[A-Z0-9][\w/-]*", word) for word in quote.split()):
+        return True  # "China Bangladesh Indonesia Pakistan ...": a chart legend or heading, only capitalised names
     if len(quote.split()) >= LABEL_MAX_WORDS or quote.endswith((".", "?")):
         return False
     return any(" ".join(line.split()) == quote for line in page_text.splitlines())
