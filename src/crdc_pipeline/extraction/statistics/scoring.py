@@ -67,6 +67,8 @@ def score_document(reference: dict, extracted: dict) -> dict:
         relevant = [(r, e) for r, e in pairs if field != "response_category" or r.get("response_category")]
         agreement[field] = (sum(field_agrees(field, r, e) for r, e in relevant), len(relevant))
     matched_ids = {id(r) for r, _ in pairs}
+    unmatched = [e for e in extracted["statistics"] if all(e is not x for _, x in pairs)]
+    from_tables = table_spill(reference.get("table_values", []), unmatched)
     return {
         "reference": len(reference["statistics"]),
         "extracted": len(extracted["statistics"]),
@@ -75,5 +77,23 @@ def score_document(reference: dict, extracted: dict) -> dict:
         "context_links": context_links(pairs, reference, extracted),
         "key_conditions": key_conditions(pairs, reference, extracted),
         "missed": [r for r in reference["statistics"] if id(r) not in matched_ids],
-        "unmatched": [e for e in extracted["statistics"] if all(e is not x for _, x in pairs)],
+        "unmatched": unmatched,
+        "from_tables": len(from_tables),
     }
+
+
+def table_spill(table_values: list[dict], unmatched: list[dict]) -> list[dict]:
+    """Extracted numbers that are not reference statistics but a table cell or chart value on the same page.
+
+    The text extraction does not look for tables or charts, but their numbers can spill into it; such a number
+    is read correctly, so it is acceptable rather than wrong. Each table value is used once.
+    """
+    used: set[int] = set()
+    spilled = []
+    for ext in unmatched:
+        hit = next((i for i, t in enumerate(table_values) if i not in used and t["page"] == ext.get("page")
+                    and any(close(t["value"], n) for n in numbers(ext))), None)
+        if hit is not None:
+            used.add(hit)
+            spilled.append(ext)
+    return spilled

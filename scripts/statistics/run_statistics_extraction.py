@@ -63,7 +63,7 @@ def link_scores(links) -> str:
 
 
 def report(scores: dict[str, dict]) -> None:
-    total = {"reference": 0, "extracted": 0, "matched": 0}
+    total = {"reference": 0, "extracted": 0, "matched": 0, "from_tables": 0}
     agreement = {f: [0, 0] for f in FIELDS}
     context = [0, 0, 0, 0]
     for document_id, s in scores.items():
@@ -75,11 +75,13 @@ def report(scores: dict[str, dict]) -> None:
         for k in range(4):
             context[k] += s["context_links"][k]
         print(f"{document_id:18} found {s['matched']:3}/{s['reference']:<3} reference statistics, "
-              f"{s['extracted'] - s['matched']:3} extra, context links {link_scores(s['context_links'])}")
+              f"{s['extracted'] - s['matched']:3} extra ({s['from_tables']} from tables or charts), context links {link_scores(s['context_links'])}")
     recall = total["matched"] / max(total["reference"], 1)
     precision = total["matched"] / max(total["extracted"], 1)
     print(f"\nrecall {recall:.0%} ({total['matched']}/{total['reference']}), "
-          f"precision {precision:.0%} ({total['matched']}/{total['extracted']})")
+          f"precision {precision:.0%} ({total['matched']}/{total['extracted']}); "
+          f"{(total['matched'] + total['from_tables']) / max(total['extracted'], 1):.0%} counting "
+          f"{total['from_tables']} numbers spilled from tables or charts as acceptable")
     print("agreement on matched statistics: " + ", ".join(
         f"{f} {a}/{n}" for f, (a, n) in agreement.items()))
     print(f"context links: {link_scores(context)} (by specific fact, on matched statistics)")

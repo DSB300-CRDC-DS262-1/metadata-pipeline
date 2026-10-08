@@ -48,3 +48,17 @@ def test_acceptable_links_count_for_precision_but_not_recall() -> None:
         {"item_id": "e2", "item_type": "assumption", "page": 3, "quote": "We assumed that 96% of production was irrigated."}]}
     pairs = [({"context_item_ids": ["region"], "acceptable_item_ids": ["assumed"]}, {"context_item_ids": ["e1", "e2"]})]
     assert context_links(pairs, reference, extracted) == (1, 1, 2, 2)
+
+
+def test_a_number_spilled_from_a_table_or_chart_is_acceptable_not_required() -> None:
+    from crdc_pipeline.extraction.statistics.scoring import score_document
+
+    reference = {"statistics": [], "context_items": [], "contexts": [],
+                 "table_values": [{"page": 7, "value": 40.4, "kind": "data"}, {"page": 7, "value": 43.6, "kind": "data"}]}
+    extracted = {"context_items": [], "statistics": [
+        {"page": 7, "value": 40.4, "variable": "mean claims", "context_item_ids": []},   # a table cell: acceptable
+        {"page": 7, "value": 40.4, "variable": "repeat", "context_item_ids": []},        # each table value counts once
+        {"page": 8, "value": 43.6, "variable": "other page", "context_item_ids": []},    # another page: not from the table
+    ]}
+    scores = score_document(reference, extracted)
+    assert scores["reference"] == 0 and scores["from_tables"] == 1
