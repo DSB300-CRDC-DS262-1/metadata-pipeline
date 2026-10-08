@@ -50,6 +50,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--whole-document", action="store_true", help="context and linking steps over the whole document in one call")
     parser.add_argument("--no-scope", action="store_true", help="skip linking whole-study items to every statistic")
     parser.add_argument("--no-datasets", action="store_true", help="give every statistic all the study's items, even with several datasets")
+    parser.add_argument("--keep-table-rows", action="store_true", help="keep numbers that look like table rows or chart labels")
     parser.add_argument("--no-dedupe", action="store_true", help="keep numbers restated elsewhere in the document")
     parser.add_argument("--suffix", default="", help="appended to the output folder, e.g. r2")
     parser.add_argument("--relink-from", type=Path, help="redo only the linking of a saved run, in one whole-document call per document, using --context-backend/--context-model")
@@ -173,7 +174,7 @@ def main() -> None:
         pages = [p.text for p in load_document(pdf, document_id, vision=transcribe).pages]
         result = extract_findings(pages, backend, document_id, exclude_tables=args.exclude_tables, link=not args.no_link, scope=not args.no_scope,
                                   context_backend=context_backend, whole_document=args.whole_document,
-                                  dedupe=not args.no_dedupe, datasets=not args.no_datasets)
+                                  dedupe=not args.no_dedupe, datasets=not args.no_datasets, drop_table_rows=not args.keep_table_rows)
         saved = {"document_id": document_id, **json.loads(result.model_dump_json())}
         for statistic in saved["statistics"]:
             statistic["context_id"] = saved["context_ids"].get(statistic["statistic_id"])

@@ -90,6 +90,7 @@ def extract_findings(
     whole_document: bool = False,
     dedupe: bool = True,
     datasets: bool = True,
+    drop_table_rows: bool = True,
 ) -> FindingsExtractionResult:
     """Context items, then statistics, for every page with text.
 
@@ -159,7 +160,7 @@ def extract_findings(
     for n, text in numbered:
         prompt = STATISTICS_PROMPT.format(page=n, text=text, items=item_list(items), word_numbers=word_number_note(text))
         found = [s for s in generate(prompt, PageStatistics, f"page {n} statistics", backend).statistics
-                 if not is_table_row(s, text) and not is_structural(s) and not value_not_in_quote(s)
+                 if not (drop_table_rows and is_table_row(s, text)) and not is_structural(s) and not value_not_in_quote(s)
                  and not value_not_on_page(s, text)]
         kept = merge_ranges(drop_conversions([with_period(label_type(shared_unit(label_change(label_cited(label_survey_answer(s, text))))))
                                  for s in (tidy_statistic(s) for s in found) if s is not None]))
