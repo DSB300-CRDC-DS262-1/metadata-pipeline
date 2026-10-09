@@ -7,9 +7,6 @@ are set in code. The context steps' prompts and rules are in extraction/contexts
 
 from __future__ import annotations
 
-import threading
-from concurrent.futures import ThreadPoolExecutor
-
 from pydantic import BaseModel, Field
 
 from ..backends import Backend
@@ -95,7 +92,6 @@ def extract_findings(
     dedupe: bool = True,
     datasets: bool = True,
     drop_table_rows: bool = False,
-    workers: int = 1,
 ) -> FindingsExtractionResult:
     """Context items, then statistics, for every page with text.
 
@@ -106,8 +102,6 @@ def extract_findings(
     `whole_document` runs the context and linking steps once over the whole document instead of
     page by page (statistics stay page by page). `datasets` splits the study's items by dataset when the
     document reports more than one, so each statistic takes only its own dataset's conditions.
-    `workers` pages are sent to the model at once in the page-by-page steps (a local server answers several
-    requests together, faster than one after another); results keep page order.
     """
     pages = before_references(pages)
     if exclude_tables:
@@ -117,29 +111,22 @@ def extract_findings(
     models: list[str] = []
     failed: list[str] = []
 
-    lock = threading.Lock()
-
     def generate(prompt: str, schema: type[BaseModel], step: str, model: Backend) -> BaseModel:
         try:
             result = model.generate(prompt, schema)
         except RuntimeError as exc:  # e.g. the model looping until the server stops it
-            with lock:
-                failed.append(f"{step}: {exc}")
+            failed.append(f"{step}: {exc}")
             return schema()
-        with lock:
-            usage["seconds"] += result.seconds
-            usage["prompt_tokens"] += result.prompt_tokens or 0
-            usage["output_tokens"] += result.output_tokens or 0
-            if result.model not in models:
-                models.append(result.model)
+        usage["seconds"] += result.seconds
+        usage["prompt_tokens"] += result.prompt_tokens or 0
+        usage["output_tokens"] += result.output_tokens or 0
+        if result.model not in models:
+            models.append(result.model)
         return result.parsed
 
     def generate_all(calls: list[tuple[str, type[BaseModel], str, Backend]]) -> list[BaseModel]:
-        """Several calls at once, answers in the order asked."""
-        if workers <= 1 or len(calls) <= 1:
-            return [generate(*call) for call in calls]
-        with ThreadPoolExecutor(max_workers=workers) as pool:
-            return list(pool.map(lambda call: generate(*call), calls))
+        """One call per page, answers in page order."""
+        return [generate(*call) for call in calls]
 
     numbered = [(n, text) for n, text in enumerate(pages, start=1) if text.strip()]
     items: list[ContextItem] = []

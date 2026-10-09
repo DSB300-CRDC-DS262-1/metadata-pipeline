@@ -15,7 +15,8 @@ This repository is for the development of a python application that can extract 
 > the local model in one pass, and the references are in `data/reference/` (metadata, statistics, contexts).
 >
 > **Results on the four documents:** metadata 76 of 76 fields; statistics recall 99% (237 of 239) and
-> precision 96%; context links recall 83% and precision 73% against the reference.
+> precision 96% (93% if numbers spilled from tables and charts count as wrong); context links recall 71% and
+> precision 75% against the reference.
 >
 > **Where to look:** the rules are in `src/crdc_pipeline/extraction/*/` and each one has a test in `tests/`;
 > "How metadata is extracted" and "Statistics and contexts" below explain them in order.
@@ -200,13 +201,20 @@ model never needs the whole document at once:
    numbers each method fact covers, and a fact about one measure or analysis
    (mean scores, path modelling) comes off the others; a fact kept on a third
    or more of the numbers stays on all. `--no-datasets` turns these off.
-3. **Statistics** per page, then a **linking** call per page for the
-   specific items each number needs (its survey question, scenario, source).
+3. **Statistics** per page. `--link` adds a **linking** call per page for
+   the specific items each number needs (its survey question, scenario,
+   source): about a quarter more model time for links at 74% and 73%, so it
+   is off by default.
 4. **Plain-code rules**: the reading the wording states ("just over" is a
    lower bound), values as printed ("80%" is 80, "half" is 50%), the period
    nearest the value in its sentence at printed precision, survey answers
-   dated to the fieldwork year, citations make a figure "cited". Table rows,
-   chart and infographic labels, reference lists, date-only values and
+   dated to the fieldwork year, citations make a figure "cited". A value
+   whose digits are not in its own sentence or not on its page (a digit
+   changed while copying) is dropped. Tables and charts are not looked for,
+   but their numbers may spill into the text: they are kept, except a chart
+   axis (three or more numbers in the same words, steps of one size).
+   `--drop-table-rows` also drops lines that look like table rows or chart
+   labels. Reference lists, date-only values and
    numbers that only set up the report are dropped: subgroup definitions and
    bounds ("6-10 people", "(5+ days)"), scale ends, counts of the report's own
    parts ("three main themes", "three production seasons"), thresholds in a
@@ -221,8 +229,8 @@ model never needs the whole document at once:
    survey answers (a 1 to 5 scale without agreement wording only the ratings).
 6. **Duplicates**: numbers with the same value and unit are paired (also a
    value restated as a bound, "approaching" and "approximately $3.5 million",
-   or rounded, with units in any word order), and one
-   model call per document judges which pairs are the same measurement (the
+   or rounded, with units in any word order), and model calls of up to 50
+   pairs judge which are the same measurement (the
    abstract repeating a result). The later one is dropped and the earlier
    keeps both sets of links; different survey questions or groups are kept
    apart. `--no-dedupe` turns this off.
@@ -234,10 +242,12 @@ model never needs the whole document at once:
 
 Scored against `data/reference/statistics.json` and `contexts.json` (four
 documents, 239 statistics), the latest E4B run finds 99% of the reference
-statistics (237) at 96% precision. Field agreement on matched statistics:
+statistics (237) at 93% precision, or 96% counting the numbers spilled from
+tables and charts (`tables.json`) as acceptable rather than wrong. Field agreement on matched statistics:
 value reading 99%, type 92%, period 90%, record type 87% (repeat runs vary by
-a few points). Context links reach 83% of the facts the reference links, and
-73% of the links given are right (85% and 57% before the dataset steps). Key conditions are right for nearly all
+a few points). Context links reach 71% of the facts the reference links, and
+75% of the links given are right (74% and 73% with `--link`; 85% and 57%
+before the dataset steps). Key conditions are right for nearly all
 statistics: region 204 of 207, time period 156 of 157, sample 102 of 109, data
 source 100 of 118. A
 run takes about 2 to 7 minutes per document.
@@ -352,6 +362,7 @@ data/
     metadata.json                  reference metadata, 19 fields per document
     statistics.json                reference statistics, with the context items each one needs
     contexts.json                  reference context items and contexts
+    tables.json                    values in the documents' tables and charts, to score spilled numbers
   schema_worked_examples.json      worked examples of the documents, contexts and statistics tables
   ground_truth_all_documents.json  older 48-statistic reference set
   organisation_names.json          standard name and known variants per organisation
