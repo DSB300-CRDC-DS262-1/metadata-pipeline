@@ -139,3 +139,12 @@ def test_schema_caps_list_lengths() -> None:
     properties = DocumentMetadata.model_json_schema()["properties"]
     assert properties["evidence"]["maxItems"] == 25
     assert properties["authors"]["maxItems"] == 50
+
+
+def test_gemini_schema_drops_list_limits_only() -> None:
+    from crdc_pipeline.extraction.backends import gemini_schema
+    from crdc_pipeline.extraction.statistics.prompts import PageStatistics
+
+    schema = gemini_schema(PageStatistics)
+    assert "maxItems" not in json.dumps(schema)
+    assert schema["properties"]["statistics"]["items"] == {"$ref": "#/$defs/Statistic"}
