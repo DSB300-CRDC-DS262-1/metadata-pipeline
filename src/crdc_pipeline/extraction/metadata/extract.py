@@ -8,7 +8,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from .backends import Backend
+from ..backends import Backend
 from .names import (
     ORGANISATION_FIELDS,
     canonical_names,

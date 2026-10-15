@@ -10,7 +10,7 @@ import os
 
 import pytest
 
-from crdc_pipeline.extraction.statistics import StatisticEntry, build_context_text, build_prompt
+from crdc_pipeline.extraction.gemini.statistics import StatisticEntry, build_context_text, build_prompt
 
 
 def test_build_context_text_marks_every_page() -> None:
@@ -30,22 +30,21 @@ def test_prompt_includes_rules_and_selected_text() -> None:
     prompt = build_prompt(["Some Page Text"])
     assert "Some Page Text" in prompt
     assert "censored_below" in prompt
-    assert "model_assumption" in prompt
+    assert "statistic_type" in prompt
 
 
-def test_statistic_entry_note_defaults_to_none() -> None:
+def test_statistic_entry_optional_fields_default_to_empty() -> None:
     entry = StatisticEntry(
         variable="a measurement",
         value=1.0,
-        value_status="exact",
         reported_text="one",
-        unit="things",
-        record_type="measurement",
-        time_period=None,
+        statistic_type="count",
+        value_status="exact",
         page=1,
-        source_excerpt="There was one thing.",
+        source_text="There was one thing.",
     )
-    assert entry.note is None
+    assert entry.unit is None and entry.associated_datetimes is None
+    assert entry.constraints == [] and entry.limitations == []
 
 
 @pytest.mark.skipif(
@@ -55,10 +54,10 @@ def test_statistic_entry_note_defaults_to_none() -> None:
 def test_live_extraction_on_aghealth2019() -> None:
     from pathlib import Path
 
-    from crdc_pipeline.extraction.statistics import extract_statistics, make_client
+    from crdc_pipeline.extraction.gemini.statistics import extract_statistics, make_client
     from crdc_pipeline.ingestion.loader import load_document
 
-    pdf_path = Path(__file__).resolve().parent.parent / "data" / "raw_pdfs" / "aghealth2019.pdf"
+    pdf_path = Path(__file__).resolve().parents[2] / "data" / "raw_pdfs" / "aghealth2019.pdf"
     if not pdf_path.is_file():
         pytest.skip("data/raw_pdfs/aghealth2019.pdf not found")
 

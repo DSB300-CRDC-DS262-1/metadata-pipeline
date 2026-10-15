@@ -7,7 +7,7 @@ import pytest
 
 from crdc_pipeline.ingestion.loader import load_document
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data"
 MANIFEST_PATH = DATA_DIR / "document_manifest.json"
 
 

@@ -34,8 +34,8 @@
           "context_id": "aghealth2019_002b",
           "context_type": "time_period",
           "value": {
-            "start": "2014-01-01",
-            "end": "2019-12-31"
+            "start": "2014",
+            "end": "2019"
           },
           "original_text": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2014‐19 were identified.",
           "page": 4
@@ -161,10 +161,10 @@
         {
           "context_group_id": "aghealth2024_003",
           "context_id": "aghealth2024_003b",
-          "context_type": "sample_population",
+          "context_type": "time_period",
           "value": {
-            "start": "2001-01-01",
-            "end": "2023-12-31"
+            "start": "2001",
+            "end": "2023"
           },
           "original_text": "The postcodes of all areas in Australia where cotton has been commercially grown during the period 2001-23 were identified.",
           "page": 4
@@ -230,8 +230,8 @@
           "context_id": "aghealth2024_009b",
           "context_type": "time_period",
           "value": {
-            "start": "2021-01-01",
-            "end": "2022-12-31"
+            "start": "2021",
+            "end": "2022"
           },
           "original_text": "the available data for the most recent years where nature and mechanism of injury data are available (2021-22) and for the economic costs (2020-21), are provisional in nature.",
           "page": 5
@@ -241,8 +241,8 @@
           "context_id": "aghealth2024_009c",
           "context_type": "time_period",
           "value": {
-            "start": "2020-07-01",
-            "end": "2021-06-31"
+            "start": "2020",
+            "end": "2021"
           },
           "original_text": "the available data for the most recent years where nature and mechanism of injury data are available (2021-22) and for the economic costs (2020-21), are provisional in nature.",
           "page": 5
@@ -292,8 +292,8 @@
           "context_id": "aghealth2024_014b",
           "context_type": "time_period",
           "value": {
-            "start": "2008-07-01",
-            "end": "2012-06-31"
+            "start": "2008",
+            "end": "2012"
           },
           "original_text": "As such, it should be noted that the first interval (2008-09 to 2011-12), is only three years in duration, compared to the data for subsequent years that is in five-year intervals.",
           "page": 6
@@ -349,8 +349,8 @@
           "context_id": "hedayati2019_001c",
           "context_type": "time_period",
           "value": {
-            "start": "2011-01-01",
-            "end": "2014-12-31"
+            "start": "2011",
+            "end": "2014"
           },
           "original_text": "The foreground data for the study were for the three production seasons from 2011-2012 to 2013-2014 in northwest New South Wales, with a functional unit of one tonne of cotton lint at port.",
           "page": 1
@@ -488,8 +488,8 @@
           "context_id": "hedayati2019_013b",
           "context_type": "time_period",
           "value": {
-            "start": "2011-01-01",
-            "end": "2014-12-31"
+            "start": "2011",
+            "end": "2014"
           },
           "original_text": "The temporal scope of the LCA was the three cotton production seasons of 2011-2012, 2012-2013, and 2013-2014.",
           "page": 3
@@ -715,8 +715,8 @@
           "context_id": "hedayati2019_036c",
           "context_type": "time_period",
           "value": {
-            "start": "2011-01-01",
-            "end": "2014-12-31"
+            "start": "2011",
+            "end": "2014"
           },
           "original_text": "We applied an average cotton lint price from 2011 to 2014 of $2070/t ($470/bale) and average cottonseed price of $300/t, allocating approximately 86% of the life cycle climate change impact to lint.",
           "page": 5
@@ -789,7 +789,7 @@
           "context_type": "time_period",
           "value": {
             "start": "2025-10-30",
-            "end": "2014-11-17"
+            "end": "2025-11-17"
           },
           "original_text": "Participants were recruited across the country between 30 October and 17 November 2025.",
           "page": 5
@@ -817,7 +817,7 @@
   "statistics": [
     { "id": "aghealth2019_01", "document_id": "doc_aghealth2019", "variable": "confirmed cotton-related deaths, 2001-13", "value": 9, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "2001-2013", "page": 3 },
     { "id": "aghealth2019_02", "document_id": "doc_aghealth2019", "variable": "additional confirmed deaths found since initial review", "value": 2, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "ambiguous, needs cross-reference to resolve", "page": 3 },
-    { "id": "aghealth2019_03", "document_id": "doc_aghealth2019", "variable": "confirmed cotton-related deaths, recent period", "value": 6, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "2014-01-01 to 2019-10-31", "page": 3 },
+    { "id": "aghealth2019_03", "document_id": "doc_aghealth2019", "variable": "confirmed cotton-related deaths, recent period", "value": 6, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "2014 to 2019-10", "page": 3 },
     { "id": "aghealth2019_04", "document_id": "doc_aghealth2019", "variable": "possible unconfirmed cotton-related deaths", "value": 5, "value_status": "exact, but explicitly unconfirmed by the source", "unit": "deaths", "record_type": "measurement", "time_period": "not specified", "page": "3-4" },
     { "id": "aghealth2019_05", "document_id": "doc_aghealth2019", "variable": "total fatal incidents in economic costing", "value": 17, "value_status": "exact", "unit": "fatal incidents", "record_type": "measurement", "time_period": "2001-2019", "page": 4, "supersedes_by": "aghealth2024_06 (later report, different period end and currency year, not a clean like-for-like update)" },
     { "id": "aghealth2019_06", "document_id": "doc_aghealth2019", "variable": "total direct economic cost of fatal incidents", "value": 48, "value_status": "approximate, prose says 'surpasses'", "unit": "AUD millions, 2018 dollars", "record_type": "measurement", "time_period": "2001-2019", "page": 4 },
@@ -830,7 +830,7 @@
     { "id": "aghealth2019_13", "document_id": "doc_aghealth2019", "variable": "time for a coronial case to be closed", "value": null, "value_status": "approximate range, reported as '3-5 years or longer'", "unit": "years", "record_type": "measurement", "time_period": "not specified", "page": 2 },
 
     { "id": "aghealth2024_01", "document_id": "doc_aghealth2024", "variable": "confirmed cotton-related deaths, 2014-19 (revised)", "value": 8, "value_status": "exact", "unit": "deaths", "record_type": "measurement", "time_period": "2014-2019", "page": 3, "supersedes_statistic_id": "aghealth2019_03" },
-    { "id": "aghealth2024_02", "document_id": "doc_aghealth2024", "variable": "confirmed cotton-related deaths, recent period", "value": null, "value_status": "censored_below", "reported_text": "fewer than five", "unit": "deaths", "record_type": "measurement", "time_period": "2019-11-01 to 2023-12-31", "page": 3, "note": "withheld under AgHealth's own ethics agreement, not missing data" },
+    { "id": "aghealth2024_02", "document_id": "doc_aghealth2024", "variable": "confirmed cotton-related deaths, recent period", "value": null, "value_status": "censored_below", "reported_text": "fewer than five", "unit": "deaths", "record_type": "measurement", "time_period": "2019-10 to 2023-12", "page": 3, "note": "withheld under AgHealth's own ethics agreement, not missing data" },
     { "id": "aghealth2024_03", "document_id": "doc_aghealth2024", "variable": "additional possible cotton-related deaths, recent period", "value": 2, "value_status": "exact, but explicitly unconfirmed", "unit": "deaths", "record_type": "measurement", "time_period": "2019-2023", "page": 3 },
     { "id": "aghealth2024_04", "document_id": "doc_aghealth2024", "variable": "total fatal incidents in economic costing (revised)", "value": 21, "value_status": "exact", "unit": "fatal incidents", "record_type": "measurement", "time_period": "2001-2023", "page": 4, "note": "not a clean supersession of aghealth2019_05, period end and currency year both changed" },
     { "id": "aghealth2024_05", "document_id": "doc_aghealth2024", "variable": "total direct economic cost of fatal incidents (revised)", "value": 73, "value_status": "approximate, prose says 'surpasses'", "unit": "AUD millions, 2023 dollars", "record_type": "measurement", "time_period": "2001-2023", "page": 4, "note": "not a clean supersession of aghealth2019_06, currency year and case count both changed" },

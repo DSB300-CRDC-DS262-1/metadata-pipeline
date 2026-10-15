@@ -1,6 +1,6 @@
 """Measure GPU memory, power and energy while local models run metadata extraction.
 
-Usage: python scripts/measure_compute.py phi4 gemma4:e4b gemma4:12b:off
+Usage: python scripts/metadata/measure_compute.py phi4 gemma4:e4b gemma4:12b:off
        (append ":off" to run a model with thinking off)
 """
 
@@ -14,7 +14,7 @@ import threading
 import time
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PYTHON = sys.executable
 RUNS = 3
 QUERY = ["nvidia-smi", "--query-gpu=power.draw,memory.used,utilization.gpu", "--format=csv,noheader,nounits"]
@@ -45,7 +45,7 @@ def measure(model: str, think: str, suffix: str) -> dict:
     thread = threading.Thread(target=sampler)
     thread.start()
     start = time.monotonic()
-    command = [PYTHON, "scripts/run_metadata_extraction.py", "--model", model, "--think", think]
+    command = [PYTHON, "scripts/metadata/run_metadata_extraction.py", "--model", model, "--think", think]
     if suffix:
         command += ["--suffix", suffix]
     output = subprocess.run(command, cwd=PROJECT_ROOT, capture_output=True, text=True, encoding="utf-8").stdout
