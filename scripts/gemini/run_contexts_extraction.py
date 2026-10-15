@@ -2,7 +2,7 @@
    results, plus a quick recall check against
    data/ground_truth_all_documents.json.
 
-Mirrors scripts/run_metadata_extraction.py in structure. This is a
+Mirrors scripts/metadata/run_metadata_extraction.py in structure. This is a
 quick-look tool for development, not the real scoring script.
 
 The recall calculation matches ground-truth context entries to
@@ -39,16 +39,16 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
-from crdc_pipeline.extraction.contexts import extract_contexts, make_client, assign_context_ids  # noqa: E402
+from crdc_pipeline.extraction.gemini.contexts import extract_contexts, make_client, assign_context_ids  # noqa: E402
 from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
 
 MANIFEST_PATH = ROOT / "data" / "document_manifest.json"
 RAW_PDFS_DIR = ROOT / "data" / "raw_pdfs"
 GROUND_TRUTH_PATH = ROOT / "data" / "ground_truth_all_documents.json"
-OUTPUT_DIR = ROOT / "output" / "contexts"
+OUTPUT_DIR = ROOT / "output" / "gemini" / "contexts"
 
 
 def main() -> None:
