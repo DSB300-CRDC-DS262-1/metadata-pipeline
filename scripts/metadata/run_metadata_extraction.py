@@ -13,13 +13,14 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from crdc_pipeline.extraction import extract_metadata, make_backend  # noqa: E402
-from crdc_pipeline.extraction.scoring import SCORED_FIELDS, field_value, matches  # noqa: E402
+from crdc_pipeline.extraction.metadata.scoring import SCORED_FIELDS, field_value, matches  # noqa: E402
 from crdc_pipeline.extraction.vision import make_page_transcriber, make_vision_backend  # noqa: E402
 from crdc_pipeline.ingestion.loader import load_document  # noqa: E402
+from crdc_pipeline.reference import metadata_reference  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "metadata"
@@ -31,8 +32,7 @@ def load_manifest() -> list[dict]:
 
 
 def load_reference_metadata() -> dict[str, dict]:
-    schema = json.loads((DATA_DIR / "schema_worked_examples.json").read_text(encoding="utf-8"))
-    return {d["document_id"]: d for d in schema["documents"]}
+    return metadata_reference()
 
 
 def slug(text: str) -> str:

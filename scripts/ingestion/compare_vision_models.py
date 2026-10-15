@@ -1,6 +1,6 @@
 """Compare local vision models on page reading (Voconiq) and symbol learning (Hedayati).
 
-Usage: python scripts/compare_vision_models.py gemma4:e4b gemma4:12b
+Usage: python scripts/ingestion/compare_vision_models.py gemma4:e4b gemma4:12b
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ import sys
 import time
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from crdc_pipeline.extraction.vision import (  # noqa: E402

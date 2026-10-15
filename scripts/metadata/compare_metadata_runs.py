@@ -10,10 +10,11 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from crdc_pipeline.extraction.scoring import SCORED_FIELDS, field_value, matches  # noqa: E402
+from crdc_pipeline.extraction.metadata.scoring import SCORED_FIELDS, field_value, matches  # noqa: E402
+from crdc_pipeline.reference import metadata_reference  # noqa: E402
 
 OUTPUT_ROOT = PROJECT_ROOT / "output" / "metadata"
 
@@ -24,8 +25,7 @@ def spread(values: list[float]) -> str:
 
 
 def main() -> None:
-    schema = json.loads((PROJECT_ROOT / "data" / "schema_worked_examples.json").read_text(encoding="utf-8"))
-    reference = {d["document_id"]: d for d in schema["documents"]}
+    reference = metadata_reference()
     checks = [(doc, f) for doc in reference for f in SCORED_FIELDS]
 
     models: dict[str, list[dict]] = defaultdict(list)

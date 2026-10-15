@@ -8,7 +8,7 @@ from difflib import get_close_matches
 from functools import lru_cache
 from pathlib import Path
 
-NAMES_PATH = Path(__file__).resolve().parents[3] / "data" / "organisation_names.json"
+NAMES_PATH = Path(__file__).resolve().parents[4] / "data" / "organisation_names.json"
 # Only long names are matched loosely; short ones ("CSRO", "ACSA") are too easy to confuse.
 OCR_MATCH_MIN_LENGTH = 20
 OCR_MATCH_CUTOFF = 0.92

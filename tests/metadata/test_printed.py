@@ -1,7 +1,7 @@
 """Fields read from fixed printed formats rather than by a model."""
 
-from crdc_pipeline.extraction.metadata import DocumentMetadata, tidy
-from crdc_pipeline.extraction.printed import iso_date, printed_fields
+from crdc_pipeline.extraction.metadata.extract import DocumentMetadata, tidy
+from crdc_pipeline.extraction.metadata.printed import iso_date, printed_fields
 
 HISTORY_PAGE = (
     "Journal of Cleaner Production 212 (2019) 974-985\n0959-6526/ 2018 Elsevier Ltd.\n"
@@ -50,14 +50,14 @@ def test_iso_date_keeps_the_written_precision() -> None:
 
 
 def test_issn_check_digit_rejects_look_alikes() -> None:
-    from crdc_pipeline.extraction.printed import valid_issn
+    from crdc_pipeline.extraction.metadata.printed import valid_issn
 
     assert valid_issn("0959-6526")
     assert not valid_issn("2011-2012")
 
 
 def test_citation_year_comes_from_the_suggested_citation() -> None:
-    from crdc_pipeline.extraction.printed import citation_year
+    from crdc_pipeline.extraction.metadata.printed import citation_year
 
     assert citation_year(["Cover", "Title", "Citation Roth Rural (2017) Cotton Growing Practices 2016"]) == "2017"
     assert citation_year(["CITATION Voconiq (2023) Community Trust in the"]) == "2023"

@@ -149,7 +149,7 @@
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
       "data_source": "National Coroners Information System (NCIS), via AgHealth Australia",
       "collection_method": "case-by-case review of National Coroners Information System records",
-      "time_period": "2014-01-01 to 2019-10-31",
+      "time_period": "2014 to 2019-10",
       "currency_basis": null,
       "limitations": "restricted to cases where a cotton link could be positively confirmed"
     },
@@ -160,7 +160,7 @@
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
       "data_source": "National Coroners Information System (NCIS), via AgHealth Australia",
       "collection_method": "case-by-case review of National Coroners Information System records",
-      "time_period": "2014-01-01 to 2019-10-31",
+      "time_period": "2014 to 2019",
       "currency_basis": null,
       "limitations": "restricted to cases where a cotton link could be positively confirmed"
     },
@@ -171,7 +171,7 @@
       "sample_or_population": "coronial fatality records matched to cotton-growing postcodes",
       "data_source": "National Coroners Information System (NCIS), via AgHealth Australia",
       "collection_method": "case-by-case review of National Coroners Information System records",
-      "time_period": "2019-11-01 to 2023-12-31",
+      "time_period": "2019-10 to 2023-12",
       "currency_basis": null,
       "limitations": "AgHealth Australia's ethics agreement for coronial data prohibits reporting an exact count when a category holds fewer than five cases"
     },
